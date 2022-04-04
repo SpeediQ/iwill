@@ -3,28 +3,23 @@ package com.kowalczyk.iwill.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "privileges")
-public class Privilege {
+@Table(name = "items")
+public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String title;
     private String desc;
-    private boolean isActive;
+    private Double price;
 
-    public boolean isActive() {
-        return isActive;
+    public Item() {
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public Privilege() {
-    }
-
-    public Privilege(String desc) {
+    public Item(String title, String desc, Double price) {
+        this.title = title;
         this.desc = desc;
+        this.price = price;
     }
 
     public long getId() {
@@ -35,6 +30,14 @@ public class Privilege {
         this.id = id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getDesc() {
         return desc;
     }
@@ -43,11 +46,23 @@ public class Privilege {
         this.desc = desc;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
-        return "Privilege{" +
+        return "Item{" +
                 "id=" + id +
+                ", title='" + title + '\'' +
                 ", desc='" + desc + '\'' +
+                ", price=" + price +
                 '}';
     }
+
+
 }
