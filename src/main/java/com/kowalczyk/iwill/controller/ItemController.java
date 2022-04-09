@@ -1,49 +1,34 @@
 package com.kowalczyk.iwill.controller;
 
-import com.kowalczyk.iwill.adapter.ClientServRepository;
-import com.kowalczyk.iwill.adapter.ItemRepository;
-import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Item;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.kowalczyk.iwill.controller.dto.ItemDTO;
+import com.kowalczyk.iwill.service.ItemService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapItemToDTOList;
+
 @RestController
 public class ItemController {
-    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
-    private final ItemRepository repository;
+    private ItemService service;
 
-    public ItemController(ItemRepository repository) {
-        this.repository = repository;
+    public ItemController(ItemService service) {
+        this.service = service;
     }
 
     @GetMapping("/i")
-    List<Item> getAll (){
-        List<Item> result = repository.findAll();
-        return result;
+    public List<ItemDTO> getItems() {
+        return mapItemToDTOList(service.getItems());
     }
 
-
-    @PostMapping("/i")
-    Item createClient (Item entity){
-        Item body = repository.save(entity);
-        return body;
-    }
-    @GetMapping("/i/{id}")
-    public ResponseEntity<Item> getItem(@PathVariable Long id) {
-        return repository.findById(id)
-                .map(body -> ResponseEntity.ok(body))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    public Item copyToNewItem(Item item) {
-        Item newItem = new Item();
-        newItem.setDesc(item.getDesc());
-        newItem.setPrice(item.getPrice());
-        newItem.setTitle(item.getTitle());
-        return newItem;
-    }
+//    @PostMapping("/i/{id}")
+//    public ClientServ addClientServices(@RequestBody ClientServDTO clientServDTO) {
+//        return service.addClientService(mapToClientServ(clientServDTO));
+//    }
+//
+//    @PutMapping("/cs/{id}")
+//    public void updateClientService(@PathVariable Long id, @RequestBody ClientServDTO clientServDTO) {
+//        service.updateClientService(mapToClientServ(clientServDTO));
+//    }
 }

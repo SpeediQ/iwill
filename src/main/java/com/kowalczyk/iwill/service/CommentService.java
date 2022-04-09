@@ -1,30 +1,30 @@
 package com.kowalczyk.iwill.service;
 
 import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Visit;
+import com.kowalczyk.iwill.model.Comment;
 import com.kowalczyk.iwill.repesitory.ClientServRepository;
-import com.kowalczyk.iwill.repesitory.VisitRepository;
+import com.kowalczyk.iwill.repesitory.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class VisitService {
-    private final VisitRepository repository;
+public class CommentService {
+    private final CommentRepository repository;
 
-    public VisitService(VisitRepository repository) {
+    public CommentService(CommentRepository repository) {
         this.repository = repository;
     }
 
-    public List<Visit> getClientServices() {
+    public List<Comment> getComments() {
         return repository.findAll();
     }
 
-    public Visit addClientService(Visit body) {
+    public Comment addComment(Comment body) {
         return repository.save(body);
     }
 
-    public void updateClientService(Visit body) {
+    public void updateComment(Comment body) {
         repository.save(body);
     }
 }

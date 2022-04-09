@@ -1,36 +1,35 @@
 package com.kowalczyk.iwill.controller;
 
-import com.kowalczyk.iwill.adapter.CommentRepository;
-import com.kowalczyk.iwill.adapter.ItemRepository;
+import com.kowalczyk.iwill.controller.dto.CommentDTO;
 import com.kowalczyk.iwill.model.Comment;
-import com.kowalczyk.iwill.model.Item;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.kowalczyk.iwill.service.CommentService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static com.kowalczyk.iwill.controller.mapper.CommentDTOMapper.mapCommentToDTOList;
+import static com.kowalczyk.iwill.controller.mapper.CommentMapper.mapToComment;
+
 @RestController
 public class CommentController {
-    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
-    private final CommentRepository repository;
+    private CommentService service;
 
-    public CommentController(CommentRepository repository) {
-        this.repository = repository;
+    public CommentController(CommentService service) {
+        this.service = service;
     }
 
     @GetMapping("/cm")
-    List<Comment> getAll (@RequestBody Comment entity){
-        List<Comment> result = repository.findAll();
-        return result;
+    public List<CommentDTO> getComments() {
+        return mapCommentToDTOList(service.getComments());
     }
 
-    @PostMapping("/cm")
-    Comment createClient (Comment entity){
-        Comment body = repository.save(entity);
-        return body;
+    @PostMapping("/cm/{id}")
+    public Comment addComment(@RequestBody CommentDTO commentDTO) {
+        return service.addComment(mapToComment(commentDTO));
+    }
+
+    @PutMapping("/cm/{id}")
+    public void updateComment(@PathVariable Long id, @RequestBody CommentDTO commentDTO) {
+        service.updateComment(mapToComment(commentDTO));
     }
 }

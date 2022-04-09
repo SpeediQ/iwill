@@ -1,9 +1,15 @@
 package com.kowalczyk.iwill.model;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.Tolerate;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "items")
+@Builder
+@Data
 public class Item {
 
     @Id
@@ -13,13 +19,8 @@ public class Item {
     private String desc;
     private Double price;
 
+    @Tolerate
     public Item() {
-    }
-
-    public Item(String title, String desc, Double price) {
-        this.title = title;
-        this.desc = desc;
-        this.price = price;
     }
 
     public long getId() {
