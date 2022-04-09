@@ -1,16 +1,12 @@
 package com.kowalczyk.iwill.controller.mapper;
 
-import com.kowalczyk.iwill.controller.dto.ClientServDTO;
 import com.kowalczyk.iwill.controller.dto.VisitDTO;
-import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Visit;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.controller.mapper.ClientServDTOMapper.mapClientServToDTOList;
-import static com.kowalczyk.iwill.controller.mapper.CommentDTOMapper.mapToCommentDTO;
-import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapToItemDTO;
 
 
 public class VisitDTOMapper {

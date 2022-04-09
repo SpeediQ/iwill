@@ -17,13 +17,11 @@ public class ClientServ {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String desc;
-    @OneToOne
-    @JoinColumn(name = "ITEM_ID")
-    private Item item;
-    @OneToOne
+     @OneToOne
     @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "VISIT_ID")
     private Visit visit;
 
     @Tolerate

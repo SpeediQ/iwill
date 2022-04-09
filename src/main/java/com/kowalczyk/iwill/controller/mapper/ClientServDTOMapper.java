@@ -14,7 +14,7 @@ public class ClientServDTOMapper {
 
     public static List<ClientServDTO> mapClientServToDTOList(List<ClientServ> clientServs) {
         return clientServs.stream()
-                .map(clientServ -> mapClientServToDTO(clientServ))
+                .map(ClientServDTOMapper::mapClientServToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -23,7 +23,6 @@ public class ClientServDTOMapper {
         return ClientServDTO.builder()
                 .id(clientServ.getId())
                 .desc(clientServ.getDesc())
-                .item(mapToItemDTO(clientServ.getItem()))
                 .comment(mapToCommentDTO(clientServ.getComment()))
                 .build();
     }

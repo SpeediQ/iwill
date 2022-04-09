@@ -1,16 +1,14 @@
 package com.kowalczyk.iwill.service;
 
 import com.kowalczyk.iwill.controller.dto.ItemDTO;
-import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Comment;
-import com.kowalczyk.iwill.model.Item;
+import com.kowalczyk.iwill.model.*;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 
-import static com.kowalczyk.iwill.controller.mapper.ClientServDTOMapper.mapClientServToDTOList;
 import static com.kowalczyk.iwill.controller.mapper.ItemMapper.mapToItem;
 
 @Component
@@ -18,11 +16,15 @@ public class Start {
     ClientServService clientServService;
     ItemService itemService;
     CommentService commentService;
+    VisitService visitService;
+    ClientCardService clientCardService;
 
-    public Start(ClientServService clientServService, ItemService itemService, CommentService commentService) {
+    public Start(ClientServService clientServService, ItemService itemService, CommentService commentService, VisitService visitService, ClientCardService clientCardService) {
         this.clientServService = clientServService;
         this.itemService = itemService;
         this.commentService = commentService;
+        this.visitService = visitService;
+        this.clientCardService = clientCardService;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -49,16 +51,30 @@ public class Start {
 
         ClientServ clientServ = ClientServ.builder()
                 .desc("client service desc")
-                .item(item)
                 .comment(comment)
                 .build();
 
         clientServService.addClientService(clientServ);
 
-        List<ClientServ> clientServices = clientServService.getClientServices();
-        System.out.println(mapClientServToDTOList(clientServices));
-        System.out.println(clientServices);
+        Visit visit = Visit.builder()
+                .desc("visit desc")
+                .clientServs(Collections.singletonList(clientServ))
+                .build();
 
+        visitService.addVisit(visit);
+
+        clientServ.setVisit(visit);
+        clientServService.updateClientService(clientServ);
+
+
+//        ClientCard clientCard = ClientCard.builder()
+//                .desc("clientCard desc")
+//                .visits(Collections.singletonList(visit))
+//                .build();
+//
+//        clientCardService.addClientCard(clientCard);
+//        visit.setClientCard(clientCard);
+//        visitService.updateVisit(visit);
     }
 
 }

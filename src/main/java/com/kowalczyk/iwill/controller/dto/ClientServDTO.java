@@ -8,6 +8,5 @@ import lombok.Data;
 public class ClientServDTO {
     private long id;
     private String desc;
-    private ItemDTO item;
     private CommentDTO comment;
 }
