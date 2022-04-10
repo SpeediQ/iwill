@@ -22,7 +22,7 @@ public class VisitDTOMapper {
         return VisitDTO.builder()
                 .id(visit.getId())
                 .desc(visit.getDesc())
-                .clientServs(mapClientServToDTOList(visit.getClientServs()))
+                .clientServDTOS(mapClientServToDTOList(visit.getClientServs()))
                 .build();
     }
 

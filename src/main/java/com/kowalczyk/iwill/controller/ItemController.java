@@ -1,13 +1,15 @@
 package com.kowalczyk.iwill.controller;
 
 import com.kowalczyk.iwill.controller.dto.ItemDTO;
+import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.service.ItemService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapItemToDTOList;
+import static com.kowalczyk.iwill.controller.mapper.ItemMapper.mapToItem;
 
 @RestController
 public class ItemController {
@@ -22,13 +24,20 @@ public class ItemController {
         return mapItemToDTOList(service.getItems());
     }
 
-//    @PostMapping("/i/{id}")
-//    public ClientServ addClientServices(@RequestBody ClientServDTO clientServDTO) {
-//        return service.addClientService(mapToClientServ(clientServDTO));
-//    }
-//
-//    @PutMapping("/cs/{id}")
-//    public void updateClientService(@PathVariable Long id, @RequestBody ClientServDTO clientServDTO) {
-//        service.updateClientService(mapToClientServ(clientServDTO));
-//    }
+    @GetMapping("/i/{id}")
+    ResponseEntity<Item> readTask(@PathVariable Long id) {
+        return service.getItemById(id)
+                .map(body -> ResponseEntity.ok(body))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/i/{id}")
+    public Item addVisit(@RequestBody ItemDTO itemDTO) {
+        return service.addItem(mapToItem(itemDTO));
+    }
+
+    @PutMapping("/i/{id}")
+    public void updateVisit(@PathVariable Long id, @RequestBody ItemDTO itemDTO) {
+        service.updateItem(mapToItem(itemDTO));
+    }
 }

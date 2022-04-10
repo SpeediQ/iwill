@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.controller.mapper.CommentMapper.mapToComment;
-import static com.kowalczyk.iwill.controller.mapper.ItemMapper.mapToItem;
 
 public class ClientServMapper {
 
@@ -21,7 +20,7 @@ public class ClientServMapper {
         return ClientServ.builder()
                 .id(clientServDTO.getId())
                 .desc(clientServDTO.getDesc())
-                .comment(mapToComment(clientServDTO.getComment()))
+                .comment(mapToComment(clientServDTO.getCommentDTO()))
                 .build();
     }
 }

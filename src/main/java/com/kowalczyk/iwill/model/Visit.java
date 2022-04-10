@@ -18,7 +18,8 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String desc;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "CLIENTCARD_ID")
     private ClientCard clientCard;
     @OneToMany(fetch = FetchType.EAGER,
             mappedBy = "visit",

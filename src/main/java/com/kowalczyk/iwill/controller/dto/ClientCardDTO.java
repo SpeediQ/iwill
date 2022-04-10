@@ -13,5 +13,5 @@ import java.util.List;
 public class ClientCardDTO {
     private long id;
     private String desc;
-    private List<VisitDTO> visits;
+    private List<VisitDTO> visitDTOS;
 }

@@ -1,14 +1,11 @@
 package com.kowalczyk.iwill.controller.mapper;
 
 import com.kowalczyk.iwill.controller.dto.ClientCardDTO;
-import com.kowalczyk.iwill.controller.dto.VisitDTO;
 import com.kowalczyk.iwill.model.ClientCard;
-import com.kowalczyk.iwill.model.Visit;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.kowalczyk.iwill.controller.mapper.ClientServDTOMapper.mapClientServToDTOList;
 import static com.kowalczyk.iwill.controller.mapper.VisitDTOMapper.mapVisitToDTOList;
 
 
@@ -25,7 +22,7 @@ public class ClientCardDTOMapper {
         return ClientCardDTO.builder()
                 .id(clientCard.getId())
                 .desc(clientCard.getDesc())
-                .visits(mapVisitToDTOList(clientCard.getVisits()))
+                .visitDTOS(mapVisitToDTOList(clientCard.getVisits()))
                 .build();
     }
 

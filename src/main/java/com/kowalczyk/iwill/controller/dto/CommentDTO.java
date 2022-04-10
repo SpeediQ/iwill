@@ -10,5 +10,5 @@ import lombok.Getter;
 public class CommentDTO {
     private long id;
     private String desc;
-    private ItemDTO item;
+    private ItemDTO itemDTO;
 }

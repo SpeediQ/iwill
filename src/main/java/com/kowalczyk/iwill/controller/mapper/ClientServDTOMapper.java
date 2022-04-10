@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.controller.mapper.CommentDTOMapper.mapToCommentDTO;
-import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapToItemDTO;
 
 
 public class ClientServDTOMapper {
@@ -23,7 +22,7 @@ public class ClientServDTOMapper {
         return ClientServDTO.builder()
                 .id(clientServ.getId())
                 .desc(clientServ.getDesc())
-                .comment(mapToCommentDTO(clientServ.getComment()))
+                .commentDTO(mapToCommentDTO(clientServ.getComment()))
                 .build();
     }
 

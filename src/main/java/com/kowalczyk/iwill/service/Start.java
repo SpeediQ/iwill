@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.kowalczyk.iwill.controller.mapper.ItemMapper.mapToItem;
+import static com.kowalczyk.iwill.controller.mapper.VisitDTOMapper.mapVisitToDTO;
 
 @Component
 public class Start {
@@ -18,13 +19,15 @@ public class Start {
     CommentService commentService;
     VisitService visitService;
     ClientCardService clientCardService;
+    ClientService clientService;
 
-    public Start(ClientServService clientServService, ItemService itemService, CommentService commentService, VisitService visitService, ClientCardService clientCardService) {
+    public Start(ClientServService clientServService, ItemService itemService, CommentService commentService, VisitService visitService, ClientCardService clientCardService, ClientService clientService) {
         this.clientServService = clientServService;
         this.itemService = itemService;
         this.commentService = commentService;
         this.visitService = visitService;
         this.clientCardService = clientCardService;
+        this.clientService = clientService;
     }
 
     @EventListener(ApplicationReadyEvent.class)
@@ -32,9 +35,9 @@ public class Start {
 
 
         ItemDTO itemDTO = ItemDTO.builder()
-                .desc("testDesc")
-                .title("testTitle")
-                .price(10D)
+                .title("Elektrostymulacja jako usługa")
+                .desc("opis do elktrostymulacji")
+                .price(120.00D)
                 .build();
         itemService.addItem(mapToItem(itemDTO));
 
@@ -43,21 +46,21 @@ public class Start {
         itemService.addItem(item);
 
         Comment comment = Comment.builder()
-                .desc("Desc comment")
+                .desc("Opis przebiegu elektrostymulacji dla konkretnego klienta")
                 .item(item)
                 .build();
         commentService.addComment(comment);
 
 
         ClientServ clientServ = ClientServ.builder()
-                .desc("client service desc")
+                .desc("Usługa wykonana dla klienta")
                 .comment(comment)
                 .build();
 
         clientServService.addClientService(clientServ);
 
         Visit visit = Visit.builder()
-                .desc("visit desc")
+                .desc("Wizyta klienta - posiada listę usług")
                 .clientServs(Collections.singletonList(clientServ))
                 .build();
 
@@ -67,14 +70,28 @@ public class Start {
         clientServService.updateClientService(clientServ);
 
 
-//        ClientCard clientCard = ClientCard.builder()
-//                .desc("clientCard desc")
-//                .visits(Collections.singletonList(visit))
-//                .build();
-//
-//        clientCardService.addClientCard(clientCard);
-//        visit.setClientCard(clientCard);
-//        visitService.updateVisit(visit);
+        ClientCard clientCard = ClientCard.builder()
+                .desc("Karta klienta - posiada listę wizyt")
+                .visits(Collections.singletonList(visit))
+                .build();
+
+        clientCardService.addClientCard(clientCard);
+        visit.setClientCard(clientCard);
+        visitService.updateVisit(visit);
+
+
+        Client client = Client.builder()
+                .firstname("Marcin")
+                .lastname("Abc")
+                .desc("Client desc")
+                .clientCard(clientCard)
+                .build();
+
+        clientCard.setClient(client);
+        clientService.addClient(client);
+        clientCardService.updateClientCard(clientCard);
+;
+
     }
 
 }

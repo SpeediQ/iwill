@@ -1,8 +1,6 @@
 package com.kowalczyk.iwill.controller.mapper;
 
-import com.kowalczyk.iwill.controller.dto.ClientServDTO;
 import com.kowalczyk.iwill.controller.dto.VisitDTO;
-import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Visit;
 
 import java.util.List;
@@ -22,7 +20,7 @@ public class VisitMapper {
         return Visit.builder()
                 .id(visit.getId())
                 .desc(visit.getDesc())
-                .clientServs(mapClientServDTOToList(visit.getClientServs()))
+                .clientServs(mapClientServDTOToList(visit.getClientServDTOS()))
                 .build();
     }
 }

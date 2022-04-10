@@ -1,8 +1,6 @@
 package com.kowalczyk.iwill.controller.mapper;
 
-import com.kowalczyk.iwill.controller.dto.ClientServDTO;
 import com.kowalczyk.iwill.controller.dto.CommentDTO;
-import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Comment;
 
 import java.util.List;
@@ -22,7 +20,7 @@ public class CommentDTOMapper {
         return CommentDTO.builder()
                 .id(comment.getId())
                 .desc(comment.getDesc())
-                .item(mapToItemDTO(comment.getItem()))
+                .itemDTO(mapToItemDTO(comment.getItem()))
                 .build();
     }
 }

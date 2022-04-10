@@ -1,19 +1,18 @@
 package com.kowalczyk.iwill.controller.dto;
 
 import com.kowalczyk.iwill.model.ClientCard;
-import com.kowalczyk.iwill.model.ClientServ;
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Tolerate;
 
-import javax.management.ConstructorParameters;
 import javax.persistence.*;
 import java.util.List;
 
 @Data
 @Builder
-public class VisitDTO {
+public class ClientDTO {
     private long id;
+    private String firstname;
+    private String lastname;
     private String desc;
-    private List<ClientServDTO> clientServDTOS;
+    private ClientCardDTO clientCardDTO;
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.Tolerate;
 
 import javax.persistence.*;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -16,8 +17,8 @@ public class ClientCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String desc;
-    @OneToMany(mappedBy = "clientCard", cascade=CascadeType.ALL)
-    private List<Visit> visits;
+    @OneToMany(mappedBy = "clientCard", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private List<Visit> visits = new LinkedList<Visit>();
     @OneToOne(mappedBy = "clientCard", cascade=CascadeType.ALL)
     private Client client;
 
