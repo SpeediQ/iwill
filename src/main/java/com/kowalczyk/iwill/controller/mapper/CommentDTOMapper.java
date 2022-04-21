@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapToItemDTO;
 
 public class CommentDTOMapper {
-    public static List<CommentDTO> mapCommentToDTOList(List<Comment> comments) {
+    public static List<CommentDTO> mapToCommentDTOList(List<Comment> comments) {
         return comments.stream()
                 .map(comment -> mapToCommentDTO(comment))
                 .collect(Collectors.toList());

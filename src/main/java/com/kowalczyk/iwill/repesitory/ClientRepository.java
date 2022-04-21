@@ -2,7 +2,6 @@ package com.kowalczyk.iwill.repesitory;
 
 
 import com.kowalczyk.iwill.model.Client;
-import com.kowalczyk.iwill.model.ClientCard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +11,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
 //    @Query("select distinct p from Post p left join fetch p.comments")
 //    List<Post> findAllPostsWithComments();
-
 
 
 }

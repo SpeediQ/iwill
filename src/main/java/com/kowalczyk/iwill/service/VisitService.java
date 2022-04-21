@@ -1,12 +1,11 @@
 package com.kowalczyk.iwill.service;
 
-import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Visit;
-import com.kowalczyk.iwill.repesitory.ClientServRepository;
 import com.kowalczyk.iwill.repesitory.VisitRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VisitService {
@@ -26,5 +25,9 @@ public class VisitService {
 
     public void updateVisit(Visit body) {
         repository.save(body);
+    }
+
+    public Optional<Visit> getVisitById(Long id) {
+        return repository.findById(id);
     }
 }

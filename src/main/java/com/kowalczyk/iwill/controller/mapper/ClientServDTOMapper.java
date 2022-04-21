@@ -11,14 +11,14 @@ import static com.kowalczyk.iwill.controller.mapper.CommentDTOMapper.mapToCommen
 
 public class ClientServDTOMapper {
 
-    public static List<ClientServDTO> mapClientServToDTOList(List<ClientServ> clientServs) {
+    public static List<ClientServDTO> mapToClientServDTOList(List<ClientServ> clientServs) {
         return clientServs.stream()
-                .map(ClientServDTOMapper::mapClientServToDTO)
+                .map(ClientServDTOMapper::mapToClientServDTO)
                 .collect(Collectors.toList());
     }
 
 
-    public static ClientServDTO mapClientServToDTO(ClientServ clientServ) {
+    public static ClientServDTO mapToClientServDTO(ClientServ clientServ) {
         return ClientServDTO.builder()
                 .id(clientServ.getId())
                 .desc(clientServ.getDesc())

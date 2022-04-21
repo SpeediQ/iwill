@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.experimental.Tolerate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String desc;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "CLIENTCARD_ID")
     private ClientCard clientCard;
     @OneToMany(fetch = FetchType.EAGER,

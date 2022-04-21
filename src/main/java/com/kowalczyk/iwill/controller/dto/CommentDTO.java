@@ -1,9 +1,7 @@
 package com.kowalczyk.iwill.controller.dto;
 
-import com.kowalczyk.iwill.model.Item;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 @Data
 @Builder

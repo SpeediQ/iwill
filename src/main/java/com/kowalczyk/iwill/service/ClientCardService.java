@@ -1,12 +1,11 @@
 package com.kowalczyk.iwill.service;
 
 import com.kowalczyk.iwill.model.ClientCard;
-import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repesitory.ClientCardRepository;
-import com.kowalczyk.iwill.repesitory.VisitRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientCardService {
@@ -27,4 +26,9 @@ public class ClientCardService {
     public void updateClientCard(ClientCard body) {
         repository.save(body);
     }
+
+    public Optional<ClientCard> getClientCardById(Long id) {
+        return repository.findById(id);
+    }
+
 }

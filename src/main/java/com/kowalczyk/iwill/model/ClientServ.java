@@ -2,8 +2,6 @@ package com.kowalczyk.iwill.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Tolerate;
 
 import javax.persistence.*;
@@ -17,7 +15,7 @@ public class ClientServ {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String desc;
-     @OneToOne
+    @OneToOne
     @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
     @ManyToOne(cascade = CascadeType.PERSIST)

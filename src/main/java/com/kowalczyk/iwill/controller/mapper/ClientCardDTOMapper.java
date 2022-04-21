@@ -2,27 +2,26 @@ package com.kowalczyk.iwill.controller.mapper;
 
 import com.kowalczyk.iwill.controller.dto.ClientCardDTO;
 import com.kowalczyk.iwill.model.ClientCard;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.kowalczyk.iwill.controller.mapper.VisitDTOMapper.mapVisitToDTOList;
-
-
+@Transactional
 public class ClientCardDTOMapper {
 
-    public static List<ClientCardDTO> mapClientCardToDTOList(List<ClientCard> clientCards) {
+    public static List<ClientCardDTO> mapToClientCardDTOList(List<ClientCard> clientCards) {
         return clientCards.stream()
-                .map(ClientCardDTOMapper::mapClientCardToDTO)
+                .map(ClientCardDTOMapper::mapToClientCardDTO)
                 .collect(Collectors.toList());
     }
 
 
-    public static ClientCardDTO mapClientCardToDTO(ClientCard clientCard) {
+    public static ClientCardDTO mapToClientCardDTO(ClientCard clientCard) {
         return ClientCardDTO.builder()
                 .id(clientCard.getId())
                 .desc(clientCard.getDesc())
-                .visitDTOS(mapVisitToDTOList(clientCard.getVisits()))
+//                .visitDTOS(mapVisitToDTOList(clientCard.getVisits()))
                 .build();
     }
 

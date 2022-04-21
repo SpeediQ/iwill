@@ -17,9 +17,9 @@ public class ClientCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String desc;
-    @OneToMany(mappedBy = "clientCard", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private List<Visit> visits = new LinkedList<Visit>();
-    @OneToOne(mappedBy = "clientCard", cascade=CascadeType.ALL)
+    //    @OneToMany(mappedBy = "clientCard", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+//    private List<Visit> visits = new LinkedList<Visit>();
+    @OneToOne(mappedBy = "clientCard", cascade = CascadeType.ALL)
     private Client client;
 
     @Tolerate

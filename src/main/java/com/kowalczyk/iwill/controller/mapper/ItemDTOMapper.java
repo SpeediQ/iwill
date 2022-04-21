@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 
 public class ItemDTOMapper {
 
-    public static List<ItemDTO> mapItemToDTOList(List<Item> items){
+    public static List<ItemDTO> mapToItemDTOList(List<Item> items) {
         return items.stream()
-                .map(item -> mapToItemDTO(item))
+                .map(ItemDTOMapper::mapToItemDTO)
                 .collect(Collectors.toList());
     }
 
@@ -20,6 +20,7 @@ public class ItemDTOMapper {
                 .desc(item.getDesc())
                 .title(item.getTitle())
                 .price(item.getPrice())
+                .type("DTO")
                 .build();
     }
 }

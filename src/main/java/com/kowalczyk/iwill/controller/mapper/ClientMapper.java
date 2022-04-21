@@ -10,7 +10,7 @@ import static com.kowalczyk.iwill.controller.mapper.ClientCardMapper.mapToClient
 
 public class ClientMapper {
 
-    public static List<Client> mapClientDTOToList(List<ClientDTO> clientDTOS) {
+    public static List<Client> mapToClientList(List<ClientDTO> clientDTOS) {
         return clientDTOS.stream()
                 .map(ClientMapper::mapToClient)
                 .collect(Collectors.toList());

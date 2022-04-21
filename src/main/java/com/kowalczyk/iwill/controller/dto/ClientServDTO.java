@@ -2,8 +2,6 @@ package com.kowalczyk.iwill.controller.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Tolerate;
-import org.springframework.context.event.EventListener;
 
 @Data
 @Builder

@@ -23,5 +23,17 @@ public class Item {
     public Item() {
     }
 
+    public void updateItem(Item source) {
+        if (source.getTitle() != null) {
+            title = source.getTitle();
+        }
+        if (source.getDesc() != null) {
+            desc = source.getDesc();
+        }
+        if (source.getPrice() != null) {
+            price = source.getPrice();
+        }
+    }
+
 
 }

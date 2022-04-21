@@ -10,7 +10,7 @@ import static com.kowalczyk.iwill.controller.mapper.CommentMapper.mapToComment;
 
 public class ClientServMapper {
 
-    public static List<ClientServ> mapClientServDTOToList(List<ClientServDTO> clientServDTOS) {
+    public static List<ClientServ> mapToClientServList(List<ClientServDTO> clientServDTOS) {
         return clientServDTOS.stream()
                 .map(ClientServMapper::mapToClientServ)
                 .collect(Collectors.toList());
