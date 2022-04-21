@@ -5,8 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ClientServDTO {
+public class ClientDTO {
     private long id;
+    private String firstname;
+    private String lastname;
     private String desc;
-    private CommentDTO commentDTO;
+    private ClientCardDTO clientCardDTO;
 }

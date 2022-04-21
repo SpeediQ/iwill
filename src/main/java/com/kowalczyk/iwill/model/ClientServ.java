@@ -2,8 +2,6 @@ package com.kowalczyk.iwill.model;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Tolerate;
 
 import javax.persistence.*;
@@ -18,12 +16,10 @@ public class ClientServ {
     private long id;
     private String desc;
     @OneToOne
-    @JoinColumn(name = "ITEM_ID")
-    private Item item;
-    @OneToOne
     @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "VISIT_ID")
     private Visit visit;
 
     @Tolerate

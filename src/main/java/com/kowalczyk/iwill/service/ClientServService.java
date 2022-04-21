@@ -5,10 +5,12 @@ import com.kowalczyk.iwill.repesitory.ClientServRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientServService {
     private final ClientServRepository repository;
+
 
     public ClientServService(ClientServRepository repository) {
         this.repository = repository;
@@ -24,5 +26,9 @@ public class ClientServService {
 
     public void updateClientService(ClientServ body) {
         repository.save(body);
+    }
+
+    public Optional<ClientServ> getClientServiceById(Long id) {
+        return repository.findById(id);
     }
 }

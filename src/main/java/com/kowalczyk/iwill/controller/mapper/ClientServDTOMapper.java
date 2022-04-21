@@ -7,24 +7,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.controller.mapper.CommentDTOMapper.mapToCommentDTO;
-import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapToItemDTO;
 
 
 public class ClientServDTOMapper {
 
-    public static List<ClientServDTO> mapClientServToDTOList(List<ClientServ> clientServs) {
+    public static List<ClientServDTO> mapToClientServDTOList(List<ClientServ> clientServs) {
         return clientServs.stream()
-                .map(clientServ -> mapClientServToDTO(clientServ))
+                .map(ClientServDTOMapper::mapToClientServDTO)
                 .collect(Collectors.toList());
     }
 
 
-    public static ClientServDTO mapClientServToDTO(ClientServ clientServ) {
+    public static ClientServDTO mapToClientServDTO(ClientServ clientServ) {
         return ClientServDTO.builder()
                 .id(clientServ.getId())
                 .desc(clientServ.getDesc())
-                .item(mapToItemDTO(clientServ.getItem()))
-                .comment(mapToCommentDTO(clientServ.getComment()))
+                .commentDTO(mapToCommentDTO(clientServ.getComment()))
                 .build();
     }
 

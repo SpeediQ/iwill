@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ClientServDTO {
+public class ClientCardDTO {
     private long id;
     private String desc;
-    private CommentDTO commentDTO;
 }
