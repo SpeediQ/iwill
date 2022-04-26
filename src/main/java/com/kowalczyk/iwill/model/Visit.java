@@ -14,10 +14,10 @@ import java.util.List;
 @Data
 public class Visit {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String desc;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "CLIENTCARD_ID")
     private ClientCard clientCard;
     @OneToMany(fetch = FetchType.EAGER,

@@ -20,11 +20,18 @@ public class VisitController {
     private VisitService service;
     private static final Logger logger = LoggerFactory.getLogger(VisitService.class);
 
+    public VisitController(VisitService service) {
+        this.service = service;
+    }
 
     @GetMapping("/v")
     public ResponseEntity<List<VisitDTO>> getVisits() {
         logger.warn("Exposing all Visits");
         return ResponseEntity.ok(mapToVisitDTOList(service.getVisits()));
+    }
+    @GetMapping("/vbc/{id}")
+    public ResponseEntity<List<VisitDTO>> getVisitsByClientCardId(@PathVariable Long id) {
+        return ResponseEntity.ok(mapToVisitDTOList(service.getVisitByClientCardId(id)));
     }
 
     @GetMapping("/v/{id}")
@@ -34,7 +41,7 @@ public class VisitController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/v/{id}")
+    @PostMapping("/v")
     public ResponseEntity<Visit> addVisit(@RequestBody VisitDTO visitDTO) {
         Visit result = service.addVisit(mapToVisit(visitDTO));
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);

@@ -67,6 +67,7 @@ public class Start {
                 .clientServs(Collections.singletonList(clientServ))
                 .build();
 
+
         visitService.addVisit(visit);
 
         clientServ.setVisit(visit);
@@ -82,6 +83,11 @@ public class Start {
         visit.setClientCard(clientCard);
         visitService.updateVisit(visit);
 
+        Visit visit3 = Visit.builder()
+                .desc("Wizyta klienta - posiada listę usług3")
+                .clientCard(clientCard)
+                .build();
+
 
         Client client = Client.builder()
                 .firstname("Marcin")
@@ -96,6 +102,7 @@ public class Start {
 
         clientCard.setDesc("try");
         clientCardService.updateClientCard(clientCard);
+        visitService.addVisit(visit3);
 
 
         Optional<Visit> itemById = visitService.getVisitById(1L);
