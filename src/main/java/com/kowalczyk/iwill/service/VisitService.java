@@ -18,6 +18,9 @@ public class VisitService {
     public List<Visit> getVisits() {
         return repository.findAll();
     }
+    public List<Visit> getVisitByClientCardId(Long id) {
+        return repository.findAllByClientCard_Id(id);
+    }
 
     public Visit addVisit(Visit body) {
         return repository.save(body);
@@ -30,4 +33,6 @@ public class VisitService {
     public Optional<Visit> getVisitById(Long id) {
         return repository.findById(id);
     }
+
+
 }
