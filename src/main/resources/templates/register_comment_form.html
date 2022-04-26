@@ -30,15 +30,13 @@
 <div align="center">
     <h1>Create Comment</h1>
     <form action="#" th:action="@{/registerComment}" method="post" th:object="${comment}">
-        <label>Title:</label>
-        <input type="text" th:field="*{title}" /><br/>
+        <label>Item:</label>
+        <select th:field="*{item}">
+            <option th:each="p : ${items}" th:field="*{item}" th:value="${p.id}" th:text="${p.title}" />
+        </select><br/>
 
         <label>Description:</label>
-        <textarea rows="5" cols="25" th:field="*{desc}"></textarea>
-
-        <label>Price:</label>
-        <input type="text" th:field="*{price}" /><br/>
-        <br/>
+        <textarea rows="5" cols="25" th:field="*{desc}"></textarea><br>
 
         <button type="submit">Register</button>
     </form>

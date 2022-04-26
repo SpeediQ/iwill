@@ -39,13 +39,10 @@ public class CommentFrontEndController {
         return "register_comment_form";
     }
 
-//    @PostMapping("/registerClient")
-//    public String submitForm(@ModelAttribute("client") Client client) {
-//        client.addDefaultClientCardToClient();
-//        ClientCard clientCard = client.getClientCard();
-////        clientService.addClient(client);
-//        clientCardService.addClientCard(clientCard);
-//        return "register_comment_success";
-//    }
+    @PostMapping("/registerComment")
+    public String submitForm(@ModelAttribute("comment") Comment comment) {
+        commentService.addComment(comment);
+        return "register_comment_success";
+    }
 
 }

@@ -30,13 +30,13 @@
 <div align="center">
     <h1>User Registration</h1>
     <form action="#" th:action="@{/registerClient}" method="post" th:object="${client}">
-        <label>Imie:</label>
+        <label>Firstname:</label>
         <input type="text" th:field="*{firstname}" /><br/>
 
-        <label>Nazwisko:</label>
+        <label>LastName:</label>
         <input type="text" th:field="*{lastname}" /><br/>
 
-        <label>Opis:</label>
+        <label>Desc:</label>
         <textarea rows="5" cols="25" th:field="*{desc}"></textarea>
         <br/>
 
