@@ -19,13 +19,18 @@ public class ClientDTOMapper {
 
 
     public static ClientDTO mapToClientDTO(Client client) {
-        return ClientDTO.builder()
+        ClientDTO clientDTO = ClientDTO.builder()
                 .id(client.getId())
                 .firstname(client.getFirstname())
                 .lastname(client.getLastname())
                 .desc(client.getDesc())
-                .clientCardDTO(mapToClientCardDTO(client.getClientCard()))
                 .build();
+
+        if (client.getClientCard() != null){
+            clientDTO.setClientCardDTO(mapToClientCardDTO(client.getClientCard()));
+        }
+
+        return clientDTO;
     }
 
 

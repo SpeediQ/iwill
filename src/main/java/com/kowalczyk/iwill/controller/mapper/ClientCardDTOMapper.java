@@ -21,7 +21,6 @@ public class ClientCardDTOMapper {
         return ClientCardDTO.builder()
                 .id(clientCard.getId())
                 .desc(clientCard.getDesc())
-//                .visitDTOS(mapVisitToDTOList(clientCard.getVisits()))
                 .build();
     }
 
