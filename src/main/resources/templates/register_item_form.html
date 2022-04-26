@@ -28,16 +28,16 @@
 </head>
 <body>
 <div align="center">
-    <h1>User Registration</h1>
-    <form action="#" th:action="@{/register}" method="post" th:object="${client}">
-        <label>Imie:</label>
-        <input type="text" th:field="*{firstname}" /><br/>
+    <h1>Create Item</h1>
+    <form action="#" th:action="@{/registerItem}" method="post" th:object="${item}">
+        <label>Title:</label>
+        <input type="text" th:field="*{title}" /><br/>
 
-        <label>Nazwisko:</label>
-        <input type="text" th:field="*{lastname}" /><br/>
-
-        <label>Opis:</label>
+        <label>Description:</label>
         <textarea rows="5" cols="25" th:field="*{desc}"></textarea>
+
+        <label>Price:</label>
+        <input type="text" th:field="*{price}" /><br/>
         <br/>
 
         <button type="submit">Register</button>

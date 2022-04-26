@@ -27,13 +27,10 @@ public class ItemFrontEndController {
         return "register_item_form";
     }
 
-//    @PostMapping("/register")
-//    public String submitForm(@ModelAttribute("client") Client client) {
-//        ClientCard clientCard = new ClientCard();
-//        client.setClientCard(clientCard);
-//        clientCardService.addClientCard(clientCard);
-//        clientService.addClient(client);
-//        return "register_item_success";
-//    }
+    @PostMapping("/registerItem")
+    public String submitForm(@ModelAttribute("item") Item item) {
+       itemService.addItem(item);
+        return "register_item_success";
+    }
 
 }

@@ -25,4 +25,12 @@ public class Client {
     public Client() {
     }
 
+    public void addDefaultClientCardToClient(){
+        if (this.getClientCard() == null){
+            ClientCard clientCard = new ClientCard();
+            clientCard.setClient(this);
+            this.setClientCard(clientCard);
+        }
+    }
+
 }
