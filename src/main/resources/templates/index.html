@@ -1,13 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Index</title>
+    <meta charset="ISO-8859-1">
+    <title>Main Screen</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" />
 </head>
 <body>
-    <div align="center">
-        <h1>Spring Boot Form Demo</h1>
-        <a href="/register">Click here to register</a>
+    <div class="container text-center">
+        <div><h1>Welcome - Main Screen</h1></div><br/>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/visits}">List Visits</a>
+        </div>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/visits/new}">Create Visit</a>
+        </div>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/clientservs}">List Client Services</a>
+        </div>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/clientservs/new}">Create Client Service</a>
+        </div>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/comments}">List Comments</a>
+        </div>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/comments/new}">Create Comment</a>
+        </div>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/items}">List Items</a>
+        </div>
+        <div class="p-2">
+            <a class= "h2" th:href="@{/items/new}">Create Item</a>
+        </div>
     </div>
 </body>
 </html>

@@ -1,31 +1,62 @@
-package com.kowalczyk.iwill.model;
-
-import lombok.Builder;
-import lombok.Data;
-import lombok.experimental.Tolerate;
+package  com.kowalczyk.iwill.model;
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "visits")
-@Builder
-@Data
 public class Visit {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-    private String desc;
-    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @JoinColumn(name = "CLIENTCARD_ID")
-    private ClientCard clientCard;
-    @OneToMany(fetch = FetchType.EAGER,
-            mappedBy = "visit",
-            cascade = CascadeType.MERGE)
-    private List<ClientServ> clientServs = new LinkedList<ClientServ>();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    @Tolerate
+    @Column(name = "DESCRIPTION")
+    private String desc;
+
+    @OneToMany(mappedBy = "visit")
+    private Set<ClientServ> clientServSet = new HashSet<>();
+
     public Visit() {
+    }
+
+    public Visit(String desc) {
+        this.desc = desc;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public Set<ClientServ> getClientServSet() {
+        return clientServSet;
+    }
+
+    public void setClientServSet(Set<ClientServ> clientServSet) {
+        this.clientServSet = clientServSet;
+    }
+
+    @Override
+    public String toString() {
+        return "Visit{" +
+                "id=" + id +
+                ", desc='" + desc + '\'' +
+                ", clientServSet=" + clientServSet +
+                '}';
+    }
+
+    public String shortName(){
+        return "Wizyta: "+ this.getDesc();
     }
 }
