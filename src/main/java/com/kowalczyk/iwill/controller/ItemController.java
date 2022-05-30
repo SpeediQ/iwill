@@ -1,46 +1,55 @@
 package com.kowalczyk.iwill.controller;
 
-import com.kowalczyk.iwill.controller.dto.ItemDTO;
+
+import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Item;
-import com.kowalczyk.iwill.service.ItemService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.kowalczyk.iwill.model.Visit;
+import com.kowalczyk.iwill.repository.ClientServRepository;
+import com.kowalczyk.iwill.repository.ItemRepository;
+import com.kowalczyk.iwill.repository.VisitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
-import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapToItemDTO;
-import static com.kowalczyk.iwill.controller.mapper.ItemDTOMapper.mapToItemDTOList;
-import static com.kowalczyk.iwill.controller.mapper.ItemMapper.mapToItem;
-
-@RestController
+@Controller
 public class ItemController {
-    private ItemService service;
-    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
-    public ItemController(ItemService service) {
-        this.service = service;
+    @Autowired
+    private ItemRepository repository;
+
+    @GetMapping("/items")
+    public String listItems(Model model){
+        List<Item> listItems = repository.findAll();
+        model.addAttribute("listItems", listItems);
+        return "items";
     }
 
-    @GetMapping("/i")
-    public ResponseEntity<List<ItemDTO>> getItems() {
-        logger.warn("Exposing all Items");
-        return ResponseEntity.ok(mapToItemDTOList(service.getItems()));
+    @GetMapping("/items/new")
+    public String showItemNewForm(Model model){
+        model.addAttribute("item", new Item());
+        return "item_form";
     }
 
-    @GetMapping("/i/{id}")
-    ResponseEntity<ItemDTO> getItemById(@PathVariable Long id) {
-        return service.getItemById(id)
-                .map(body -> ResponseEntity.ok(mapToItemDTO(body)))
-                .orElse(ResponseEntity.notFound().build());
+    @PostMapping("/items/save")
+    public String saveItem(Item item){
+        repository.save(item);
+        return "redirect:/items";
     }
 
-    @PostMapping("/i/{id}")
-    public ResponseEntity<Item> addItem(@RequestBody ItemDTO itemDTO) {
-        Item result = service.addItem(mapToItem(itemDTO));
-        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+    @GetMapping("/items/edit/{id}")
+    public String showItemEditForm(@PathVariable("id") Integer id, Model model) {
+        Item item = repository.findById(id).get();
+        model.addAttribute("item", item);
+        return "item_form";
+
     }
+
 
 }

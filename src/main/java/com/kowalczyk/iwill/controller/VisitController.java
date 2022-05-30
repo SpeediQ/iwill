@@ -1,50 +1,75 @@
 package com.kowalczyk.iwill.controller;
 
-import com.kowalczyk.iwill.controller.dto.VisitDTO;
+
+
+import com.kowalczyk.iwill.model.ClientServ;
+import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
-import com.kowalczyk.iwill.service.VisitService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.kowalczyk.iwill.repository.ClientServRepository;
+import com.kowalczyk.iwill.repository.ItemRepository;
+import com.kowalczyk.iwill.repository.VisitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
-import static com.kowalczyk.iwill.controller.mapper.VisitDTOMapper.mapToVisitDTO;
-import static com.kowalczyk.iwill.controller.mapper.VisitDTOMapper.mapToVisitDTOList;
-import static com.kowalczyk.iwill.controller.mapper.VisitMapper.mapToVisit;
-
-@RestController
+@Controller
 public class VisitController {
-    private VisitService service;
-    private static final Logger logger = LoggerFactory.getLogger(VisitService.class);
 
-    public VisitController(VisitService service) {
-        this.service = service;
+    @Autowired
+    private VisitRepository visitRepository;
+    @Autowired
+    private ItemRepository itemRepository;
+
+    @GetMapping("/visits")
+    public String listVisits(Model model){
+        List<Visit> listVisits = visitRepository.findAll();
+        model.addAttribute("listVisits", listVisits);
+        return "visits";
     }
 
-    @GetMapping("/v")
-    public ResponseEntity<List<VisitDTO>> getVisits() {
-        logger.warn("Exposing all Visits");
-        return ResponseEntity.ok(mapToVisitDTOList(service.getVisits()));
-    }
-    @GetMapping("/vbc/{id}")
-    public ResponseEntity<List<VisitDTO>> getVisitsByClientCardId(@PathVariable Long id) {
-        return ResponseEntity.ok(mapToVisitDTOList(service.getVisitByClientCardId(id)));
+    @GetMapping("/visits/new")
+    public String showVisitNewForm(Model model){
+        model.addAttribute("visit", new Visit());
+        return "visit_form";
     }
 
-    @GetMapping("/v/{id}")
-    ResponseEntity<VisitDTO> getVisitById(@PathVariable Long id) {
-        return service.getVisitById(id)
-                .map(body -> ResponseEntity.ok(mapToVisitDTO(body)))
-                .orElse(ResponseEntity.notFound().build());
+    @PostMapping(value = "/visits/save", params = "add")
+    public String saveVisit(Visit visit, Model model){
+        addNewClientServToVisit(visit, model);
+        return "clientserv_form";
+    }
+    @PostMapping(value = "/visits/save", params = "submit")
+    public String addVisit(Visit visit, Model model){
+        addNewClientServToVisit(visit, model);
+        return "visits";
     }
 
-    @PostMapping("/v")
-    public ResponseEntity<Visit> addVisit(@RequestBody VisitDTO visitDTO) {
-        Visit result = service.addVisit(mapToVisit(visitDTO));
-        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+    private void addNewClientServToVisit(Visit visit, Model model) {
+        List<Item> listItems = itemRepository.findAll();
+        ClientServ newClientServ = new ClientServ(visit);
+        model.addAttribute("clientserv", newClientServ);
+        model.addAttribute("listItems", listItems);
+        visitRepository.save(visit);
+    }
+
+
+
+    @GetMapping("/visits/edit/{id}")
+    public String showClientServEditForm(@PathVariable("id") Integer id, Model model) {
+        Visit visit = visitRepository.findById(id).get();
+        Set<ClientServ> clientServSet = visit.getClientServSet();
+
+        model.addAttribute("visit", visit);
+        model.addAttribute("clientServSet", clientServSet);
+        return "visit_form";
+
     }
 
 

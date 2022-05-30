@@ -1,47 +1,58 @@
 package com.kowalczyk.iwill.controller;
 
-import com.kowalczyk.iwill.controller.dto.CommentDTO;
+
+import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Comment;
-import com.kowalczyk.iwill.service.CommentService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.kowalczyk.iwill.model.Item;
+import com.kowalczyk.iwill.model.Visit;
+import com.kowalczyk.iwill.repository.ClientServRepository;
+import com.kowalczyk.iwill.repository.CommentRepository;
+import com.kowalczyk.iwill.repository.ItemRepository;
+import com.kowalczyk.iwill.repository.VisitRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Set;
 
-import static com.kowalczyk.iwill.controller.mapper.CommentDTOMapper.mapToCommentDTO;
-import static com.kowalczyk.iwill.controller.mapper.CommentDTOMapper.mapToCommentDTOList;
-import static com.kowalczyk.iwill.controller.mapper.CommentMapper.mapToComment;
-
-@RestController
+@Controller
 public class CommentController {
-    private CommentService service;
-    private static final Logger logger = LoggerFactory.getLogger(CommentService.class);
 
+    @Autowired
+    private CommentRepository commentRepository;
 
-    public CommentController(CommentService service) {
-        this.service = service;
+    @GetMapping("/comments")
+    public String listVisits(Model model){
+        List<Comment> listComment = commentRepository.findAll();
+        model.addAttribute("listComment", listComment);
+        return "comments";
     }
 
-    @GetMapping("/cm")
-    public ResponseEntity<List<CommentDTO>> getComments() {
-        logger.warn("Exposing all Comments");
-        return ResponseEntity.ok(mapToCommentDTOList(service.getComments()));
+    @GetMapping("/comments/new")
+    public String showVisitNewForm(Model model){
+        model.addAttribute("comment", new Comment());
+        return "comment_form";
     }
 
-    @GetMapping("/cm/{id}")
-    ResponseEntity<CommentDTO> getCommentById(@PathVariable Long id) {
-        return service.getCommentById(id)
-                .map(body -> ResponseEntity.ok(mapToCommentDTO(body)))
-                .orElse(ResponseEntity.notFound().build());
+    @PostMapping("/comments/save")
+    public String saveVisit(Comment comment){
+        commentRepository.save(comment);
+        return "redirect:/comments";
     }
 
-    @PostMapping("/cm/{id}")
-    public ResponseEntity<Comment> addComment(@RequestBody CommentDTO commentDTO) {
-        Comment result = service.addComment(mapToComment(commentDTO));
-        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+    @GetMapping("/comments/edit/{id}")
+    public String showClientServEditForm(@PathVariable("id") Integer id, Model model) {
+        Comment comment = commentRepository.findById(id).get();
+        model.addAttribute("comment", comment);
+        return "comment_form";
+
     }
+
+
 
 }

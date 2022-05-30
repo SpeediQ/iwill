@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>List Comments</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div class="container text-center">
+        <div><h1>List Comments</h1></div><br/>
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                    <th>ID</th>
+                    <th>DESC</th>
+                    <th>NAME</th>
+                    <th>VALUE</th>
+                <th></th>
+                </thead>
+                <tbody>
+                    <th:block th:each="comment : ${listComment}">
+                    <tr>
+                        <td>[[${comment.id}]]</td>
+                        <td>[[${comment.desc}]]</td>
+                        <td>[[${comment.name}]]</td>
+                        <td>[[${comment.value}]]</td>
+                        <td>
+                            <a th:href="@{'/comments/edit/' + ${comment.id}}">Edit</a>
+                        </td>
+
+                    </tr>
+                    </th:block>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>

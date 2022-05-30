@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Create Client Services</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div class="container text-center">
+        <div th:if="${id == null}"><h1>Create New Client Services</h1></div><br/>
+        <div th:unless="${id == null}"><h1>Edit New Client Services</h1></div><br/>
+
+        <form th:action="@{/clientservs/save}" th:object="${clientserv}" method="post" style="max-width: 300px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${clientserv.id}" />
+<!--            <input type="hidden" name ="visitId" th:field="*{clientserv.}" th:value="${clientserv.id}" />-->
+<!--            <input type="text" name="value" class="form-control"/>-->
+        <div>
+            <div class="form-group row">
+                <label>Client Service desc: </label>
+                <div>
+                    <input type="text" th:field="*{desc}" class="form-control"/>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div>
+                <div class="form-group row">
+                    <label>Client Service Visit: </label>
+                    <div>
+                       <select th:field="*{visit}" class="form-control">
+
+                               <option th:text="${visit.desc}" th:value="${visit.id}"/>
+
+                       </select>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+<!--                <th:block th:unless="${clientserv.comment == null}">-->
+<!--                    <div>-->
+<!--                        <label>Comment #1</label>-->
+<!--                        <div>-->
+<!--                            <input type="text" name="name" th:value="${clientserv.comment.name}" th:class="form-control"/>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <input type="text" name="value" th:value="${clientserv.comment.value}" class="form-control"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="form-group row">-->
+<!--                        <label>Item: </label>-->
+<!--                        <div>-->
+<!--                            <select th:field="*{comment.item}" class="form-control">-->
+<!--                                <th:block th:each="item : ${listItems}">-->
+<!--                                    <option th:text="${item.name}" th:value="${item.id}"/>-->
+<!--                                </th:block>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div>-->
+<!--                            <p th:text="${clientserv}"/>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </th:block>-->
+
+                <th:block th:unless="${clientserv.comment == null}">
+                <div>
+                    <div class="form-group row">
+                        <label>Item: </label>
+                        <div>
+                            <select th:field="*{comment.item}" class="form-control">
+                                <th:block th:each="item : ${listItems}">
+                                    <option th:text="${item.name}" th:value="${item.id}"/>
+                                </th:block>
+                            </select>
+                        </div>
+                        <div>
+<!--                            <button type="submit" name="CopyDefaultPrice" value="Submit" class="btn btn-primary">Copy Default Price</button>-->
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label>Detail Desc</label>
+                    <div>
+                        <input type="text" name="name" class="form-control"/>
+                    </div>
+                    <label>Price</label>
+                    <div>
+                        <input type="text" name="value" class="form-control"/>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" name="submit" value="Submit" class="btn btn-primary">Save</button>
+                </div>
+
+                <div>
+                    <button type="submit" name="change" value="Change" class="btn btn-primary">Change Item</button>
+                </div>
+
+                </th:block>
+            </div>
+            <th:block th:if="${clientserv.comment == null}">
+                <div>
+                    <button type="submit" name="addItem" value="AddItem" class="btn btn-primary">Set Item</button>
+                </div>
+            </th:block>
+        </div>
+
+
+        </form>
+    </div>
+</body>
+</html>

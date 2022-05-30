@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Create Visit</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div class="container text-center">
+        <div><h1>Create New Visit</h1></div><br/>
+        <form th:action="@{/visits/save}" th:object="${visit}" method="post" style="max-width: 300px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${visit.id}" />
+
+            <div>
+            <div class="form-group row">
+                <label>Visit desc: </label>
+                <div>
+                    <input type="text" th:field="*{desc}" class="form-control" required />
+                </div>
+            </div>
+           <th:block th:unless="${visit.getClientServSet().size() == 0}">
+           <div class="form-group row">
+               <label>Services: </label>
+
+               <table class="table table-bordered">
+                   <thead>
+                   <th>SERVICE DESC</th>
+                   <th>COMMENT NAME</th>
+                   <th>COMMENT VALUE</th>
+                   <th>ACTION</th>
+                   </thead>
+                   <tbody>
+                   <th:block th:each="clientServ : ${clientServSet}">
+                       <tr>
+                           <td>[[${clientServ.desc}]]</td>
+                           <td>[[${clientServ.comment.name}]]</td>
+                           <td>[[${clientServ.comment.value}]]</td>
+                           <td>
+                               <a th:href="@{'/clientservs/edit/' + ${clientServ.id}}">Edit</a>
+                               &nbsp;
+                               <a th:href="@{'/clientservs/delete/' + ${clientServ.id}}">Delete</a>
+
+                           </td>
+                       </tr>
+                   </th:block>
+                   </tbody>
+               </table>
+           </div>
+           </th:block>
+
+        </div>
+        <div>
+            <th:block th:unless="${clientServSet == null}">
+                <button type="submit" name="submit" value="Submit" class="btn btn-primary">Save</button>
+            </th:block>
+
+            <button type="submit" name="add" value="Add" class="btn btn-primary">Add New Services to Visit</button>
+
+        </div>
+        </form>
+    </div>
+</body>
+</html>
