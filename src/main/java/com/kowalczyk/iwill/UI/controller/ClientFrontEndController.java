@@ -39,7 +39,6 @@ public class ClientFrontEndController {
     public String submitForm(@ModelAttribute("client") Client client) {
         client.addDefaultClientCardToClient();
         ClientCard clientCard = client.getClientCard();
-//        clientService.addClient(client);
         clientCardService.addClientCard(clientCard);
         return "register_client_success";
     }

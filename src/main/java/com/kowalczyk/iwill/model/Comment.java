@@ -7,7 +7,7 @@ import lombok.experimental.Tolerate;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "coments")
+@Table(name = "comments")
 @Builder
 @Data
 public class Comment {

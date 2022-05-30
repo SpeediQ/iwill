@@ -33,17 +33,16 @@
 </head>
 <body>
 <div align="center">
-    <h1>User Registration</h1>
-    <form action="#" th:action="@{/registerClient}" method="post" th:object="${client}">
-        <label>Firstname:</label>
-        <input type="text" th:field="*{firstname}" /><br/>
+    <h1>Visit Registration</h1>
+    <form action="#" th:action="@{/registerVisit}" method="post" th:object="${visit}">
 
-        <label>LastName:</label>
-        <input type="text" th:field="*{lastname}" /><br/>
+        <label>ClientCard:</label>
+        <select th:field="*{clientCard}">
+            <option th:each="p : ${clientCards}" th:value="${p.id}" th:text="${p.client.getFullName()}" />
+        </select><br/>
+        <label>Description:</label>
+        <textarea rows="5" cols="25" th:field="*{desc}"></textarea><br>
 
-        <label>Desc:</label>
-        <textarea rows="5" cols="25" th:field="*{desc}"></textarea>
-        <br/>
 
         <button type="submit">Register</button>
     </form>

@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "services")
-@Data
+
 @Builder
 public class ClientServ {
     @Id
@@ -22,7 +22,54 @@ public class ClientServ {
     @JoinColumn(name = "VISIT_ID")
     private Visit visit;
 
-    @Tolerate
+    public ClientServ(long id, String desc, Comment comment, Visit visit) {
+        this.id = id;
+        this.desc = desc;
+        this.comment = comment;
+        this.visit = visit;
+    }
+
     public ClientServ() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
+    }
+
+    public Visit getVisit() {
+        return visit;
+    }
+
+    public void setVisit(Visit visit) {
+        this.visit = visit;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientServ{" +
+                "id=" + id +
+                ", desc='" + desc + '\'' +
+                ", visit=" + visit +
+                '}';
     }
 }
