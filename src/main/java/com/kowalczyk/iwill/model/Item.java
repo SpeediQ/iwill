@@ -55,4 +55,8 @@ public class Item {
     public String toString() {
         return desc;
     }
+
+    public String niceString(){
+        return "Name: "+ name+" ; Desc: "+desc+" ; Value: "+value;
+    }
 }

@@ -69,6 +69,7 @@
 
     <script th:inline="javascript">
         var items = /*[[${listItems}]]*/ 'item';
+        var idVisit = [[${idVisit}]] ;
         // var myData = [[${idd}]];
 
         $('#txtSearch').on('keyup',function(){
@@ -114,7 +115,7 @@
                                 <td>${data[i].desc}</td>
                                 <td>${data[i].value}</td>
                                 <td>
-                                    <a href="/csitem/${idd}">Choose</a>
+                                    <a href="/csitem/${idd}/${idVisit}">Choose</a>
                                 </td>
 
                            </tr>`

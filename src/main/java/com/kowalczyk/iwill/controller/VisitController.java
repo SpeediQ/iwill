@@ -3,6 +3,7 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.ClientServ;
+import com.kowalczyk.iwill.model.Comment;
 import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ClientServRepository;
@@ -43,7 +44,14 @@ public class VisitController {
     @PostMapping(value = "/visits/save", params = "add")
     public String saveVisit(Visit visit, Model model){
         addNewClientServToVisit(visit, model);
-        return "clientserv_form";
+        visitRepository.save(visit);
+        int idVisit = visit.getId();
+        model.addAttribute("idVisit", idVisit);
+        model.addAttribute("item", new Item());
+//        model.addAttribute("idd", "idd");
+
+
+        return "itemsss";
     }
     @PostMapping(value = "/visits/save", params = "submit")
     public String addVisit(Visit visit, Model model){
@@ -53,10 +61,10 @@ public class VisitController {
 
     private void addNewClientServToVisit(Visit visit, Model model) {
         List<Item> listItems = itemRepository.findAll();
-        ClientServ newClientServ = new ClientServ(visit);
-        model.addAttribute("clientserv", newClientServ);
+//        ClientServ newClientServ = new ClientServ(visit);
+//        model.addAttribute("clientserv", newClientServ);
         model.addAttribute("listItems", listItems);
-        visitRepository.save(visit);
+
     }
 
 

@@ -6,6 +6,7 @@ import com.kowalczyk.iwill.model.Comment;
 import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ClientServRepository;
+import com.kowalczyk.iwill.repository.CommentRepository;
 import com.kowalczyk.iwill.repository.ItemRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ClientServController {
 
     @Autowired
     private VisitRepository visitRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -64,6 +68,22 @@ public class ClientServController {
         model.addAttribute("clientServSet", clientServSet);
         return "visit_form";
     }
+
+    @PostMapping(value = "/newcs/save")
+    public String saveNewClientServ(ClientServ clientServ, HttpServletRequest request, Model model){
+
+        Visit visit = clientServ.getVisit();
+        visit.getClientServSet().add(clientServ);
+        Set<ClientServ> clientServSet = visit.getClientServSet();
+        model.addAttribute("visit", visit);
+        model.addAttribute("clientServSet", clientServSet);
+
+
+        return "visit_form";
+    }
+
+
+
     @PostMapping(value = "/clientservs/save", params = "addItem")
     public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model, String keyword){
         List<Item> listItems = itemRepository.findAll();
@@ -87,11 +107,19 @@ public class ClientServController {
         return "clientserv_form";
     }
 
-    @GetMapping(value = "/csitem/{id}")
-    public String newCsWithItem(@PathVariable("id") Integer id, Model model){
-        Item item = itemRepository.findById(id).get();
-        model.addAttribute("clientserv", new ClientServ());
+    @GetMapping(value = "/csitem/{idItem}/{idVisit}")
+    public String newCsWithItem(@PathVariable("idItem") Integer idItem,@PathVariable("idVisit") Integer idVisit, Model model){
+        Visit visit = visitRepository.findById(idVisit).get();
+        Item item = itemRepository.findById(idItem).get();
+        ClientServ clientServ = new ClientServ(visit);
+        Comment comment = new Comment(clientServ, item);
+        clientServ.setComment(comment);
+        visit.getClientServSet().add(clientServ);
+
+        model.addAttribute("comment", comment);
+        model.addAttribute("clientServ", clientServ);
         model.addAttribute("item", item);
+        model.addAttribute("visit", visit);
 
         return "newcs_form";
     }
