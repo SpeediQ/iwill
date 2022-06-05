@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Create Client Services</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div class="container text-center">
+
+
+        <form th:action="@{/clientservs/save}" th:object="${clientserv}" method="post" style="max-width: 300px; margin: 0 auto;">
+
+        </form>
+    </div>
+</body>
+</html>

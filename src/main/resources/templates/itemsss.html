@@ -4,30 +4,32 @@
     <meta charset="ISO-8859-1">
     <title>List Visits</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
     <div class="container text-center">
         <div><h1>List Items</h1></div><br/>
         <div>
-            <table class="table table-bordered">
+            <input id="txtSearch" type="text" name="txtSearch">
+        </div>
+        <div>
+            <table id="itemsTable" class="table table-bordered">
                 <thead>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Value</th>
                     <th>Desc</th>
+                    <th>Value</th>
                     <th></th>
                 </thead>
                 <tbody>
                     <th:block th:each="item : ${listItems}">
                     <tr>
                         <td>[[${item.id}]]</td>
-
                         <td>[[${item.name}]]</td>
-                        <td>[[${item.value}]]</td>
                         <td>[[${item.desc}]]</td>
+                        <td>[[${item.value}]]</td>
                         <td>
-                            <a th:href="@{'/clientservs/finishing/' + ${item.id}}">Choose</a>
-                            <a th:href="@{'/items/edit/' + ${item.id}}">Edit</a>
+                            <a th:href="@{'/csitem/' + ${item.id}}">Choose</a>
                         </td>
 
                     </tr>
@@ -37,5 +39,125 @@
         </div>
 
     </div>
+    <input type="hidden" name="name" id="myData" class="form-control"/>
+    <div><h1>Create new Item</h1></div><br/>
+    <form th:action="@{/csafteritem/}" th:object="${item}" method="post" style="max-width: 300px; margin: 0 auto;">
+        <div>
+            <div class="form-group row">
+                <label>Item name: </label>
+                <div>
+                    <input type="text" th:field="*{name}" class="form-control" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label>Item value: </label>
+                <div>
+                    <input type="text" th:field="*{value}" class="form-control" required />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label>Item desc: </label>
+                <div>
+                    <input type="text" th:field="*{desc}" class="form-control" required />
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" name="submit" value="Submit" class="btn btn-primary">Save</button>
+    </form>
+
+
+    <script th:inline="javascript">
+        var items = /*[[${listItems}]]*/ 'item';
+        // var myData = [[${idd}]];
+
+        $('#txtSearch').on('keyup',function(){
+            var value = $(this).val();
+
+            var data = FilterFunction(value, items);
+            rebuildTable(data);
+        });
+
+        function FilterFunction(value, data){
+            var filteredData = [];
+            for(var i = 0; i<data.length; i++){
+                value = value.toLowerCase();
+                var name = data[i].name.toLowerCase();
+                var desc = data[i].desc.toLowerCase();
+
+                if (name.includes(value) || desc.includes(value)){
+                    filteredData.push(data[i])
+                }
+            }
+            return filteredData;
+        }
+
+        function rebuildTable(data){
+            var table = document.getElementById('itemsTable')
+            console.log(table)
+            table.innerHTML=''
+            var titleRow = `<tr>
+                                <td><b>Id</b></td>
+                                <td><b>Name</b></td>
+                                <td><b>Desc</b></td>
+                                <td><b>Value</b></td>
+                                <td><b>Action</b></td>
+                           </tr>`
+                            table.innerHTML += titleRow;
+            for (var i = 0; i <data.length; i++){
+                var idd = data[i].id;
+
+                var row = `<tr>
+
+                                <td>${idd}</td>
+                                <td>${data[i].name}</td>
+                                <td>${data[i].desc}</td>
+                                <td>${data[i].value}</td>
+                                <td>
+                                    <a href="/csitem/${idd}">Choose</a>
+                                </td>
+
+                           </tr>`
+                            table.innerHTML += row
+            }
+            // prepare selected table - with searching
+            prepareSelectedTable("#itemsTable tr");
+        }
+        // prepare selected table - without searching
+        prepareSelectedTable("#itemsTable tr");
+
+
+
+
+
+
+        function prepareSelectedTable(tableName){
+            var elem = document.querySelectorAll(tableName);
+            for(var i=0;i<elem.length;i++){
+                bindMe(elem[i]);
+            }
+        }
+
+        function bindMe(elem){
+            elem.addEventListener("click", function(evt){
+                readValues(evt);
+                var table = document.getElementById('itemsTable')
+
+            });
+        }
+
+        function readValues(evt){
+            var elem = evt.target.parentElement.innerText;
+            console.log(elem);    //elem contains current tr element's data
+            document.getElementById("myData").textContent = elem;
+            console.log("tutaj" + name);
+
+        }
+
+
+
+
+
+    </script>
 </body>
 </html>

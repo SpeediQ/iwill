@@ -27,11 +27,17 @@ public class Comment {
     public Comment() {
     }
 
+    public Comment(ClientServ clientServ) {
+        this.clientServ = clientServ;
+    }
+
     public Comment(String name, String value, ClientServ clientServ) {
         this.name = name;
         this.value = value;
         this.clientServ = clientServ;
     }
+
+
 
     public Comment(String name, String value, ClientServ clientServ, Item item) {
         this.name = name;

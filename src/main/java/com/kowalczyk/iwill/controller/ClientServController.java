@@ -2,6 +2,7 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.ClientServ;
+import com.kowalczyk.iwill.model.Comment;
 import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ClientServRepository;
@@ -39,15 +40,7 @@ public class ClientServController {
         return "clientservs";
     }
 
-    @GetMapping("/clientservs/new")
-    public String showClientServNewForm(Model model) {
-        List<Visit> listVisits = visitRepository.findAll();
-        List<Item> listItems = itemRepository.findAll();
-        model.addAttribute("clientserv", new ClientServ());
-        model.addAttribute("listVisit", listVisits);
-        model.addAttribute("listItems", listItems);
-        return "clientserv_form";
-    }
+
 
     @GetMapping("/clientservs/new/{id}")
     public String showClientServNewFormForVisit(@PathVariable("id") Integer id, Model model) {
@@ -72,13 +65,37 @@ public class ClientServController {
         return "visit_form";
     }
     @PostMapping(value = "/clientservs/save", params = "addItem")
-    public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model){
+    public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model, String keyword){
         List<Item> listItems = itemRepository.findAll();
         model.addAttribute("listItems", listItems);
-        model.addAttribute("clientServDesc", clientServ.getDesc());
+        Comment comment = new Comment(clientServ);
+
+        comment.setItem(new Item());
+        model.addAttribute("comment", new Comment("dsacv"));
+        model.addAttribute("item", new Item());
+        model.addAttribute("idd", "idd");
 
         return "itemsss";
     }
+    @GetMapping("/clientservs/new")
+    public String showClientServNewForm(Model model) {
+        List<Visit> listVisits = visitRepository.findAll();
+        List<Item> listItems = itemRepository.findAll();
+        model.addAttribute("clientserv", new ClientServ());
+        model.addAttribute("listVisit", listVisits);
+        model.addAttribute("listItems", listItems);
+        return "clientserv_form";
+    }
+
+    @GetMapping(value = "/csitem/{id}")
+    public String newCsWithItem(@PathVariable("id") Integer id, Model model){
+        Item item = itemRepository.findById(id).get();
+        model.addAttribute("clientserv", new ClientServ());
+        model.addAttribute("item", item);
+
+        return "newcs_form";
+    }
+
 
     private void addCommentToClientServ(ClientServ clientServ, HttpServletRequest request) {
         String[] names = request.getParameterValues("name");
@@ -105,7 +122,14 @@ public class ClientServController {
         return "clientserv_form";
 
     }
-    @GetMapping("/clientservs/finishing/{id}")
+    @PostMapping(value = "/test")
+    public String myTest(HttpServletRequest request) {
+        String[] names = request.getParameterValues("myTest");
+        return "visit_form";
+    }
+
+
+    @GetMapping("/clientservs/finishing")
     public String showClientServEditForm(@PathVariable("id") Integer id, Model model) {
         ClientServ clientserv = clientServRepository.findById(id).get();
         model.addAttribute("clientserv", clientserv);
