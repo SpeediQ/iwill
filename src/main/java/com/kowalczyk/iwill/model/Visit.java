@@ -19,6 +19,16 @@ public class Visit {
     public Visit() {
     }
 
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public Visit(String desc) {
         this.desc = desc;
     }

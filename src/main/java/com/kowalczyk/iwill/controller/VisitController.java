@@ -1,12 +1,8 @@
 package com.kowalczyk.iwill.controller;
 
 
-
 import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Comment;
-import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
-import com.kowalczyk.iwill.repository.ClientServRepository;
 import com.kowalczyk.iwill.repository.ItemRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Set;
 
@@ -29,45 +24,33 @@ public class VisitController {
     private ItemRepository itemRepository;
 
     @GetMapping("/visits")
-    public String listVisits(Model model){
+    public String listVisits(Model model) {
         List<Visit> listVisits = visitRepository.findAll();
         model.addAttribute("listVisits", listVisits);
         return "visits";
     }
 
     @GetMapping("/visits/new")
-    public String showVisitNewForm(Model model){
+    public String showVisitNewForm(Model model) {
         model.addAttribute("visit", new Visit());
         return "visit_form";
     }
 
     @PostMapping(value = "/visits/save", params = "add")
-    public String saveVisit(Visit visit, Model model){
-        addNewClientServToVisit(visit, model);
+    public String saveVisit(Visit visit, Model model) {
         visitRepository.save(visit);
-        int idVisit = visit.getId();
-        model.addAttribute("idVisit", idVisit);
-        model.addAttribute("item", new Item());
-//        model.addAttribute("idd", "idd");
-
+        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("idVisit", visit.getId());
 
         return "itemsss";
     }
+
     @PostMapping(value = "/visits/save", params = "submit")
-    public String addVisit(Visit visit, Model model){
-        addNewClientServToVisit(visit, model);
+    public String addVisit(Visit visit, Model model) {
+        model.addAttribute("listVisits", visitRepository.findAll());
+        visitRepository.save(visit);
         return "visits";
     }
-
-    private void addNewClientServToVisit(Visit visit, Model model) {
-        List<Item> listItems = itemRepository.findAll();
-//        ClientServ newClientServ = new ClientServ(visit);
-//        model.addAttribute("clientserv", newClientServ);
-        model.addAttribute("listItems", listItems);
-
-    }
-
-
 
     @GetMapping("/visits/edit/{id}")
     public String showClientServEditForm(@PathVariable("id") Integer id, Model model) {

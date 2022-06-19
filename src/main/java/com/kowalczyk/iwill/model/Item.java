@@ -8,6 +8,8 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String title;
+
     @Column(name = "DESCRIPTION")
     private String desc;
 
@@ -17,6 +19,14 @@ public class Item {
 
 
     public Item() {
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getId() {

@@ -18,7 +18,16 @@ public class ClientServ {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "clientServ", cascade = CascadeType.ALL)
     private Comment comment;
 
+    private String title;
+
+
+
     public ClientServ() {
+    }
+
+
+    public ClientServ(Comment comment) {
+        this.comment = comment;
     }
 
     public ClientServ(Visit visit) {
@@ -47,6 +56,14 @@ public class ClientServ {
 
     public void setVisit(Visit visit) {
         this.visit = visit;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

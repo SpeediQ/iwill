@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -44,48 +45,30 @@ public class ClientServController {
         return "clientservs";
     }
 
+    @GetMapping(value = "/cs/new/{idItem}/{idVisit}")
+    public String newCS(@PathVariable("idItem") Integer idItem, @PathVariable("idVisit") Integer idVisit, Model model) {
+        Visit visit;
+        Item item;
+        ClientServ clientServ;
 
 
-    @GetMapping("/clientservs/new/{id}")
-    public String showClientServNewFormForVisit(@PathVariable("id") Integer id, Model model) {
-        Visit visit = visitRepository.findById(id).get();
-        List<Visit> listVisits = visitRepository.findAll();
-        List<Item> listItems = itemRepository.findAll();
-        model.addAttribute("clientserv", new ClientServ());
-        model.addAttribute("listVisit", listVisits);
-        model.addAttribute("listItems", listItems);
-        model.addAttribute("visit", visit);
-        return "clientserv_form";
+        if (idVisit != null && idVisit > 0) {
+            visit = visitRepository.getById(idVisit);
+            model.addAttribute("visit", visit);
+        }
+        if (idItem != null && idItem > 0) {
+            item = itemRepository.getById(idItem);
+            clientServ = new ClientServ(new Comment(item));
+            model.addAttribute("item", item);
+            model.addAttribute("clientServ", clientServ);
+        }
+
+
+        return "cs_form";
     }
-
-    @PostMapping(value = "/clientservs/save", params = "submit")
-    public String saveClientServ(ClientServ clientServ, HttpServletRequest request, Model model){
-        addCommentToClientServ(clientServ, request);
-        clientServRepository.save(clientServ);
-        Visit visit = clientServ.getVisit();
-        Set<ClientServ> clientServSet = visit.getClientServSet();
-        model.addAttribute("visit", visit);
-        model.addAttribute("clientServSet", clientServSet);
-        return "visit_form";
-    }
-
-    @PostMapping(value = "/newcs/save")
-    public String saveNewClientServ(ClientServ clientServ, HttpServletRequest request, Model model){
-
-        Visit visit = clientServ.getVisit();
-        visit.getClientServSet().add(clientServ);
-        Set<ClientServ> clientServSet = visit.getClientServSet();
-        model.addAttribute("visit", visit);
-        model.addAttribute("clientServSet", clientServSet);
-
-
-        return "visit_form";
-    }
-
-
 
     @PostMapping(value = "/clientservs/save", params = "addItem")
-    public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model, String keyword){
+    public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model, String keyword) {
         List<Item> listItems = itemRepository.findAll();
         model.addAttribute("listItems", listItems);
         Comment comment = new Comment(clientServ);
@@ -97,68 +80,9 @@ public class ClientServController {
 
         return "itemsss";
     }
-    @GetMapping("/clientservs/new")
-    public String showClientServNewForm(Model model) {
-        List<Visit> listVisits = visitRepository.findAll();
-        List<Item> listItems = itemRepository.findAll();
-        model.addAttribute("clientserv", new ClientServ());
-        model.addAttribute("listVisit", listVisits);
-        model.addAttribute("listItems", listItems);
-        return "clientserv_form";
-    }
-
-    @GetMapping(value = "/csitem/{idItem}/{idVisit}")
-    public String newCsWithItem(@PathVariable("idItem") Integer idItem,@PathVariable("idVisit") Integer idVisit, Model model){
-        Visit visit = visitRepository.findById(idVisit).get();
-        Item item = itemRepository.findById(idItem).get();
-        ClientServ clientServ = new ClientServ(visit);
-        Comment comment = new Comment(clientServ, item);
-        clientServ.setComment(comment);
-        visit.getClientServSet().add(clientServ);
-
-        model.addAttribute("comment", comment);
-        model.addAttribute("clientServ", clientServ);
-        model.addAttribute("item", item);
-        model.addAttribute("visit", visit);
-
-        return "newcs_form";
-    }
-
-
-    private void addCommentToClientServ(ClientServ clientServ, HttpServletRequest request) {
-        String[] names = request.getParameterValues("name");
-        String[] values = request.getParameterValues("value");
-
-        Item item = clientServ.getComment().getItem();
-//        clientServ.getVisit().getId()
-
-        for (int i = 0; i < names.length; i++) {
-            clientServ.addComment(names[i], values[i], item);
-        }
-    }
 
     @GetMapping("/clientservs/edit/{id}")
     public String showFinishingForm(@PathVariable("id") Integer id, Model model) {
-        ClientServ clientserv = clientServRepository.findById(id).get();
-        model.addAttribute("clientserv", clientserv);
-
-        List<Item> listItems = itemRepository.findAll();
-        model.addAttribute("listItems", listItems);
-
-        List<Visit> listVisits = visitRepository.findAll();
-        model.addAttribute("listVisit", listVisits);
-        return "clientserv_form";
-
-    }
-    @PostMapping(value = "/test")
-    public String myTest(HttpServletRequest request) {
-        String[] names = request.getParameterValues("myTest");
-        return "visit_form";
-    }
-
-
-    @GetMapping("/clientservs/finishing")
-    public String showClientServEditForm(@PathVariable("id") Integer id, Model model) {
         ClientServ clientserv = clientServRepository.findById(id).get();
         model.addAttribute("clientserv", clientserv);
 
@@ -176,6 +100,27 @@ public class ClientServController {
         clientServRepository.deleteById(id);
         return "redirect:/clientservs";
 
+    }
+
+    @PostMapping(value = "/cs/save")
+    public String saveCS(ClientServ clientServ, HttpServletRequest request, Model model) {
+        int visitId = Integer.parseInt(request.getParameter("visitId"));
+        int itemId = Integer.parseInt(request.getParameter("itemId"));
+        Visit visit = visitRepository.getById(visitId);
+        Comment comment = clientServ.getComment();
+        comment.setItem(itemRepository.getById(itemId));
+        comment.setTitle(clientServ.getTitle());
+        comment.setDesc(clientServ.getDesc());
+        comment.setClientServ(clientServ);
+        clientServ.setVisit(visit);
+        clientServRepository.save(clientServ);
+        visit.getClientServSet().add(clientServ);
+        Set<ClientServ> clientServSet = visit.getClientServSet();
+        visitRepository.save(visit);
+        model.addAttribute("visit", visit);
+        model.addAttribute("clientServSet", clientServSet);
+
+        return "visit_form";
     }
 
 }

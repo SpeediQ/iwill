@@ -22,14 +22,14 @@
                     <th></th>
                 </thead>
                 <tbody>
-                    <th:block th:each="item : ${listItems}">
+                    <th:block th:each="item : ${items}">
                     <tr>
                         <td>[[${item.id}]]</td>
                         <td>[[${item.name}]]</td>
                         <td>[[${item.desc}]]</td>
                         <td>[[${item.value}]]</td>
                         <td>
-                            <a th:href="@{'/csitem/' + ${item.id}}">Choose</a>
+                            <a th:href="@{'/cs/new/' + ${item.id} + '/' + ${idVisit}}">Choose</a>
                         </td>
 
                     </tr>
@@ -40,35 +40,35 @@
 
     </div>
     <input type="hidden" name="name" id="myData" class="form-control"/>
-    <div><h1>Create new Item</h1></div><br/>
-    <form th:action="@{/csafteritem/}" th:object="${item}" method="post" style="max-width: 300px; margin: 0 auto;">
-        <div>
-            <div class="form-group row">
-                <label>Item name: </label>
-                <div>
-                    <input type="text" th:field="*{name}" class="form-control" required />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label>Item value: </label>
-                <div>
-                    <input type="text" th:field="*{value}" class="form-control" required />
-                </div>
-            </div>
-            <div class="form-group row">
-                <label>Item desc: </label>
-                <div>
-                    <input type="text" th:field="*{desc}" class="form-control" required />
-                </div>
-            </div>
-        </div>
+<!--    <div><h1>Create new Item</h1></div><br/>-->
+<!--    <form th:action="@{/csafteritem/}" th:object="${item}" method="post" style="max-width: 300px; margin: 0 auto;">-->
+<!--        <div>-->
+<!--            <div class="form-group row">-->
+<!--                <label>Item name: </label>-->
+<!--                <div>-->
+<!--                    <input type="text" th:field="*{name}" class="form-control" required />-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group row">-->
+<!--                <label>Item value: </label>-->
+<!--                <div>-->
+<!--                    <input type="text" th:field="*{value}" class="form-control" required />-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="form-group row">-->
+<!--                <label>Item desc: </label>-->
+<!--                <div>-->
+<!--                    <input type="text" th:field="*{desc}" class="form-control" required />-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
-        <button type="submit" name="submit" value="Submit" class="btn btn-primary">Save</button>
-    </form>
+<!--        <button type="submit" name="submit" value="Submit" class="btn btn-primary">Save</button>-->
+<!--    </form>-->
 
 
     <script th:inline="javascript">
-        var items = /*[[${listItems}]]*/ 'item';
+        var items = /*[[${items}]]*/ 'item';
         var idVisit = [[${idVisit}]] ;
         // var myData = [[${idd}]];
 
@@ -115,7 +115,7 @@
                                 <td>${data[i].desc}</td>
                                 <td>${data[i].value}</td>
                                 <td>
-                                    <a href="/csitem/${idd}/${idVisit}">Choose</a>
+                                    <a href="/cs/new/${idd}/${idVisit}">Choose</a>
                                 </td>
 
                            </tr>`
