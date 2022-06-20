@@ -21,7 +21,6 @@ public class ClientServ {
     private String title;
 
 
-
     public ClientServ() {
     }
 

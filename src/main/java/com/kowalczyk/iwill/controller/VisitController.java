@@ -2,7 +2,10 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.ClientServ;
+import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
+import com.kowalczyk.iwill.repository.ClientCardRepository;
+import com.kowalczyk.iwill.repository.ClientRepository;
 import com.kowalczyk.iwill.repository.ItemRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,10 @@ public class VisitController {
     private VisitRepository visitRepository;
     @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
+    private ClientCardRepository clientCardRepository;
 
     @GetMapping("/visits")
     public String listVisits(Model model) {
@@ -41,6 +48,8 @@ public class VisitController {
         visitRepository.save(visit);
         model.addAttribute("items", itemRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
+        model.addAttribute("item", new Item());
+
 
         return "itemsss";
     }

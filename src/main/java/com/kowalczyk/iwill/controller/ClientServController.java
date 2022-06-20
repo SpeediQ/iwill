@@ -67,19 +67,19 @@ public class ClientServController {
         return "cs_form";
     }
 
-    @PostMapping(value = "/clientservs/save", params = "addItem")
-    public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model, String keyword) {
-        List<Item> listItems = itemRepository.findAll();
-        model.addAttribute("listItems", listItems);
-        Comment comment = new Comment(clientServ);
-
-        comment.setItem(new Item());
-        model.addAttribute("comment", new Comment("dsacv"));
-        model.addAttribute("item", new Item());
-        model.addAttribute("idd", "idd");
-
-        return "itemsss";
-    }
+//    @PostMapping(value = "/clientservs/save", params = "addItem")
+//    public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model, String keyword) {
+//        List<Item> listItems = itemRepository.findAll();
+//        model.addAttribute("listItems", listItems);
+//        Comment comment = new Comment(clientServ);
+//
+//        comment.setItem(new Item());
+//        model.addAttribute("comment", new Comment("dsacv"));
+//        model.addAttribute("item", new Item());
+//        model.addAttribute("idd", "idd");
+//
+//        return "itemsss";
+//    }
 
     @GetMapping("/clientservs/edit/{id}")
     public String showFinishingForm(@PathVariable("id") Integer id, Model model) {
