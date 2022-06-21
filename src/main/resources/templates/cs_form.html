@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Create Client Services</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div class="container text-center">
+        <div><h1>Create New Client Service</h1></div><br/>
+
+        <form th:action="@{/cs/save}" th:object="${clientServ}" method="post" style="max-width: 300px; margin: 0 auto;">
+            <input type="hidden" th:name="visitId" th:value="${visit.id}" />
+            <input type="hidden" th:name="itemId" th:value="${item.id}" />
+
+
+
+        <div>
+            <div class="form-group row">
+                <label>Client Service desc: </label>
+                <div>
+                    <input type="text" th:field="*{title}" placeholder="Client Service Title" class="form-control"/>
+                </div>
+                <br>
+                <div>
+                    <input type="text" th:field="*{desc}" placeholder="Client Service Description" class="form-control"/>
+                </div>
+                <br>
+                <div>
+                    <div>
+                        <span>Item name:</span>
+                        <span th:text="${item.name}" th:remove="tag"></span>
+                    </div>
+                    <div>
+                        <span>Item default price:</span>
+                        <span th:text="${item.value}" th:remove="tag"></span>
+                    </div>
+                    <br>
+                    <div>
+                        <input type="text" th:field="*{comment.value}" placeholder="Price of the Service" class="form-control"/>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div>
+            <div>
+                <button type="submit" class="btn btn-primary">Go to Visit Screen</button>
+            </div>
+        </div>
+
+
+        </form>
+    </div>
+</body>
+</html>

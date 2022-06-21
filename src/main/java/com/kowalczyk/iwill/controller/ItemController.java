@@ -1,12 +1,8 @@
 package com.kowalczyk.iwill.controller;
 
 
-import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Item;
-import com.kowalczyk.iwill.model.Visit;
-import com.kowalczyk.iwill.repository.ClientServRepository;
 import com.kowalczyk.iwill.repository.ItemRepository;
-import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,17 +12,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class ItemController {
 
     @Autowired
-    private ItemRepository repository;
+    private ItemRepository itemRepository;
 
     @GetMapping("/items")
     public String listItems(Model model){
-        List<Item> listItems = repository.findAll();
+        List<Item> listItems = itemRepository.findAll();
         model.addAttribute("listItems", listItems);
         return "items";
     }
@@ -39,16 +34,26 @@ public class ItemController {
 
     @PostMapping("/items/save")
     public String saveItem(Item item){
-        repository.save(item);
+        itemRepository.save(item);
         return "redirect:/items";
     }
 
     @GetMapping("/items/edit/{id}")
     public String showItemEditForm(@PathVariable("id") Integer id, Model model) {
-        Item item = repository.findById(id).get();
+        Item item = itemRepository.findById(id).get();
         model.addAttribute("item", item);
         return "item_form";
 
+    }
+
+    @PostMapping("/item/add")
+    public String addItemByVisitFlow(Item item, Model model, HttpServletRequest request){
+        itemRepository.save(item);
+        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("idVisit", request.getParameter("idVisit"));
+        model.addAttribute("item", new Item());
+
+        return "itemsss";
     }
 
 

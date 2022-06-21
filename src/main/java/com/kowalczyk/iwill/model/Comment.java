@@ -15,6 +15,8 @@ public class Comment {
 
     private String value;
 
+    private String title;
+
     @OneToOne
     @JoinColumn(name="CLIENT_SERVICES_ID")
     private ClientServ clientServ;
@@ -27,11 +29,47 @@ public class Comment {
     public Comment() {
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Comment(ClientServ clientServ) {
+        this.clientServ = clientServ;
+    }
+
+    public Comment(Item item) {
+        this.item = item;
+    }
+
+    public Comment(ClientServ clientServ, Item item) {
+        this.clientServ = clientServ;
+        this.item = item;
+    }
+
+    public Comment(String desc, String name, String value) {
+        this.desc = desc;
+        this.name = name;
+        this.value = value;
+    }
+
+    public Comment(String desc, String name, String value, Item item) {
+        this.desc = desc;
+        this.name = name;
+        this.value = value;
+        this.item = item;
+    }
+
     public Comment(String name, String value, ClientServ clientServ) {
         this.name = name;
         this.value = value;
         this.clientServ = clientServ;
     }
+
+
 
     public Comment(String name, String value, ClientServ clientServ, Item item) {
         this.name = name;

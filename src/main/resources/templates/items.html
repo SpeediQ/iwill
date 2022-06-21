@@ -12,6 +12,7 @@
             <table class="table table-bordered">
                 <thead>
                     <th>ID</th>
+                    <th>TITLE</th>
                     <th>Name</th>
                     <th>Value</th>
                     <th>Desc</th>
@@ -21,6 +22,7 @@
                     <th:block th:each="item : ${listItems}">
                     <tr>
                         <td>[[${item.id}]]</td>
+                        <td>[[${item.title}]]</td>
 
                         <td>[[${item.name}]]</td>
                         <td>[[${item.value}]]</td>

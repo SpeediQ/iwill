@@ -16,7 +16,21 @@ public class Visit {
     @OneToMany(mappedBy = "visit")
     private Set<ClientServ> clientServSet = new HashSet<>();
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "CLIENT_CARD_ID")
+    private ClientCard clientCard;
+
     public Visit() {
+    }
+
+    private String title;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public Visit(String desc) {
@@ -45,6 +59,14 @@ public class Visit {
 
     public void setClientServSet(Set<ClientServ> clientServSet) {
         this.clientServSet = clientServSet;
+    }
+
+    public ClientCard getClientCard() {
+        return clientCard;
+    }
+
+    public void setClientCard(ClientCard clientCard) {
+        this.clientCard = clientCard;
     }
 
     @Override
