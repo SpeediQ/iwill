@@ -12,10 +12,14 @@ public class Client {
     private String lastname;
     private String comment;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "client", cascade = CascadeType.ALL)
-    private ClientCard clientCard = new ClientCard();
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
+    private ClientCard clientCard;
 
     public Client() {
+    }
+
+    public Client(ClientCard clientCard) {
+        this.clientCard = clientCard;
     }
 
     public int getId() {
@@ -62,10 +66,7 @@ public class Client {
     public String toString() {
         return "Client{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", comment='" + comment + '\'' +
-                ", clientCard=" + clientCard +
+
                 '}';
     }
 }

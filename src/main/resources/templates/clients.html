@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>List Visits</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <div><h1>Clients</h1></div>
+
+    <br/>
+    <div>
+        <input id="txtSearch" type="text" name="txtSearch">
+    </div>
+    <div>
+        <table id="clientsTable" class="table table-bordered">
+            <thead>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Lastname</th>
+            <th>Comment</th>
+            <th></th>
+            </thead>
+            <tbody>
+            <th:block th:each="client : ${clients}">
+                <tr>
+                    <td>[[${client.id}]]</td>
+                    <td>[[${client.name}]]</td>
+                    <td>[[${client.lastname}]]</td>
+                    <td>[[${client.comment}]]</td>
+                    <td>
+                        <a th:href="@{'/cc/new/' + ${client.id}}">Choose</a>
+                    </td>
+
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+<input type="hidden" name="name" id="myData" class="form-control"/>
+
+<form th:action="@{/c/add}" th:object="${client}" method="post" style="max-width: 300px; margin: 0 auto;">
+    <div>
+        <h2>Create new Client: </h2>
+
+        <div class="form-group row">
+            <label>Name: </label>
+            <div>
+                <input type="text" th:field="*{name}" class="form-control" required/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label>Lastname: </label>
+            <div>
+                <input type="text" th:field="*{lastname}" class="form-control"/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label>Comment: </label>
+            <div>
+                <input type="text" th:field="*{comment}" class="form-control"/>
+            </div>
+        </div>
+        <div>
+            <div>
+                <button type="submit" class="btn btn-primary">Add new Client</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+<script th:inline="javascript">
+    var clients = /*[[${clients}]]*/ 'clients';
+
+    $('#txtSearch').on('keyup', function () {
+        var value = $(this).val();
+
+        var data = FilterFunction(value, clients);
+        rebuildTable(data);
+    });
+
+    function FilterFunction(value, data) {
+        var filteredData = [];
+        for (var i = 0; i < data.length; i++) {
+            value = value.toLowerCase();
+            var name = data[i].name.toLowerCase();
+            var desc = data[i].lastname.toLowerCase();
+
+            if (name.includes(value) || desc.includes(value)) {
+                filteredData.push(data[i])
+            }
+        }
+        return filteredData;
+    }
+
+    function rebuildTable(data) {
+        var table = document.getElementById('clientsTable')
+        console.log(table)
+        table.innerHTML = ''
+        var titleRow = `<tr>
+                                <td><b>Id</b></td>
+                                <td><b>Name</b></td>
+                                <td><b>Lastname</b></td>
+                                <td><b>Comment</b></td>
+                                <td><b>Action</b></td>
+
+                           </tr>`
+        table.innerHTML += titleRow;
+        for (var i = 0; i < data.length; i++) {
+            var idd = data[i].id;
+
+            var row = `<tr>
+
+                                <td>${idd}</td>
+                                <td>${data[i].name}</td>
+                                <td>${data[i].lastname}</td>
+                                <td>${data[i].comment}</td>
+                                <td>
+                                    <a href="/cc/new/${idd}}">Choose</a>
+                                </td>
+
+                           </tr>`
+            table.innerHTML += row
+        }
+        // prepare selected table - with searching
+        prepareSelectedTable("#clientsTable tr");
+    }
+
+    // prepare selected table - without searching
+    prepareSelectedTable("#clientsTable tr");
+
+
+    function prepareSelectedTable(tableName) {
+        var elem = document.querySelectorAll(tableName);
+        for (var i = 0; i < elem.length; i++) {
+            bindMe(elem[i]);
+        }
+    }
+
+    function bindMe(elem) {
+        elem.addEventListener("click", function (evt) {
+            readValues(evt);
+            var table = document.getElementById('clientsTable')
+
+        });
+    }
+
+    function readValues(evt) {
+        var elem = evt.target.parentElement.innerText;
+        console.log(elem);    //elem contains current tr element's data
+        document.getElementById("myData").textContent = elem;
+
+    }
+</script>
+</body>
+</html>

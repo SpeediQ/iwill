@@ -45,6 +45,11 @@ public class ClientServController {
         return "clientservs";
     }
 
+    /*
+Screen "Create New Client Service"
+set fields: title, desc, item, price
+button "go to Visit Screen" -> cs/save
+* */
     @GetMapping(value = "/cs/new/{idItem}/{idVisit}")
     public String newCS(@PathVariable("idItem") Integer idItem, @PathVariable("idVisit") Integer idVisit, Model model) {
         Visit visit;
@@ -67,20 +72,6 @@ public class ClientServController {
         return "cs_form";
     }
 
-//    @PostMapping(value = "/clientservs/save", params = "addItem")
-//    public String addItemToClientServ(ClientServ clientServ, HttpServletRequest request, Model model, String keyword) {
-//        List<Item> listItems = itemRepository.findAll();
-//        model.addAttribute("listItems", listItems);
-//        Comment comment = new Comment(clientServ);
-//
-//        comment.setItem(new Item());
-//        model.addAttribute("comment", new Comment("dsacv"));
-//        model.addAttribute("item", new Item());
-//        model.addAttribute("idd", "idd");
-//
-//        return "itemsss";
-//    }
-
     @GetMapping("/clientservs/edit/{id}")
     public String showFinishingForm(@PathVariable("id") Integer id, Model model) {
         ClientServ clientserv = clientServRepository.findById(id).get();
@@ -102,6 +93,13 @@ public class ClientServController {
 
     }
 
+    /*
+Screen "Create New Visit"
+services has been added to Visit
+visit is save to db / we can add next CS to Visit
+button "Add New Services to Visit" -> visits/save params = "addItem"
+button "Add New Services to Visit" -> visits/save params = "submit"
+* */
     @PostMapping(value = "/cs/save")
     public String saveCS(ClientServ clientServ, HttpServletRequest request, Model model) {
         int visitId = Integer.parseInt(request.getParameter("visitId"));

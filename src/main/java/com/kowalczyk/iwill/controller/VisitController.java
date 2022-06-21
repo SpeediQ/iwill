@@ -37,22 +37,34 @@ public class VisitController {
         return "visits";
     }
 
+/*
+Screen "New Visit"
+basic fields: Visit.title (mandatory), Visit.desc
+button "Add New Services to Visit" -> visits/save params = "addItem"
+button "Add New Services to Visit" -> visits/save params = "submit"
+* */
     @GetMapping("/visits/new")
     public String showVisitNewForm(Model model) {
         model.addAttribute("visit", new Visit());
         return "visit_form";
     }
 
-    @PostMapping(value = "/visits/save", params = "add")
+/*
+Screen "List Items"
+itemsList -> choose action -> /cs/new/{idItem}/{idVisit}"
+Ability to add new Item
+* */
+    @PostMapping(value = "/visits/save", params = "addItem")
     public String saveVisit(Visit visit, Model model) {
         visitRepository.save(visit);
         model.addAttribute("items", itemRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
         model.addAttribute("item", new Item());
-
-
         return "itemsss";
     }
+/*
+save Visit to db
+* */
 
     @PostMapping(value = "/visits/save", params = "submit")
     public String addVisit(Visit visit, Model model) {
