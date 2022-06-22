@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Create Client Services</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div class="container text-center">
+        <div><h1>Client Card</h1></div><br/>
+        <form th:action="@{/c/v/add}" method="get" style="max-width: 300px; margin: 0 auto;">
+            <input type="hidden" th:name="idClient" th:value="${idClient}" />
+        <div>
+            <table id="clientsTable" class="table table-bordered">
+                <thead>
+                <th>ID</th>
+                <th>Desc</th>
+
+                </thead>
+                <tbody>
+                <th:block th:each="visit : ${visitSet}">
+                    <tr>
+                        <td>[[${visit.id}]]</td>
+                        <td>[[${visit.desc}]]</td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <div>
+                <button type="submit" class="btn btn-primary">Add new Visit</button>
+            </div>
+        </div>
+
+        </form>
+    </div>
+</body>
+</html>
+

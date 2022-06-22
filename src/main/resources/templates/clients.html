@@ -31,7 +31,7 @@
                     <td>[[${client.lastname}]]</td>
                     <td>[[${client.comment}]]</td>
                     <td>
-                        <a th:href="@{'/cc/new/' + ${client.id}}">Choose</a>
+                        <a th:href="@{'/c/add/' + ${client.id}}">Choose</a>
                     </td>
 
                 </tr>
@@ -124,7 +124,7 @@
                                 <td>${data[i].lastname}</td>
                                 <td>${data[i].comment}</td>
                                 <td>
-                                    <a href="/cc/new/${idd}}">Choose</a>
+                                    <a href="/c/add/${idd}}">Choose</a>
                                 </td>
 
                            </tr>`

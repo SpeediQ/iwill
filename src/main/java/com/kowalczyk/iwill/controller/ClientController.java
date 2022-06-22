@@ -4,6 +4,7 @@ package com.kowalczyk.iwill.controller;
 import com.kowalczyk.iwill.model.*;
 import com.kowalczyk.iwill.repository.ClientCardRepository;
 import com.kowalczyk.iwill.repository.ClientRepository;
+import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+
+import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
 public class ClientController {
@@ -21,6 +26,8 @@ public class ClientController {
     private ClientRepository clientRepository;
     @Autowired
     private ClientCardRepository clientCardRepository;
+    @Autowired
+    private VisitRepository visitRepository;
 
 
 
@@ -28,7 +35,7 @@ public class ClientController {
     @GetMapping("/c/new")
     public String showClientForm(Model model){
         model.addAttribute("client", new Client());
-        model.addAttribute("clients", clientRepository.findAll());
+        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
         return "clients";
     }
 
@@ -38,37 +45,35 @@ public class ClientController {
         client.setClientCard(clientCard);
         clientRepository.save(client);
         model.addAttribute("client", new Client());
-        model.addAttribute("clients", clientRepository.findAll());
-//        model.addAttribute("idVisit", request.getParameter("idVisit"));
+        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
 
         return "clients";
     }
 
-    @GetMapping(value = "/cc/new/{idClient}")
-    public String newCS(@PathVariable("idClient") Integer idClient, Model model) {
-        Client client;
-        ClientCard clientCard = new ClientCard();
+    @GetMapping(value = "/c/add/{idClient}")
+    public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {
+        model.addAttribute("idClient", idClient);
 
-        if (idClient != null && idClient > 0) {
-            client = clientRepository.getById(idClient);
+        Set<Visit> visitSet = new HashSet<>();
 
-            if (client.getClientCard() == null) {
-                client.setClientCard(clientCard);
-                clientRepository.save(client);
-                clientCard.setClient(client);
-                clientCardRepository.save(clientCard);
-            } else {
-                clientCard = client.getClientCard();
+        if (idClient > 0){
+            Client client = clientRepository.findById(idClient).get();
+            if (client.getClientCard() != null) {
+                visitSet = client.getClientCard().getVisitSet();
             }
-
-            model.addAttribute("clientCard", clientCard);
-            model.addAttribute("visitSet", clientCard.getVisitSet());
-            model.addAttribute("clientCardId", clientCard.getId());
-            model.addAttribute("visit", new Visit());
         }
+        model.addAttribute("visitSet", visitSet);
+        return "ccard_form";
+    }
+
+    @GetMapping(value = "c/v/add")
+    public String addVisitToClient( HttpServletRequest request) {
+        int idClient = Integer.parseInt(request.getParameter("idClient"));
+        Client client = clientRepository.findById(idClient).get();
+        
 
 
-        return "cs_form";
+        return "ccard_form";
     }
 
 
