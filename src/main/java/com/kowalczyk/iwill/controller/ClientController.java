@@ -43,6 +43,7 @@ public class ClientController {
     public String addItemByVisitFlow(Client client, Model model, HttpServletRequest request){
         ClientCard clientCard = new ClientCard();
         client.setClientCard(clientCard);
+        clientCard.setClient(client);
         clientRepository.save(client);
         model.addAttribute("client", new Client());
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
@@ -52,28 +53,34 @@ public class ClientController {
 
     @GetMapping(value = "/c/add/{idClient}")
     public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {
-        model.addAttribute("idClient", idClient);
 
         Set<Visit> visitSet = new HashSet<>();
 
-        if (idClient > 0){
-            Client client = clientRepository.findById(idClient).get();
-            if (client.getClientCard() != null) {
-                visitSet = client.getClientCard().getVisitSet();
-            }
+
+        Client client = clientRepository.getById(idClient);
+        if (client.getClientCard() != null) {
+            visitSet = client.getClientCard().getVisitSet();
         }
+
+        model.addAttribute("client", client);
         model.addAttribute("visitSet", visitSet);
         return "ccard_form";
     }
 
-    @GetMapping(value = "c/v/add")
-    public String addVisitToClient( HttpServletRequest request) {
-        int idClient = Integer.parseInt(request.getParameter("idClient"));
-        Client client = clientRepository.findById(idClient).get();
-        
+    @PostMapping(value = "c/v/add")
+    public String addVisitToClient(Client client, HttpServletRequest request, Model model) {
+
+        Client newClient = clientRepository.getById(client.getId());
+        ClientCard clientCard = newClient.getClientCard();
+        Visit visit = new Visit();
+        clientCard.getVisitSet().add(visit);
+        visit.setClientCard(clientCard);
+        clientCardRepository.save(clientCard);
 
 
-        return "ccard_form";
+        model.addAttribute("visit", visit);
+        model.addAttribute("idClient", request.getParameter("idClient"));
+        return "visit_form";
     }
 
 

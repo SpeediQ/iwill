@@ -12,7 +12,7 @@ public class Client {
     private String lastname;
     private String comment;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "client", cascade = CascadeType.ALL)
     private ClientCard clientCard;
 
     public Client() {

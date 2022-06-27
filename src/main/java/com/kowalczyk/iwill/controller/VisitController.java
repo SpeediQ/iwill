@@ -1,6 +1,7 @@
 package com.kowalczyk.iwill.controller;
 
 
+import com.kowalczyk.iwill.model.Client;
 import com.kowalczyk.iwill.model.ClientServ;
 import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
@@ -15,8 +16,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Set;
+
+import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
 public class VisitController {
@@ -55,11 +59,12 @@ itemsList -> choose action -> /cs/new/{idItem}/{idVisit}"
 Ability to add new Item
 * */
     @PostMapping(value = "/visits/save", params = "addItem")
-    public String saveVisit(Visit visit, Model model) {
+    public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
         visitRepository.save(visit);
         model.addAttribute("items", itemRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
         model.addAttribute("item", new Item());
+
         return "itemsss";
     }
 /*
@@ -70,7 +75,9 @@ save Visit to db
     public String addVisit(Visit visit, Model model) {
         model.addAttribute("listVisits", visitRepository.findAll());
         visitRepository.save(visit);
-        return "visits";
+        model.addAttribute("client", new Client());
+        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
+        return "clients";
     }
 
     @GetMapping("/visits/edit/{id}")

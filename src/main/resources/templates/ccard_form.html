@@ -2,30 +2,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="ISO-8859-1">
-    <title>Create Client Services</title>
+    <title>Client Card</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
 </head>
 <body>
     <div class="container text-center">
-        <div><h1>Client Card</h1></div><br/>
-        <form th:action="@{/c/v/add}" method="get" style="max-width: 300px; margin: 0 auto;">
-            <input type="hidden" th:name="idClient" th:value="${idClient}" />
-        <div>
-            <table id="clientsTable" class="table table-bordered">
-                <thead>
-                <th>ID</th>
-                <th>Desc</th>
+        <div><h2>Karta Klienta:</h2></div><br/>
+        <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 300px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${client.id}"/>
 
-                </thead>
-                <tbody>
-                <th:block th:each="visit : ${visitSet}">
-                    <tr>
-                        <td>[[${visit.id}]]</td>
-                        <td>[[${visit.desc}]]</td>
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
+            <div>
+                <table class="table table-bordered">
+                    <thead>
+                    <th>ID</th>
+                    <th>Tytul Wizyty</th>
+                    <th>Uslugi</th>
+                    <th>Akcja</th>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="visit : ${visitSet}">
+                        <tr>
+                            <td>[[${visit.id}]]</td>
+                            <td>[[${visit.desc}]]</td>
+                            <td>[[${visit.clientServSet}]]</td>
+
+                            <td>
+                                <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
         </div>
         <div>
             <div>

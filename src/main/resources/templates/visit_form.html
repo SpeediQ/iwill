@@ -11,6 +11,9 @@
     <br/>
     <form th:action="@{/visits/save}" th:object="${visit}" method="post" style="max-width: 300px; margin: 0 auto;">
         <input type="hidden" th:field="*{id}" th:value="${visit.id}"/>
+<!--        <input type="hidden" th:field="*{clientCard}" th:value="${clientCard}"/>-->
+<!--        <input type="hidden" th:name="idClient" th:value="${idClient}" />-->
+
         <!--            <input type="hidden" th:name="clientServSet" th:value="${clientServSet}" />-->
 
         <div>
