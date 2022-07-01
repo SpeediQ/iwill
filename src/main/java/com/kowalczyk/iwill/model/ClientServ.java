@@ -15,22 +15,26 @@ public class ClientServ {
     @JoinColumn(name = "VISIT_ID")
     private Visit visit;
 
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "clientServ", cascade = CascadeType.ALL)
-    private Comment comment;
-
     private String title;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ITEM_ID")
+    private Item item;
+
+    private double price;
 
 
     public ClientServ() {
     }
 
 
-    public ClientServ(Comment comment) {
-        this.comment = comment;
-    }
 
     public ClientServ(Visit visit) {
         this.visit = visit;
+    }
+
+    public ClientServ(Item item) {
+        this.item = item;
     }
 
     public int getId() {
@@ -65,21 +69,25 @@ public class ClientServ {
         this.title = title;
     }
 
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return desc;
-    }
-
-    public Comment getComment() {
-        return comment;
-    }
-
-    public void setComment(Comment comment) {
-        this.comment = comment;
-    }
-
-    public void addComment(String name, String value, Item item) {
-        setComment(new Comment(name, value, this, item));
     }
 
 }

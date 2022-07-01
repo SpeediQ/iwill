@@ -2,11 +2,9 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Comment;
 import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ClientServRepository;
-import com.kowalczyk.iwill.repository.CommentRepository;
 import com.kowalczyk.iwill.repository.ItemRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -30,8 +27,6 @@ public class ClientServController {
     @Autowired
     private VisitRepository visitRepository;
 
-    @Autowired
-    private CommentRepository commentRepository;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -63,7 +58,9 @@ button "go to Visit Screen" -> cs/save
         }
         if (idItem != null && idItem > 0) {
             item = itemRepository.getById(idItem);
-            clientServ = new ClientServ(new Comment(item));
+//            clientServ = new ClientServ(new Comment(item));
+            clientServ = new ClientServ(item);
+            clientServ.setPrice(item.getValue());
             model.addAttribute("item", item);
             model.addAttribute("clientServ", clientServ);
         }
@@ -105,11 +102,7 @@ button "Add New Services to Visit" -> visits/save params = "submit"
         int visitId = Integer.parseInt(request.getParameter("visitId"));
         int itemId = Integer.parseInt(request.getParameter("itemId"));
         Visit visit = visitRepository.getById(visitId);
-        Comment comment = clientServ.getComment();
-        comment.setItem(itemRepository.getById(itemId));
-        comment.setTitle(clientServ.getTitle());
-        comment.setDesc(clientServ.getDesc());
-        comment.setClientServ(clientServ);
+        clientServ.setItem(itemRepository.getById(itemId));
         clientServ.setVisit(visit);
         clientServRepository.save(clientServ);
         visit.getClientServSet().add(clientServ);

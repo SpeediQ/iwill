@@ -15,7 +15,7 @@ public class Item {
 
     private String name;
 
-    private String value;
+    private double value;
 
 
     public Item() {
@@ -53,11 +53,11 @@ public class Item {
         this.name = name;
     }
 
-    public String getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         this.value = value;
     }
 

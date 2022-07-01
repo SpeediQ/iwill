@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
     <title>Create Client Services</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
 </head>
@@ -17,27 +17,30 @@
 
         <div>
             <div class="form-group row">
-                <label>Client Service desc: </label>
+                <span>Nazwa usługi:</span>
                 <div>
                     <input type="text" th:field="*{title}" placeholder="Client Service Title" class="form-control"/>
                 </div>
-                <br>
                 <div>
-                    <input type="text" th:field="*{desc}" placeholder="Client Service Description" class="form-control"/>
+                    <span>Domyślna nazwa usługi:</span>
+                    <span th:text="${item.name}" th:remove="tag"></span>
+                </div>
+                <br>
+                <span>Opis Usługi:</span>
+                <div>
+                    <textarea th:field="*{desc}" placeholder="Client Service Description" class="form-control" required/>
+
                 </div>
                 <br>
                 <div>
-                    <div>
-                        <span>Item name:</span>
-                        <span th:text="${item.name}" th:remove="tag"></span>
-                    </div>
-                    <div>
-                        <span>Item default price:</span>
-                        <span th:text="${item.value}" th:remove="tag"></span>
-                    </div>
                     <br>
                     <div>
-                        <input type="text" th:field="*{comment.value}" placeholder="Price of the Service" class="form-control"/>
+                        <span>Cena usługi:</span>
+                        <input type="text" th:field="*{price}" placeholder="Price of the Service" class="form-control"/>
+                    </div>
+                    <div>
+                        <span>Domyślna cena usługi:</span>
+                        <span th:text="${item.value}" th:remove="tag"></span>
                     </div>
                 </div>
 
