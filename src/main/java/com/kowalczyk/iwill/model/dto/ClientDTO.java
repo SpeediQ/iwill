@@ -8,6 +8,7 @@ import lombok.Builder;
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.OneToOne;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ public class ClientDTO {
     private String lastname;
     private String comment;
     private ClientCardDTO clientCardDTO;
+    private Date date;
 
     public int getId() {
         return id;
@@ -59,6 +61,14 @@ public class ClientDTO {
 
     public void setClientCardDTO(ClientCardDTO clientCardDTO) {
         this.clientCardDTO = clientCardDTO;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override

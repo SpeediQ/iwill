@@ -1,14 +1,8 @@
 package com.kowalczyk.iwill.controller;
 
 
-import com.kowalczyk.iwill.model.Client;
-import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Item;
-import com.kowalczyk.iwill.model.Visit;
-import com.kowalczyk.iwill.repository.ClientCardRepository;
-import com.kowalczyk.iwill.repository.ClientRepository;
-import com.kowalczyk.iwill.repository.ItemRepository;
-import com.kowalczyk.iwill.repository.VisitRepository;
+import com.kowalczyk.iwill.model.*;
+import com.kowalczyk.iwill.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +27,9 @@ public class VisitController {
     private ClientRepository clientRepository;
     @Autowired
     private ClientCardRepository clientCardRepository;
+    @Autowired
+    private StatusRepository statusRepository;
+
 
     @GetMapping("/visits")
     public String listVisits(Model model) {
@@ -60,12 +57,18 @@ Ability to add new Item
 * */
     @PostMapping(value = "/visits/save", params = "addItem")
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
+        setCurrentStatus(visit);
         visitRepository.save(visit);
         model.addAttribute("items", itemRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
         model.addAttribute("item", new Item());
 
         return "itemsss";
+    }
+
+    private void setCurrentStatus(Visit visit) {
+        Status status = statusRepository.getById(ConstanceNr.STATUS_CURRENT);
+        visit.setStatus(status);
     }
 /*
 save Visit to db

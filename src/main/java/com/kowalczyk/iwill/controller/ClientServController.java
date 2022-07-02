@@ -113,5 +113,14 @@ button "Add New Services to Visit" -> visits/save params = "submit"
 
         return "visit_form";
     }
+    @PostMapping(value = "/cs/save" , params = "back")
+    public String saveCS(HttpServletRequest request, Model model) {
+        int visitId = Integer.parseInt(request.getParameter("idVisit"));
+        Visit visit = visitRepository.getById(visitId);
+        model.addAttribute("clientServSet", visit.getClientServSet());
+        model.addAttribute("visit", visit);
+        return "visit_form";
+    }
+
 
 }

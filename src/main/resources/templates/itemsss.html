@@ -66,6 +66,7 @@
             <label>Item value: </label>
             <div>
                 <input type="text" th:field="*{value}" class="form-control" required/>
+
             </div>
         </div>
     </div>
@@ -74,6 +75,13 @@
             <button type="submit" class="btn btn-primary">Add new Item</button>
         </div>
     </div>
+</form>
+<form th:action="@{/cs/save}" method="post" style="max-width: 300px; margin: 0 auto;">
+    <input type="hidden" th:name="idVisit" th:value="${idVisit}" />
+    <div>
+        <button type="submit" name="back" value="Back" class="btn btn-primary">Cofnij</button>
+    </div>
+
 </form>
 
 
