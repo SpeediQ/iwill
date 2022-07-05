@@ -15,9 +15,10 @@ public class ClientServDTO {
 
     private int id;
     private String desc;
-    private Visit visit;
     private String title;
     private double price;
+    private Item item;
+
 
     public int getId() {
         return id;
@@ -35,14 +36,6 @@ public class ClientServDTO {
         this.desc = desc;
     }
 
-    public Visit getVisit() {
-        return visit;
-    }
-
-    public void setVisit(Visit visit) {
-        this.visit = visit;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -57,6 +50,14 @@ public class ClientServDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 
     @Override

@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Create Client Services</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
 </head>
 <body>
-    <div class="container text-center">
-        <div><h1>Create New Client Service</h1></div><br/>
+<div class="container text-center">
+    <div><h1>Create New Client Service</h1></div>
+    <br/>
 
-        <form th:action="@{/cs/save}" th:object="${clientServ}" method="post" style="max-width: 300px; margin: 0 auto;">
-            <input type="hidden" th:name="visitId" th:value="${visit.id}" />
-            <input type="hidden" th:name="itemId" th:value="${item.id}" />
-
+    <form th:action="@{/cs/save}" th:object="${clientServ}" method="post" style="max-width: 300px; margin: 0 auto;">
+        <input type="hidden" th:name="visitId" th:value="${visit.id}"/>
+        <input type="hidden" th:name="itemId" th:value="${item.id}"/>
 
 
         <div>
@@ -27,7 +27,8 @@
                 <br>
                 <span>Opis Usługi:</span>
                 <div>
-                    <textarea th:field="*{desc}" placeholder="Client Service Description" class="form-control" required/>
+                    <textarea th:field="*{desc}" placeholder="Client Service Description" class="form-control"
+                              required/>
 
                 </div>
                 <br>
@@ -51,7 +52,14 @@
         </div>
 
 
-        </form>
-    </div>
+    </form>
+    <form th:action="@{/cs/save}" method="post" style="max-width: 300px; margin: 0 auto;">
+        <input type="hidden" th:name="idVisit" th:value="${visit.id}"/>
+        <div>
+            <button type="submit" name="back" value="Back" class="btn btn-primary">Cofnij</button>
+        </div>
+
+    </form>
+</div>
 </body>
 </html>
