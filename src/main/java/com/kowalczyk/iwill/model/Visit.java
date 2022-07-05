@@ -33,10 +33,10 @@ public class Visit implements Serializable {
     @JoinColumn(name = "STATUS_ID")
     private Status status;
 
+    private String title;
+
     public Visit() {
     }
-
-    private String title;
 
     public String getTitle() {
         return title;
@@ -117,5 +117,15 @@ public class Visit implements Serializable {
 
     public String shortName() {
         return "Wizyta: " + this.getDesc();
+    }
+
+    public Double getSum() {
+        double sum = 0;
+        if (getClientServSet() != null && getClientServSet().size() > 0){
+            for (ClientServ clientServ : getClientServSet()) {
+                sum += clientServ.getPrice();
+            }
+        }
+        return sum;
     }
 }

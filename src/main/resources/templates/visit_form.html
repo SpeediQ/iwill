@@ -12,6 +12,7 @@
     <form th:action="@{/visits/save}" th:object="${visit}" method="post" style="max-width: 300px; margin: 0 auto;">
         <input type="hidden" th:field="*{id}" th:value="${visit.id}"/>
         <input type="hidden" th:field="*{clientCard}" th:value="${clientCard}"/>
+        <input type="hidden" th:field="*{status}" th:value="${status}"/>
 <!--        <input type="hidden" th:name="idClient" th:value="${idClient}" />-->
 
         <!--            <input type="hidden" th:name="clientServSet" th:value="${clientServSet}" />-->
@@ -35,21 +36,20 @@
 
                     <table id="itemsTable" class="table table-bordered">
                         <thead>
-                        <th>ID</th>
-                        <th>ITEM</th>
                         <th>TITLE</th>
                         <th>DESCRIPTION</th>
                         <th>PRICE</th>
+                        <th>ACTION</th>
                         </thead>
                         <tbody>
                         <th:block th:each="clientServ : ${clientServSet}">
                             <tr>
-                                <td>[[${clientServ.id}]]</td>
-                                <td>[[${clientServ.item.id}]]</td>
                                 <td>[[${clientServ.title}]]</td>
                                 <td>[[${clientServ.desc}]]</td>
                                 <td>[[${clientServ.price}]]</td>
-
+                                <td>
+                                    <a th:href="@{'/cs/edit/' + ${clientServ.id}}">Edytuj Usługę</a>
+                                </td>
                             </tr>
                         </th:block>
                         </tbody>

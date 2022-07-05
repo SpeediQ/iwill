@@ -22,7 +22,6 @@
                     <input type="text" th:field="*{title}" placeholder="Client Service Title" class="form-control"/>
                 </div>
                 <div>
-                    <span>Domyślna nazwa usługi:</span>
                     <span th:text="${item.name}" th:remove="tag"></span>
                 </div>
                 <br>
@@ -39,7 +38,6 @@
                         <input type="text" th:field="*{price}" placeholder="Price of the Service" class="form-control"/>
                     </div>
                     <div>
-                        <span>Domyślna cena usługi:</span>
                         <span th:text="${item.value}" th:remove="tag"></span>
                     </div>
                 </div>
@@ -48,7 +46,7 @@
         </div>
         <div>
             <div>
-                <button type="submit" class="btn btn-primary">Go to Visit Screen</button>
+                <button type="submit" class="btn btn-primary">Dodaj usługę do wizyty</button>
             </div>
         </div>
 

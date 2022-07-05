@@ -54,10 +54,12 @@ public class Item {
 
     @Override
     public String toString() {
-        return desc;
+        return "Item{" +
+                "name='" + name + '\'' +
+                '}';
     }
 
     public String niceString(){
-        return "Name: "+ name+" ; Desc: "+desc+" ; Value: "+value;
+        return "Tytuł: "+ name+" ; Cena: "+value+" ; Opis: "+desc;
     }
 }

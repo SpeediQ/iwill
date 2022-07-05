@@ -8,24 +8,40 @@
 <body>
     <div class="container text-center">
         <div><h2>Karta Klienta:</h2></div><br/>
-        <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 300px; margin: 0 auto;">
+        <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 600px; margin: 0 auto;">
             <input type="hidden" th:field="*{id}" th:value="${client.id}"/>
+
+            <div>
+                <span>Klient:</span>
+                <span th:text="${client.getNiceName}" th:remove="tag"></span>
+                <br>
+                <span>data urodzenia:</span>
+                <span th:text="${#dates.format(client.date, 'dd/MM/yyyy')}" th:remove="tag"></span>
+
+            </div>
 
             <div>
                 <table class="table table-bordered">
                     <thead>
-                    <th>ID</th>
-                    <th>Tytul Wizyty</th>
-                    <th>Uslugi</th>
-                    <th>Akcja</th>
+                    <th>Title</th>
+                    <th>Desc</th>
+                    <th>ClientServSet</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Sum</th>
+                    <th>Action</th>
                     </thead>
                     <tbody>
                     <th:block th:each="visit : ${visitSet}">
                         <tr>
-                            <td>[[${visit.id}]]</td>
+                            <td>[[${visit.title}]]</td>
                             <td>[[${visit.desc}]]</td>
                             <td>[[${visit.clientServSet}]]</td>
-
+                            <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
+                            <td>[[${visit.time}]]</td>
+                            <td>[[${visit.status}]]</td>
+                            <td>[[${visit.getSum}]]</td>
                             <td>
                                 <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
                             </td>

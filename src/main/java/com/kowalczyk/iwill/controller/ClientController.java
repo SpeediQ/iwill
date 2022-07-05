@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
@@ -54,16 +53,16 @@ public class ClientController {
     @GetMapping(value = "/c/add/{idClient}")
     public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {
 
-        Set<Visit> visitSet = new HashSet<>();
+        List<Visit> visitList = new ArrayList<>();
 
 
         Client client = clientRepository.getById(idClient);
         if (client.getClientCard() != null) {
-            visitSet = client.getClientCard().getVisitSet();
+            visitList = client.getClientCard().getSortedVisitListByVisitSet();
         }
 
         model.addAttribute("client", client);
-        model.addAttribute("visitSet", visitSet);
+        model.addAttribute("visitSet", visitList);
         return "ccard_form";
     }
 

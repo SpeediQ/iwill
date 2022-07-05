@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
@@ -76,11 +78,13 @@ save Visit to db
 
     @PostMapping(value = "/visits/save", params = "submit")
     public String addVisit(Visit visit, Model model) {
-        model.addAttribute("listVisits", visitRepository.findAll());
         visitRepository.save(visit);
-        model.addAttribute("client", new Client());
-        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
-        return "clients";
+        ClientCard clientCard = visit.getClientCard();
+        Client client = clientCard.getClient();
+        List<Visit> visitSet = clientCard.getSortedVisitListByVisitSet();
+        model.addAttribute("visitSet", visitSet);
+        model.addAttribute("client", client);
+        return "ccardview_form";
     }
 
     @GetMapping("/visits/edit/{id}")

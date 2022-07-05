@@ -76,6 +76,10 @@ public class Client {
         this.date = date;
     }
 
+    public String getNiceName(){
+        return name + " " + lastname;
+    }
+
     @Override
     public String toString() {
         return "Client{" +
