@@ -5,7 +5,10 @@ import com.kowalczyk.iwill.model.dto.ClientCardDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.kowalczyk.iwill.model.mapper.VisitDTOMapper.mapToVisitDTOList;
 
 @Transactional
 public class ClientCardDTOMapper {
@@ -15,15 +18,15 @@ public class ClientCardDTOMapper {
                 .id(clientCard.getId())
                 .build();
         if (clientCard.getVisitSet() != null){
-            clientCardDTO.setVisitSet(clientCard.getVisitSet());
+            clientCardDTO.setVisitSet(mapToVisitDTOList(clientCard.getVisitSet()));
         }
         return clientCardDTO;
     }
 
-    public static List<ClientCardDTO> mapToClientCardDTOList(List<ClientCard> clientCards) {
+    public static Set<ClientCardDTO> mapToClientCardDTOList(Set<ClientCard> clientCards) {
         return clientCards.stream()
                 .map(ClientCardDTOMapper::mapToClientCardDTO)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
 }

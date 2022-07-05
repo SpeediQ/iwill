@@ -14,7 +14,7 @@ import java.util.Set;
 public class ClientCardDTO {
 
     private int id;
-    private Set<Visit> visitSet = new HashSet<>();
+    private Set<VisitDTO> visitSet = new HashSet<>();
 
 
     public ClientCardDTO() {
@@ -28,11 +28,11 @@ public class ClientCardDTO {
         this.id = id;
     }
 
-    public Set<Visit> getVisitSet() {
+    public Set<VisitDTO> getVisitSet() {
         return visitSet;
     }
 
-    public void setVisitSet(Set<Visit> visitSet) {
+    public void setVisitSet(Set<VisitDTO> visitSet) {
         this.visitSet = visitSet;
     }
 
