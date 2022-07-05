@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Visits</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <div><h1>Karta Klienta</h1></div>
+    <br/>
+    <div>
+        <span>Klient:</span>
+        <span th:text="${client.getNiceName}" th:remove="tag"></span>
+        <br>
+        <span>data urodzenia:</span>
+        <span th:text="${#dates.format(client.date, 'dd/MM/yyyy')}" th:remove="tag"></span>
+
+    </div>
+
+    <div>
+        <table id="itemsTable" class="table table-bordered">
+            <thead>
+            <th>Title</th>
+            <th>Desc</th>
+            <th>ClientServSet</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Sum</th>
+            <th>Action</th>
+            </thead>
+            <tbody>
+            <th:block th:each="visit : ${visitSet}">
+                <tr>
+                    <td>[[${visit.title}]]</td>
+                    <td>[[${visit.desc}]]</td>
+                    <td>[[${visit.clientServSet}]]</td>
+                    <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
+                    <td>[[${visit.time}]]</td>
+                    <td>[[${visit.status}]]</td>
+                    <td>[[${visit.getSum}]]</td>
+                    <td>
+                        <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj Wizytę</a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+    <div class="p-2">
+        <a class= "h2" th:href="@{/c/new}">Back</a>
+    </div>
+</div>
+
+
+</body>
+</html>
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>List Visits</title>-->
+<!--    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container text-center">-->
+<!--    <div><h1>Karta Klienta</h1></div>-->
+<!--    <br/>-->
+<!--    <div>-->
+<!--        <span>Klient:</span>-->
+<!--        <span th:text="${client.getNiceName}" th:remove="tag"></span>-->
+<!--        <br>-->
+<!--        <span>data urodzenia:</span>-->
+<!--        <span th:text="${#dates.format(client.date, 'dd/MM/yyyy')}" th:remove="tag"></span>-->
+
+<!--    </div>-->
+
+<!--    <div>-->
+<!--        <table id="itemsTable" class="table table-bordered">-->
+<!--            <thead>-->
+<!--            <th>Title</th>-->
+<!--            <th>Desc</th>-->
+<!--            <th>ClientServSet</th>-->
+<!--            <th>Date</th>-->
+<!--            <th>Time</th>-->
+<!--            <th>Status</th>-->
+<!--            <th>Sum</th>-->
+<!--            <th>Action</th>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <th:block th:each="visit : ${visitSet}">-->
+<!--                <tr>-->
+<!--                    <td>[[${visit.title}]]</td>-->
+<!--                    <td>[[${visit.desc}]]</td>-->
+<!--                    <td>[[${visit.clientServSet}]]</td>-->
+<!--                    <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>-->
+<!--                    <td>[[${visit.time}]]</td>-->
+<!--                    <td>[[${visit.status}]]</td>-->
+<!--                    <td>[[${visit.getSum}]]</td>-->
+<!--                    <td>-->
+<!--                        <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj Wizytę</a>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--            </th:block>-->
+<!--            </tbody>-->
+<!--        </table>-->
+<!--    </div>-->
+<!--    <div class="p-2">-->
+<!--        <a class= "h2" th:href="@{/c/new}">Back</a>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+<!--</body>-->
+<!--</html>-->

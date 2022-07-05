@@ -1,8 +1,11 @@
 package com.kowalczyk.iwill.model;
 
 import javax.persistence.*;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class ClientCard {
@@ -42,6 +45,13 @@ public class ClientCard {
 
     public void setVisitSet(Set<Visit> visitSet) {
         this.visitSet = visitSet;
+    }
+
+    public List<Visit> getSortedVisitListByVisitSet() {
+        return getVisitSet().stream()
+                .sorted(Comparator
+                        .comparing(Visit::getDate).reversed())
+                .collect(Collectors.toList());
     }
 
     @Override

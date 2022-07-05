@@ -1,41 +1,23 @@
-package com.kowalczyk.iwill.model;
+package com.kowalczyk.iwill.model.dto;
+
+import com.kowalczyk.iwill.model.Item;
+import com.kowalczyk.iwill.model.Visit;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@Entity
-public class ClientServ {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Builder
+@AllArgsConstructor
+public class ClientServDTO {
+
     private int id;
-    @Column(name = "DESCRIPTION")
     private String desc;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "VISIT_ID")
     private Visit visit;
-
     private String title;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ITEM_ID")
-    private Item item;
-
     private double price;
-
-
-    public ClientServ() {
-    }
-
-
-
-    public ClientServ(Visit visit) {
-        this.visit = visit;
-    }
-
-    public ClientServ(Item item) {
-        this.item = item;
-    }
 
     public int getId() {
         return id;
@@ -69,14 +51,6 @@ public class ClientServ {
         this.title = title;
     }
 
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -87,6 +61,9 @@ public class ClientServ {
 
     @Override
     public String toString() {
-        return " {" + title + " " + desc+ "} ";
+        return "ClientServDTO{" +
+                "desc='" + desc + '\'' +
+                ", title='" + title + '\'' +
+                '}';
     }
 }

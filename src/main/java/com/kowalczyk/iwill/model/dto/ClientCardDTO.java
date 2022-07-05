@@ -36,4 +36,10 @@ public class ClientCardDTO {
         this.visitSet = visitSet;
     }
 
+    @Override
+    public String toString() {
+        return "ClientCardDTO{" +
+                "id=" + id +
+                '}';
+    }
 }

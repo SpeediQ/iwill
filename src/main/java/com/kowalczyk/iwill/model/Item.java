@@ -8,25 +8,16 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String title;
 
     @Column(name = "DESCRIPTION")
     private String desc;
 
     private String name;
 
-    private String value;
+    private double value;
 
 
     public Item() {
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public int getId() {
@@ -53,20 +44,22 @@ public class Item {
         this.name = name;
     }
 
-    public String getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
     @Override
     public String toString() {
-        return desc;
+        return "Item{" +
+                "name='" + name + '\'' +
+                '}';
     }
 
     public String niceString(){
-        return "Name: "+ name+" ; Desc: "+desc+" ; Value: "+value;
+        return "Tytuł: "+ name+" ; Cena: "+value+" ; Opis: "+desc;
     }
 }

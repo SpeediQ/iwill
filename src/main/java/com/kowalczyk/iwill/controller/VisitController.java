@@ -1,13 +1,8 @@
 package com.kowalczyk.iwill.controller;
 
 
-import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Item;
-import com.kowalczyk.iwill.model.Visit;
-import com.kowalczyk.iwill.repository.ClientCardRepository;
-import com.kowalczyk.iwill.repository.ClientRepository;
-import com.kowalczyk.iwill.repository.ItemRepository;
-import com.kowalczyk.iwill.repository.VisitRepository;
+import com.kowalczyk.iwill.model.*;
+import com.kowalczyk.iwill.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
 public class VisitController {
@@ -29,6 +29,9 @@ public class VisitController {
     private ClientRepository clientRepository;
     @Autowired
     private ClientCardRepository clientCardRepository;
+    @Autowired
+    private StatusRepository statusRepository;
+
 
     @GetMapping("/visits")
     public String listVisits(Model model) {
@@ -55,12 +58,19 @@ itemsList -> choose action -> /cs/new/{idItem}/{idVisit}"
 Ability to add new Item
 * */
     @PostMapping(value = "/visits/save", params = "addItem")
-    public String saveVisit(Visit visit, Model model) {
+    public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
+        setCurrentStatus(visit);
         visitRepository.save(visit);
         model.addAttribute("items", itemRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
         model.addAttribute("item", new Item());
+
         return "itemsss";
+    }
+
+    private void setCurrentStatus(Visit visit) {
+        Status status = statusRepository.getById(ConstanceNr.STATUS_CURRENT);
+        visit.setStatus(status);
     }
 /*
 save Visit to db
@@ -68,9 +78,13 @@ save Visit to db
 
     @PostMapping(value = "/visits/save", params = "submit")
     public String addVisit(Visit visit, Model model) {
-        model.addAttribute("listVisits", visitRepository.findAll());
         visitRepository.save(visit);
-        return "visits";
+        ClientCard clientCard = visit.getClientCard();
+        Client client = clientCard.getClient();
+        List<Visit> visitSet = clientCard.getSortedVisitListByVisitSet();
+        model.addAttribute("visitSet", visitSet);
+        model.addAttribute("client", client);
+        return "ccardview_form";
     }
 
     @GetMapping("/visits/edit/{id}")

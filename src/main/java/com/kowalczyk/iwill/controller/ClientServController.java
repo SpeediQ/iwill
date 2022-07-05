@@ -2,11 +2,9 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Comment;
 import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ClientServRepository;
-import com.kowalczyk.iwill.repository.CommentRepository;
 import com.kowalczyk.iwill.repository.ItemRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -30,8 +27,6 @@ public class ClientServController {
     @Autowired
     private VisitRepository visitRepository;
 
-    @Autowired
-    private CommentRepository commentRepository;
 
     @Autowired
     private ItemRepository itemRepository;
@@ -63,13 +58,21 @@ button "go to Visit Screen" -> cs/save
         }
         if (idItem != null && idItem > 0) {
             item = itemRepository.getById(idItem);
-            clientServ = new ClientServ(new Comment(item));
+//            clientServ = new ClientServ(new Comment(item));
+            clientServ = new ClientServ(item);
+            copyDataFromItemToClientServ(item, clientServ);
             model.addAttribute("item", item);
             model.addAttribute("clientServ", clientServ);
         }
 
 
         return "cs_form";
+    }
+
+    private void copyDataFromItemToClientServ(Item item, ClientServ clientServ) {
+        clientServ.setPrice(item.getValue());
+        clientServ.setDesc(item.getDesc());
+        clientServ.setTitle(item.getName());
     }
 
     @GetMapping("/clientservs/edit/{id}")
@@ -105,20 +108,54 @@ button "Add New Services to Visit" -> visits/save params = "submit"
         int visitId = Integer.parseInt(request.getParameter("visitId"));
         int itemId = Integer.parseInt(request.getParameter("itemId"));
         Visit visit = visitRepository.getById(visitId);
-        Comment comment = clientServ.getComment();
-        comment.setItem(itemRepository.getById(itemId));
-        comment.setTitle(clientServ.getTitle());
-        comment.setDesc(clientServ.getDesc());
-        comment.setClientServ(clientServ);
+        clientServ.setItem(itemRepository.getById(itemId));
         clientServ.setVisit(visit);
         clientServRepository.save(clientServ);
         visit.getClientServSet().add(clientServ);
         Set<ClientServ> clientServSet = visit.getClientServSet();
         visitRepository.save(visit);
         model.addAttribute("visit", visit);
+        model.addAttribute("status", visit.getStatus());
         model.addAttribute("clientServSet", clientServSet);
 
         return "visit_form";
     }
+    @PostMapping(value = "/cs/save" , params = "back")
+    public String saveCS(HttpServletRequest request, Model model) {
+        int visitId = Integer.parseInt(request.getParameter("idVisit"));
+        Visit visit = visitRepository.getById(visitId);
+        model.addAttribute("clientServSet", visit.getClientServSet());
+        model.addAttribute("visit", visit);
+        return "visit_form";
+    }
+    @GetMapping(value = "/cs/edit/{id}")
+    public String editCS(@PathVariable("id") Integer id, Model model) {
+        ClientServ clientServ = clientServRepository.getById(id);
+        model.addAttribute("clientServ", clientServ);
+        model.addAttribute("items",itemRepository.findAll());
+        return "cs_edit_form";
+    }
+    @PostMapping(value = "/cs/save", params = "update")
+    public String updateCS(ClientServ clientServ, Model model, HttpServletRequest request) {
+        Item selectedItem = clientServ.getItem();
+        clientServ = updateCSByRequest(request);
+        model.addAttribute("visit", clientServ.getVisit());
+        clientServ.setItem(selectedItem);
+        clientServRepository.save(clientServ);
 
+        model.addAttribute("clientServSet", clientServ.getVisit().getClientServSet());
+        model.addAttribute("visit", clientServ.getVisit());
+        return "visit_form";
+
+    }
+
+    private ClientServ updateCSByRequest(HttpServletRequest request) {
+        ClientServ clientServ;
+        int id = Integer.parseInt(request.getParameter("id"));
+        clientServ = clientServRepository.getById(id);
+        clientServ.setTitle(request.getParameter("title"));
+        clientServ.setDesc(request.getParameter("desc"));
+        clientServ.setPrice(Double.parseDouble(request.getParameter("price")));
+        return clientServ;
+    }
 }

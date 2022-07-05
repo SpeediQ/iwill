@@ -1,6 +1,9 @@
 package com.kowalczyk.iwill.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Client {
@@ -12,7 +15,10 @@ public class Client {
     private String lastname;
     private String comment;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date date;
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "client", cascade = CascadeType.ALL)
     private ClientCard clientCard;
 
     public Client() {
@@ -60,6 +66,18 @@ public class Client {
 
     public void setClientCard(ClientCard clientCard) {
         this.clientCard = clientCard;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getNiceName(){
+        return name + " " + lastname;
     }
 
     @Override

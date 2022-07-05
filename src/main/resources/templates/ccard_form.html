@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Client Card</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+</head>
+<body>
+    <div class="container text-center">
+        <div><h2>Karta Klienta:</h2></div><br/>
+        <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 600px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${client.id}"/>
+
+            <div>
+                <span>Klient:</span>
+                <span th:text="${client.getNiceName}" th:remove="tag"></span>
+                <br>
+                <span>data urodzenia:</span>
+                <span th:text="${#dates.format(client.date, 'dd/MM/yyyy')}" th:remove="tag"></span>
+
+            </div>
+
+            <div>
+                <table class="table table-bordered">
+                    <thead>
+                    <th>Title</th>
+                    <th>Desc</th>
+                    <th>ClientServSet</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Sum</th>
+                    <th>Action</th>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="visit : ${visitSet}">
+                        <tr>
+                            <td>[[${visit.title}]]</td>
+                            <td>[[${visit.desc}]]</td>
+                            <td>[[${visit.clientServSet}]]</td>
+                            <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
+                            <td>[[${visit.time}]]</td>
+                            <td>[[${visit.status}]]</td>
+                            <td>[[${visit.getSum}]]</td>
+                            <td>
+                                <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+        </div>
+        <div>
+            <div>
+                <button type="submit" class="btn btn-primary">Add new Visit</button>
+            </div>
+        </div>
+
+        </form>
+    </div>
+</body>
+</html>
+

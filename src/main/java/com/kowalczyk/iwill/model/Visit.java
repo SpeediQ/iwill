@@ -1,11 +1,15 @@
-package  com.kowalczyk.iwill.model;
+package com.kowalczyk.iwill.model;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Visit {
+public class Visit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -20,10 +24,19 @@ public class Visit {
     @JoinColumn(name = "CLIENT_CARD_ID")
     private ClientCard clientCard;
 
-    public Visit() {
-    }
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date date;
+
+    private String time;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "STATUS_ID")
+    private Status status;
 
     private String title;
+
+    public Visit() {
+    }
 
     public String getTitle() {
         return title;
@@ -69,6 +82,30 @@ public class Visit {
         this.clientCard = clientCard;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Visit{" +
@@ -78,7 +115,17 @@ public class Visit {
                 '}';
     }
 
-    public String shortName(){
-        return "Wizyta: "+ this.getDesc();
+    public String shortName() {
+        return "Wizyta: " + this.getDesc();
+    }
+
+    public Double getSum() {
+        double sum = 0;
+        if (getClientServSet() != null && getClientServSet().size() > 0){
+            for (ClientServ clientServ : getClientServSet()) {
+                sum += clientServ.getPrice();
+            }
+        }
+        return sum;
     }
 }

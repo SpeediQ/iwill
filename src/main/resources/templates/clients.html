@@ -8,12 +8,16 @@
 </head>
 <body>
 <div class="container text-center">
-    <div><h1>Clients</h1></div>
+    <div><h1>Dodaj wizyte</h1></div>
 
     <br/>
+
+
     <div>
-        <input id="txtSearch" type="text" name="txtSearch">
+        <span>Wyszukaj klienta </span><input id="txtSearch" type="text" name="txtSearch">
     </div>
+    <br>
+
     <div>
         <table id="clientsTable" class="table table-bordered">
             <thead>
@@ -21,6 +25,7 @@
             <th>Name</th>
             <th>Lastname</th>
             <th>Comment</th>
+            <th>Date</th>
             <th></th>
             </thead>
             <tbody>
@@ -30,8 +35,9 @@
                     <td>[[${client.name}]]</td>
                     <td>[[${client.lastname}]]</td>
                     <td>[[${client.comment}]]</td>
+                    <td>[[${#dates.format(client.date, 'dd/MM/yyyy')}]]</td>
                     <td>
-                        <a th:href="@{'/cc/new/' + ${client.id}}">Choose</a>
+                        <a th:href="@{'/c/add/' + ${client.id}}">Choose</a>
                     </td>
 
                 </tr>
@@ -66,6 +72,12 @@
                 <input type="text" th:field="*{comment}" class="form-control"/>
             </div>
         </div>
+
+        <div>
+            <label for="clientDate">Data urodzenia:</label>
+            <input type="date" th:field="*{date}" id="clientDate" required/>
+        </div>
+
         <div>
             <div>
                 <button type="submit" class="btn btn-primary">Add new Client</button>
@@ -124,7 +136,7 @@
                                 <td>${data[i].lastname}</td>
                                 <td>${data[i].comment}</td>
                                 <td>
-                                    <a href="/cc/new/${idd}}">Choose</a>
+                                    <a href="/c/add/${idd}}">Choose</a>
                                 </td>
 
                            </tr>`
