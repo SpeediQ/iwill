@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
@@ -35,7 +34,7 @@ public class ClientController {
     public String showClientForm(Model model){
         model.addAttribute("client", new Client());
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
-        return "clients";
+        return "choose_or_create_client_form";
     }
 
     @PostMapping("/c/add")
@@ -47,7 +46,7 @@ public class ClientController {
         model.addAttribute("client", new Client());
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
 
-        return "clients";
+        return "choose_or_create_client_form";
     }
 
     @GetMapping(value = "/c/add/{idClient}")

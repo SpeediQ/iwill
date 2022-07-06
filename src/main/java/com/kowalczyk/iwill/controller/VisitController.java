@@ -61,7 +61,7 @@ Ability to add new Item
         model.addAttribute("idVisit", visit.getId());
         model.addAttribute("item", new ServiceType());
 
-        return "itemsss";
+        return "choose_or_create_serviceType_form";
     }
 
     private void setCurrentStatus(Visit visit) {

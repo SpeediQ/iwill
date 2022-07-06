@@ -90,12 +90,12 @@
 
 
 <script th:inline="javascript">
-    var clients = /*[[${clients}]]*/ 'clients';
+    var clients = /*[[${clients}]]*/ 'choose_or_create_client_form.html';
 
     $('#txtSearch').on('keyup', function () {
         var value = $(this).val();
 
-        var data = FilterFunction(value, clients);
+        var data = FilterFunction(value, choose_or_create_client_form);
         rebuildTable(data);
     });
 

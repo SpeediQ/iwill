@@ -23,13 +23,13 @@ public class ServiceTypeController {
     public String listItems(Model model){
         List<ServiceType> listItems = serviceTypeRepository.findAll();
         model.addAttribute("listItems", listItems);
-        return "items";
+        return "serviceType";
     }
 
     @GetMapping("/items/new")
     public String showItemNewForm(Model model){
         model.addAttribute("item", new ServiceType());
-        return "item_form";
+        return "serviceType_form";
     }
 
     @PostMapping("/items/save")
@@ -42,7 +42,7 @@ public class ServiceTypeController {
     public String showItemEditForm(@PathVariable("id") Integer id, Model model) {
         ServiceType item = serviceTypeRepository.findById(id).get();
         model.addAttribute("item", item);
-        return "item_form";
+        return "serviceType_form";
 
     }
 
@@ -53,7 +53,7 @@ public class ServiceTypeController {
         model.addAttribute("idVisit", request.getParameter("idVisit"));
         model.addAttribute("item", new ServiceType());
 
-        return "itemsss";
+        return "choose_or_create_serviceType_form";
     }
 
 
