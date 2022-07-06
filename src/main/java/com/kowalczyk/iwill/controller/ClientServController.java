@@ -2,10 +2,10 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Item;
+import com.kowalczyk.iwill.model.ServiceType;
 import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ClientServRepository;
-import com.kowalczyk.iwill.repository.ItemRepository;
+import com.kowalczyk.iwill.repository.ServiceTypeRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class ClientServController {
 
 
     @Autowired
-    private ItemRepository itemRepository;
+    private ServiceTypeRepository serviceTypeRepository;
 
 
     @GetMapping("/clientservs")
@@ -48,7 +48,7 @@ button "go to Visit Screen" -> cs/save
     @GetMapping(value = "/cs/new/{idItem}/{idVisit}")
     public String newCS(@PathVariable("idItem") Integer idItem, @PathVariable("idVisit") Integer idVisit, Model model) {
         Visit visit;
-        Item item;
+        ServiceType item;
         ClientServ clientServ;
 
 
@@ -57,7 +57,7 @@ button "go to Visit Screen" -> cs/save
             model.addAttribute("visit", visit);
         }
         if (idItem != null && idItem > 0) {
-            item = itemRepository.getById(idItem);
+            item = serviceTypeRepository.getById(idItem);
 //            clientServ = new ClientServ(new Comment(item));
             clientServ = new ClientServ(item);
             copyDataFromItemToClientServ(item, clientServ);
@@ -69,7 +69,7 @@ button "go to Visit Screen" -> cs/save
         return "cs_form";
     }
 
-    private void copyDataFromItemToClientServ(Item item, ClientServ clientServ) {
+    private void copyDataFromItemToClientServ(ServiceType item, ClientServ clientServ) {
         clientServ.setPrice(item.getValue());
         clientServ.setDesc(item.getDesc());
         clientServ.setTitle(item.getName());
@@ -80,7 +80,7 @@ button "go to Visit Screen" -> cs/save
         ClientServ clientserv = clientServRepository.findById(id).get();
         model.addAttribute("clientserv", clientserv);
 
-        List<Item> listItems = itemRepository.findAll();
+        List<ServiceType> listItems = serviceTypeRepository.findAll();
         model.addAttribute("listItems", listItems);
 
         List<Visit> listVisits = visitRepository.findAll();
@@ -108,7 +108,7 @@ button "Add New Services to Visit" -> visits/save params = "submit"
         int visitId = Integer.parseInt(request.getParameter("visitId"));
         int itemId = Integer.parseInt(request.getParameter("itemId"));
         Visit visit = visitRepository.getById(visitId);
-        clientServ.setItem(itemRepository.getById(itemId));
+        clientServ.setServiceType(serviceTypeRepository.getById(itemId));
         clientServ.setVisit(visit);
         clientServRepository.save(clientServ);
         visit.getClientServSet().add(clientServ);
@@ -132,15 +132,15 @@ button "Add New Services to Visit" -> visits/save params = "submit"
     public String editCS(@PathVariable("id") Integer id, Model model) {
         ClientServ clientServ = clientServRepository.getById(id);
         model.addAttribute("clientServ", clientServ);
-        model.addAttribute("items",itemRepository.findAll());
+        model.addAttribute("items", serviceTypeRepository.findAll());
         return "cs_edit_form";
     }
     @PostMapping(value = "/cs/save", params = "update")
     public String updateCS(ClientServ clientServ, Model model, HttpServletRequest request) {
-        Item selectedItem = clientServ.getItem();
+        ServiceType selectedItem = clientServ.getServiceType();
         clientServ = updateCSByRequest(request);
         model.addAttribute("visit", clientServ.getVisit());
-        clientServ.setItem(selectedItem);
+        clientServ.setServiceType(selectedItem);
         clientServRepository.save(clientServ);
 
         model.addAttribute("clientServSet", clientServ.getVisit().getClientServSet());

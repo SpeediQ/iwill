@@ -23,7 +23,7 @@
                     <input type="text" name="price" th:value="${clientServ.getPrice()}" class="form-control"/>
                 </div>
                 <label>Item:</label>
-                <select th:field="*{item}">
+                <select th:field="*{serviceType}">
                     <option th:each="item : ${items}" th:value="${item.id}" th:text="${item.niceString}" />
                 </select>
 

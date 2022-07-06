@@ -11,12 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
 public class VisitController {
@@ -24,7 +20,7 @@ public class VisitController {
     @Autowired
     private VisitRepository visitRepository;
     @Autowired
-    private ItemRepository itemRepository;
+    private ServiceTypeRepository serviceTypeRepository;
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
@@ -61,9 +57,9 @@ Ability to add new Item
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
         setCurrentStatus(visit);
         visitRepository.save(visit);
-        model.addAttribute("items", itemRepository.findAll());
+        model.addAttribute("items", serviceTypeRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
-        model.addAttribute("item", new Item());
+        model.addAttribute("item", new ServiceType());
 
         return "itemsss";
     }

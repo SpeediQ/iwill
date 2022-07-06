@@ -3,7 +3,7 @@ package  com.kowalczyk.iwill.model;
 import javax.persistence.*;
 
 @Entity
-public class Item {
+public class ServiceType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -17,7 +17,7 @@ public class Item {
     private double value;
 
 
-    public Item() {
+    public ServiceType() {
     }
 
     public int getId() {
@@ -54,7 +54,7 @@ public class Item {
 
     @Override
     public String toString() {
-        return "Item{" +
+        return "ServiceType{" +
                 "name='" + name + '\'' +
                 '}';
     }

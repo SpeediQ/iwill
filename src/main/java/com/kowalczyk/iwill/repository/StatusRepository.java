@@ -1,7 +1,6 @@
 package com.kowalczyk.iwill.repository;
 
 
-import com.kowalczyk.iwill.model.Item;
 import com.kowalczyk.iwill.model.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 
