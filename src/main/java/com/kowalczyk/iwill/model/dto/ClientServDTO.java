@@ -1,13 +1,8 @@
 package com.kowalczyk.iwill.model.dto;
 
-import com.kowalczyk.iwill.model.Item;
-import com.kowalczyk.iwill.model.Visit;
+import com.kowalczyk.iwill.model.ServiceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor
@@ -17,7 +12,7 @@ public class ClientServDTO {
     private String desc;
     private String title;
     private double price;
-    private Item item;
+    private ServiceType serviceType;
 
 
     public int getId() {
@@ -52,12 +47,12 @@ public class ClientServDTO {
         this.price = price;
     }
 
-    public Item getItem() {
-        return item;
+    public ServiceType getServiceType() {
+        return serviceType;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setServiceType(ServiceType serviceType) {
+        this.serviceType = serviceType;
     }
 
     @Override

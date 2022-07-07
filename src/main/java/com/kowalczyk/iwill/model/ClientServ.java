@@ -1,7 +1,6 @@
 package com.kowalczyk.iwill.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class ClientServ {
@@ -18,8 +17,8 @@ public class ClientServ {
     private String title;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ITEM_ID")
-    private Item item;
+    @JoinColumn(name = "SERVICE_TYPE_ID")
+    private ServiceType serviceType;
 
     private double price;
 
@@ -33,8 +32,8 @@ public class ClientServ {
         this.visit = visit;
     }
 
-    public ClientServ(Item item) {
-        this.item = item;
+    public ClientServ(ServiceType serviceType) {
+        this.serviceType = serviceType;
     }
 
     public int getId() {
@@ -69,12 +68,12 @@ public class ClientServ {
         this.title = title;
     }
 
-    public Item getItem() {
-        return item;
+    public ServiceType getServiceType() {
+        return serviceType;
     }
 
-    public void setItem(Item item) {
-        this.item = item;
+    public void setServiceType(ServiceType serviceType) {
+        this.serviceType = serviceType;
     }
 
     public double getPrice() {

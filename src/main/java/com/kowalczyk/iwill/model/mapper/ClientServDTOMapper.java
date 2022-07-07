@@ -1,13 +1,9 @@
 package com.kowalczyk.iwill.model.mapper;
 
-import com.kowalczyk.iwill.model.ClientCard;
 import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Visit;
-import com.kowalczyk.iwill.model.dto.ClientCardDTO;
 import com.kowalczyk.iwill.model.dto.ClientServDTO;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -24,8 +20,8 @@ public class ClientServDTOMapper {
                 .title(clientServ.getTitle())
                 .price(clientServ.getPrice())
                 .build();
-        if (clientServ.getItem() != null){
-            clientServDTO.setItem(clientServ.getItem());
+        if (clientServ.getServiceType() != null){
+            clientServDTO.setServiceType(clientServ.getServiceType());
         }
         return clientServDTO;
     }
