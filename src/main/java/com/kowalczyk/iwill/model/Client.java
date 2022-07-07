@@ -28,6 +28,10 @@ public class Client {
         this.clientCard = clientCard;
     }
 
+    public Client(String comment) {
+        this.comment = comment;
+    }
+
     public int getId() {
         return id;
     }

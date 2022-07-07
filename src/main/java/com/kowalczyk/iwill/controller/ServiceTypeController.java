@@ -49,9 +49,9 @@ public class ServiceTypeController {
     @PostMapping("/serviceType/add")
     public String addItemByVisitFlow(ServiceType item, Model model, HttpServletRequest request){
         serviceTypeRepository.save(item);
-        model.addAttribute("items", serviceTypeRepository.findAll());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
         model.addAttribute("idVisit", request.getParameter("idVisit"));
-        model.addAttribute("item", new ServiceType());
+        model.addAttribute("serviceType", new ServiceType());
 
         return "choose_or_create_serviceType_form";
     }

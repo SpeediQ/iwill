@@ -17,6 +17,8 @@ public class Visit implements Serializable {
     @Column(name = "DESCRIPTION")
     private String desc;
 
+    private String code;
+
     @OneToMany(mappedBy = "visit")
     private Set<ClientServ> clientServSet = new HashSet<>();
 
@@ -100,6 +102,14 @@ public class Visit implements Serializable {
 
     public Status getStatus() {
         return status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public void setStatus(Status status) {

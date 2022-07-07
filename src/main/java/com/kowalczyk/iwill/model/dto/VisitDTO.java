@@ -23,6 +23,7 @@ public class VisitDTO {
     private String time;
     private Status status;
     private String title;
+    private String code;
 
     public int getId() {
         return id;
@@ -78,6 +79,14 @@ public class VisitDTO {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override

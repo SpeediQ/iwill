@@ -32,7 +32,7 @@ public class ClientController {
 
     @GetMapping("/c/new")
     public String showClientForm(Model model){
-        model.addAttribute("client", new Client());
+        model.addAttribute("client", new Client("Brak komentarza"));
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
         return "choose_or_create_client_form";
     }
@@ -43,7 +43,7 @@ public class ClientController {
         client.setClientCard(clientCard);
         clientCard.setClient(client);
         clientRepository.save(client);
-        model.addAttribute("client", new Client());
+        model.addAttribute("client", new Client("Brak komentarza"));
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
 
         return "choose_or_create_client_form";

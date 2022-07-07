@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -36,23 +37,13 @@ public class VisitController {
         return "visits";
     }
 
-/*
-Screen "New Visit"
-basic fields: Visit.title (mandatory), Visit.desc
-button "Add New Services to Visit" -> visits/save params = "addItem"
-button "Add New Services to Visit" -> visits/save params = "submit"
-* */
     @GetMapping("/visits/new")
     public String showVisitNewForm(Model model) {
         model.addAttribute("visit", new Visit());
         return "visit_form";
     }
 
-/*
-Screen "List Items"
-itemsList -> choose action -> /cs/new/{idItem}/{idVisit}"
-Ability to add new Item
-* */
+
     @PostMapping(value = "/visits/save", params = "addItem")
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
         setCurrentStatus(visit);
@@ -65,8 +56,7 @@ Ability to add new Item
     }
 
     private void setCurrentStatus(Visit visit) {
-        Status status = statusRepository.getById(ConstanceNr.STATUS_CURRENT);
-        visit.setStatus(status);
+
     }
 /*
 save Visit to db
