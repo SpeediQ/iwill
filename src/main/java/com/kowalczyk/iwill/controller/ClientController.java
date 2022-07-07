@@ -38,7 +38,7 @@ public class ClientController {
     }
 
     @PostMapping("/c/add")
-    public String addItemByVisitFlow(Client client, Model model, HttpServletRequest request){
+    public String addItemByVisitFlow(Client client, Model model){
         ClientCard clientCard = new ClientCard();
         client.setClientCard(clientCard);
         clientCard.setClient(client);
@@ -53,8 +53,23 @@ public class ClientController {
     public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {
 
         List<Visit> visitList = new ArrayList<>();
+            Client client = clientRepository.getById(idClient);
+            if (client.getClientCard() != null) {
+                visitList = client.getClientCard().getSortedVisitListByVisitSet();
+            }
+
+            model.addAttribute("client", client);
+            model.addAttribute("visitSet", visitList);
 
 
+        return "ccard_form";
+    }
+
+    @GetMapping(value = "cc/view")
+    public String showClientCard(Model model, HttpServletRequest request) {
+
+        int idClient = Integer.parseInt(request.getParameter("idClient"));
+        List<Visit> visitList = new ArrayList<>();
         Client client = clientRepository.getById(idClient);
         if (client.getClientCard() != null) {
             visitList = client.getClientCard().getSortedVisitListByVisitSet();
@@ -62,6 +77,8 @@ public class ClientController {
 
         model.addAttribute("client", client);
         model.addAttribute("visitSet", visitList);
+
+
         return "ccard_form";
     }
 
@@ -81,6 +98,5 @@ public class ClientController {
         model.addAttribute("idClient", request.getParameter("idClient"));
         return "visit_form";
     }
-
 
 }

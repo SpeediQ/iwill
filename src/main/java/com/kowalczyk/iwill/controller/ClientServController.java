@@ -45,10 +45,10 @@ Screen "Create New Client Service"
 set fields: title, desc, item, price
 button "go to Visit Screen" -> cs/save
 * */
-    @GetMapping(value = "/cs/new/{idItem}/{idVisit}")
-    public String newCS(@PathVariable("idItem") Integer idItem, @PathVariable("idVisit") Integer idVisit, Model model) {
+    @GetMapping(value = "/cs/new/{idserviceType}/{idVisit}")
+    public String newCS(@PathVariable("idserviceType") Integer idserviceType, @PathVariable("idVisit") Integer idVisit, Model model) {
         Visit visit;
-        ServiceType item;
+        ServiceType serviceType;
         ClientServ clientServ;
 
 
@@ -56,12 +56,12 @@ button "go to Visit Screen" -> cs/save
             visit = visitRepository.getById(idVisit);
             model.addAttribute("visit", visit);
         }
-        if (idItem != null && idItem > 0) {
-            item = serviceTypeRepository.getById(idItem);
+        if (idserviceType != null && idserviceType > 0) {
+            serviceType = serviceTypeRepository.getById(idserviceType);
 //            clientServ = new ClientServ(new Comment(item));
-            clientServ = new ClientServ(item);
-            copyDataFromItemToClientServ(item, clientServ);
-            model.addAttribute("item", item);
+            clientServ = new ClientServ(serviceType);
+            copyDataFromItemToClientServ(serviceType, clientServ);
+            model.addAttribute("serviceType", serviceType);
             model.addAttribute("clientServ", clientServ);
         }
 
@@ -106,9 +106,9 @@ button "Add New Services to Visit" -> visits/save params = "submit"
     @PostMapping(value = "/cs/save")
     public String saveCS(ClientServ clientServ, HttpServletRequest request, Model model) {
         int visitId = Integer.parseInt(request.getParameter("visitId"));
-        int itemId = Integer.parseInt(request.getParameter("itemId"));
+        int serviceTypeId = Integer.parseInt(request.getParameter("serviceTypeId"));
         Visit visit = visitRepository.getById(visitId);
-        clientServ.setServiceType(serviceTypeRepository.getById(itemId));
+        clientServ.setServiceType(serviceTypeRepository.getById(serviceTypeId));
         clientServ.setVisit(visit);
         clientServRepository.save(clientServ);
         visit.getClientServSet().add(clientServ);

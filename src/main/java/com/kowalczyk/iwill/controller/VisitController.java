@@ -57,9 +57,9 @@ Ability to add new Item
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
         setCurrentStatus(visit);
         visitRepository.save(visit);
-        model.addAttribute("items", serviceTypeRepository.findAll());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
-        model.addAttribute("item", new ServiceType());
+        model.addAttribute("serviceType", new ServiceType());
 
         return "choose_or_create_serviceType_form";
     }

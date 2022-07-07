@@ -12,7 +12,7 @@
 
     <form th:action="@{/cs/save}" th:object="${clientServ}" method="post" style="max-width: 300px; margin: 0 auto;">
         <input type="hidden" th:name="visitId" th:value="${visit.id}"/>
-        <input type="hidden" th:name="itemId" th:value="${item.id}"/>
+        <input type="hidden" th:name="serviceTypeId" th:value="${serviceType.id}"/>
 
 
         <div>
@@ -22,7 +22,7 @@
                     <input type="text" th:field="*{title}" placeholder="Client Service Title" class="form-control"/>
                 </div>
                 <div>
-                    <span th:text="${item.name}" th:remove="tag"></span>
+                    <span th:text="${serviceType.name}" th:remove="tag"></span>
                 </div>
                 <br>
                 <span>Opis Usługi:</span>
@@ -39,7 +39,7 @@
                         <input type="text" th:field="*{price}" placeholder="Price of the Service" class="form-control"/>
                     </div>
                     <div>
-                        <span th:text="${item.value}" th:remove="tag"></span>
+                        <span th:text="${serviceType.value}" th:remove="tag"></span>
                     </div>
                 </div>
 

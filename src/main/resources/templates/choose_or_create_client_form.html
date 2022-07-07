@@ -88,14 +88,13 @@
 </form>
 
 
-
 <script th:inline="javascript">
-    var clients = /*[[${clients}]]*/ 'choose_or_create_client_form.html';
+    var clients = /*[[${clients}]]*/ 'clients';
 
     $('#txtSearch').on('keyup', function () {
         var value = $(this).val();
 
-        var data = FilterFunction(value, choose_or_create_client_form);
+        var data = FilterFunction(value, clients);
         rebuildTable(data);
     });
 
@@ -123,14 +122,12 @@
                                 <td><b>Lastname</b></td>
                                 <td><b>Comment</b></td>
                                 <td><b>Action</b></td>
-
                            </tr>`
         table.innerHTML += titleRow;
         for (var i = 0; i < data.length; i++) {
 
 
             var row = `<tr>
-
                                 <td>${data[i].id}</td>
                                 <td>${data[i].name}</td>
                                 <td>${data[i].lastname}</td>
@@ -138,7 +135,6 @@
                                 <td>
                                     <a href="/c/add/${data[i].id}">Choose</a>
                                 </td>
-
                            </tr>`
             table.innerHTML += row
         }
@@ -171,6 +167,7 @@
         document.getElementById("myData").textContent = elem;
 
     }
+
 </script>
 </body>
 </html>

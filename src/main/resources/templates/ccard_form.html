@@ -45,6 +45,7 @@
                             <td>
                                 <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
                             </td>
+
                         </tr>
                     </th:block>
                     </tbody>
@@ -54,7 +55,16 @@
             <div>
                 <button type="submit" class="btn btn-primary">Add new Visit</button>
             </div>
+
         </div>
+
+        </form>
+
+        <form th:action="@{/c/new}" method="get" style="max-width: 300px; margin: 0 auto;">
+
+            <div>
+                <button type="submit" class="btn btn-primary">Cofnij</button>
+            </div>
 
         </form>
     </div>

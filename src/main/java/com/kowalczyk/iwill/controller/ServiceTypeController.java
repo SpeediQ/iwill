@@ -21,8 +21,8 @@ public class ServiceTypeController {
 
     @GetMapping("/items")
     public String listItems(Model model){
-        List<ServiceType> listItems = serviceTypeRepository.findAll();
-        model.addAttribute("listItems", listItems);
+        List<ServiceType> serviceTypeList = serviceTypeRepository.findAll();
+        model.addAttribute("listItems", serviceTypeList);
         return "serviceType";
     }
 
@@ -33,20 +33,20 @@ public class ServiceTypeController {
     }
 
     @PostMapping("/items/save")
-    public String saveItem(ServiceType item){
-        serviceTypeRepository.save(item);
+    public String saveItem(ServiceType serviceType){
+        serviceTypeRepository.save(serviceType);
         return "redirect:/items";
     }
 
     @GetMapping("/items/edit/{id}")
     public String showItemEditForm(@PathVariable("id") Integer id, Model model) {
-        ServiceType item = serviceTypeRepository.findById(id).get();
-        model.addAttribute("item", item);
+        ServiceType serviceType = serviceTypeRepository.findById(id).get();
+        model.addAttribute("item", serviceType);
         return "serviceType_form";
 
     }
 
-    @PostMapping("/item/add")
+    @PostMapping("/serviceType/add")
     public String addItemByVisitFlow(ServiceType item, Model model, HttpServletRequest request){
         serviceTypeRepository.save(item);
         model.addAttribute("items", serviceTypeRepository.findAll());
