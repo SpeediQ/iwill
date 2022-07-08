@@ -127,7 +127,7 @@ public class Visit implements Serializable {
 
     public Double getSum() {
         double sum = 0;
-        if (getClientServSet() != null && getClientServSet().size() > 0){
+        if (getClientServSet() != null && getClientServSet().size() > 0) {
             for (ClientServ clientServ : getClientServSet()) {
                 sum += clientServ.getPrice();
             }
@@ -135,4 +135,34 @@ public class Visit implements Serializable {
         return sum;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Visit)) return false;
+
+        Visit visit = (Visit) o;
+
+        if (id != visit.id) return false;
+        if (desc != null ? !desc.equals(visit.desc) : visit.desc != null) return false;
+        if (code != null ? !code.equals(visit.code) : visit.code != null) return false;
+        if (clientServSet != null ? !clientServSet.equals(visit.clientServSet) : visit.clientServSet != null)
+            return false;
+        if (date != null ? !date.equals(visit.date) : visit.date != null) return false;
+        if (time != null ? !time.equals(visit.time) : visit.time != null) return false;
+        if (status != null ? !status.equals(visit.status) : visit.status != null) return false;
+        return title != null ? title.equals(visit.title) : visit.title == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (desc != null ? desc.hashCode() : 0);
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (clientServSet != null ? clientServSet.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (time != null ? time.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        return result;
+    }
 }

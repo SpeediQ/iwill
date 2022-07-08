@@ -19,7 +19,6 @@ public class Numerator {
     private String symbol;
 
 
-
     public Numerator() {
     }
 
@@ -75,5 +74,28 @@ public class Numerator {
         return name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Numerator)) return false;
 
+        Numerator numerator = (Numerator) o;
+
+        if (id != numerator.id) return false;
+        if (value != numerator.value) return false;
+        if (name != null ? !name.equals(numerator.name) : numerator.name != null) return false;
+        if (description != null ? !description.equals(numerator.description) : numerator.description != null)
+            return false;
+        return symbol != null ? symbol.equals(numerator.symbol) : numerator.symbol == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + value;
+        result = 31 * result + (symbol != null ? symbol.hashCode() : 0);
+        return result;
+    }
 }

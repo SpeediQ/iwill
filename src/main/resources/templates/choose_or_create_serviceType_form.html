@@ -28,7 +28,7 @@
                     <td>[[${serviceType.desc}]]</td>
                     <td>[[${serviceType.value}]]</td>
                     <td>
-                        <a th:href="@{'/cs/new/' + ${serviceType.id} + '/' + ${idVisit}}">Choose</a>
+                        <a th:href="@{'/cs/new/' + ${serviceType.id} + '/' + ${visit.getId()}}">Choose</a>
                     </td>
 
                 </tr>
@@ -39,8 +39,9 @@
 </div>
 <input type="hidden" name="name" id="myData" class="form-control"/>
 
-<form th:action="@{/serviceType/add}" th:object="${serviceType}" method="post" style="max-width: 300px; margin: 0 auto;">
-    <input type="hidden" th:name="idVisit" th:value="${idVisit}" />
+<form th:action="@{/serviceType/add}" th:object="${serviceType}" method="post"
+      style="max-width: 300px; margin: 0 auto;">
+    <input type="hidden" th:name="idVisit" th:value="${visit.getId()}"/>
 
 
     <div>
@@ -75,7 +76,7 @@
     </div>
 </form>
 <form th:action="@{/cs/save}" method="post" style="max-width: 300px; margin: 0 auto;">
-    <input type="hidden" th:name="idVisit" th:value="${idVisit}" />
+    <input type="hidden" th:name="idVisit" th:value="${visit.getId()}"/>
     <div>
         <button type="submit" name="back" value="Back" class="btn btn-primary">Cofnij</button>
     </div>
@@ -85,7 +86,7 @@
 
 <script th:inline="javascript">
     var serviceTypeSet = /*[[${serviceTypeSet}]]*/ 'serviceTypeSet';
-    var idVisit = [[${idVisit}]];
+    var idVisit = [[${visit.getId()}]];
     // var myData = [[${idd}]];
 
     $('#txtSearch').on('keyup', function () {

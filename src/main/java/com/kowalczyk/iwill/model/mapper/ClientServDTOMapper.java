@@ -9,18 +9,18 @@ import java.util.stream.Collectors;
 
 @Transactional
 public class ClientServDTOMapper {
-//    private int id;
+    //    private int id;
 //    private String desc;
 //    private String title;
 //    private double price;
-    public static ClientServDTO mapToClientServDTO(ClientServ clientServ){
+    public static ClientServDTO mapToClientServDTO(ClientServ clientServ) {
         ClientServDTO clientServDTO = ClientServDTO.builder()
                 .id(clientServ.getId())
                 .desc(clientServ.getDesc())
                 .title(clientServ.getTitle())
                 .price(clientServ.getPrice())
                 .build();
-        if (clientServ.getServiceType() != null){
+        if (clientServ.getServiceType() != null) {
             clientServDTO.setServiceType(clientServ.getServiceType());
         }
         return clientServDTO;

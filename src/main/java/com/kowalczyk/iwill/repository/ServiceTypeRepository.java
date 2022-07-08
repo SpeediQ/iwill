@@ -1,4 +1,4 @@
-package  com.kowalczyk.iwill.repository;
+package com.kowalczyk.iwill.repository;
 
 
 import com.kowalczyk.iwill.model.ServiceType;

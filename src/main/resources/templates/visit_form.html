@@ -10,11 +10,11 @@
     <div><h1>Create New Visit</h1></div>
     <br/>
     <form th:action="@{/visits/save}" th:object="${visit}" method="post" style="max-width: 300px; margin: 0 auto;">
-        <input type="hidden" th:field="*{id}" th:value="${visit.id}"/>
+        <input type="hidden" th:field="*{id}" th:value="${visit.getId()}"/>
         <input type="hidden" th:field="*{clientCard}" th:value="${visit.getClientCard()}"/>
         <input type="hidden" th:field="*{code}" th:value="${visit.getCode()}"/>
-        <th:block th:unless="${status == null}">
-        <input type="hidden" th:field="*{status}" th:value="${status.getId()}"/>
+        <th:block th:unless="${visit.getStatus() == null}">
+            <input type="hidden" th:field="*{status}" th:value="${visit.getStatus().getId()}"/>
         </th:block>
         <!--            <input type="hidden" th:name="clientServSet" th:value="${clientServSet}" />-->
 
@@ -27,7 +27,7 @@
                 <div>
                     <label>Opis wizyty</label>
                     <textarea rows="10" placeholder="Visit Description" th:field="*{desc}" class="form-control"
-                                  required/>
+                              required/>
                 </div>
             </div>
 
@@ -43,13 +43,13 @@
                         <th>ACTION</th>
                         </thead>
                         <tbody>
-                        <th:block th:each="clientServ : ${clientServSet}">
+                        <th:block th:each="clientServ : ${visit.getClientServSet()}">
                             <tr>
-                                <td>[[${clientServ.title}]]</td>
+                                <td>[[${clientServ.getTitle}]]</td>
                                 <td>[[${clientServ.desc}]]</td>
                                 <td>[[${clientServ.price}]]</td>
                                 <td>
-                                    <a th:href="@{'/cs/edit/' + ${clientServ.id}}">Edytuj Usługę</a>
+                                    <a th:href="@{'/cs/edit/' + ${clientServ.getId()}}">Edytuj Usługę</a>
                                 </td>
                             </tr>
                         </th:block>
@@ -75,13 +75,15 @@
                 <button type="submit" name="submit" value="Submit" class="btn btn-primary">Save</button>
             </th:block>
 
-            <button type="submit" name="addItem" value="AddItem" class="btn btn-primary">Add New Services to Visit</button>
+            <button type="submit" name="addItem" value="AddItem" class="btn btn-primary">Add New Services to Visit
+            </button>
 
 
         </div>
     </form>
-    <form th:action="@{/cc/view}" method="get" style="max-width: 300px; margin: 0 auto;">
-        <input type="hidden" th:name="idClient" th:value="${visit.getClientCard().getClient().getId()}" />
+    <form th:action="@{/c/add/__${visit.getClientCard().getId()}__}" method="get"
+          style="max-width: 300px; margin: 0 auto;">
+
         <div>
             <button type="submit" class="btn btn-primary">Cofnij</button>
         </div>

@@ -14,7 +14,7 @@ public class ClientCard {
     private int id;
 
     @OneToOne
-    @JoinColumn(name="CLIENT_ID")
+    @JoinColumn(name = "CLIENT_ID")
     private Client client;
 
     @OneToMany(mappedBy = "clientCard")
@@ -56,7 +56,24 @@ public class ClientCard {
 
     @Override
     public String toString() {
-        return "ClientCard "+ id;
+        return "ClientCard " + id;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ClientCard)) return false;
+
+        ClientCard that = (ClientCard) o;
+
+        if (id != that.id) return false;
+        return visitSet != null ? visitSet.equals(that.visitSet) : that.visitSet == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (visitSet != null ? visitSet.hashCode() : 0);
+        return result;
+    }
 }
