@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Set;
+
+import static com.kowalczyk.iwill.controller.VisitController.addAttributeForVisitForm;
 
 @Controller
 public class ClientServController {
@@ -50,43 +51,28 @@ button "go to Visit Screen" -> cs/save
         Visit visit;
         ServiceType serviceType;
         ClientServ clientServ;
-
-
         if (idVisit != null && idVisit > 0) {
             visit = visitRepository.getById(idVisit);
             model.addAttribute("visit", visit);
         }
         if (idserviceType != null && idserviceType > 0) {
             serviceType = serviceTypeRepository.getById(idserviceType);
-//            clientServ = new ClientServ(new Comment(item));
             clientServ = new ClientServ(serviceType);
             copyDataFromItemToClientServ(serviceType, clientServ);
-            model.addAttribute("serviceType", serviceType);
-            model.addAttribute("clientServ", clientServ);
+            addAttributeForClientServForm(model, serviceType, clientServ);
         }
-
-
         return "cs_form";
+    }
+
+    private void addAttributeForClientServForm(Model model, ServiceType serviceType, ClientServ clientServ) {
+        model.addAttribute("serviceType", serviceType);
+        model.addAttribute("clientServ", clientServ);
     }
 
     private void copyDataFromItemToClientServ(ServiceType item, ClientServ clientServ) {
         clientServ.setPrice(item.getValue());
         clientServ.setDesc(item.getDesc());
         clientServ.setTitle(item.getName());
-    }
-
-    @GetMapping("/clientservs/edit/{id}")
-    public String showFinishingForm(@PathVariable("id") Integer id, Model model) {
-        ClientServ clientserv = clientServRepository.findById(id).get();
-        model.addAttribute("clientserv", clientserv);
-
-        List<ServiceType> listItems = serviceTypeRepository.findAll();
-        model.addAttribute("listItems", listItems);
-
-        List<Visit> listVisits = visitRepository.findAll();
-        model.addAttribute("listVisit", listVisits);
-        return "clientserv_form";
-
     }
 
     @GetMapping("/clientservs/delete/{id}")
@@ -105,22 +91,18 @@ button "go to Visit Screen" -> cs/save
         clientServ.setVisit(visit);
         clientServRepository.save(clientServ);
         visit.getClientServSet().add(clientServ);
-        Set<ClientServ> clientServSet = visit.getClientServSet();
         visitRepository.save(visit);
-        model.addAttribute("visit", visit);
-        model.addAttribute("status", visit.getStatus());
-        model.addAttribute("clientServSet", clientServSet);
+        addAttributeForVisitForm(model, visit, visit.getClientServSet());
+        return "visit_form";
+    }
 
-        return "visit_form";
-    }
-    @PostMapping(value = "/cs/save" , params = "back")
+    @PostMapping(value = "/cs/save", params = "back")
     public String saveCS(HttpServletRequest request, Model model) {
-        int visitId = Integer.parseInt(request.getParameter("idVisit"));
-        Visit visit = visitRepository.getById(visitId);
-        model.addAttribute("clientServSet", visit.getClientServSet());
-        model.addAttribute("visit", visit);
+        Visit visit = visitRepository.getById(Integer.parseInt(request.getParameter("idVisit")));
+        addAttributeForVisitForm(model, visit, visit.getClientServSet());
         return "visit_form";
     }
+
     @GetMapping(value = "/cs/edit/{id}")
     public String editCS(@PathVariable("id") Integer id, Model model) {
         ClientServ clientServ = clientServRepository.getById(id);
@@ -128,16 +110,14 @@ button "go to Visit Screen" -> cs/save
         model.addAttribute("items", serviceTypeRepository.findAll());
         return "cs_edit_form";
     }
+
     @PostMapping(value = "/cs/save", params = "update")
     public String updateCS(ClientServ clientServ, Model model, HttpServletRequest request) {
         ServiceType selectedItem = clientServ.getServiceType();
         clientServ = updateCSByRequest(request);
-        model.addAttribute("visit", clientServ.getVisit());
         clientServ.setServiceType(selectedItem);
         clientServRepository.save(clientServ);
-
-        model.addAttribute("clientServSet", clientServ.getVisit().getClientServSet());
-        model.addAttribute("visit", clientServ.getVisit());
+        addAttributeForVisitForm(model, clientServ.getVisit(), clientServ.getVisit().getClientServSet());
         return "visit_form";
 
     }

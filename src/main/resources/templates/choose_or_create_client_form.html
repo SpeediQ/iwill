@@ -48,7 +48,7 @@
 </div>
 <input type="hidden" name="name" id="myData" class="form-control"/>
 
-<form th:action="@{/c/add}" th:object="${client}" method="post" style="max-width: 300px; margin: 0 auto;">
+<form th:action="@{/main/save/client}" th:object="${client}" method="post" style="max-width: 300px; margin: 0 auto;">
     <div>
         <h2>Create new Client: </h2>
 
@@ -85,7 +85,7 @@
         </div>
     </div>
     <div class="p-2">
-        <a class= "h2" th:href="@{/}">Back</a>
+        <a class="h2" th:href="@{/}">Back</a>
     </div>
 
 </form>

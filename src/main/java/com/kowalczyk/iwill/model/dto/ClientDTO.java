@@ -1,16 +1,9 @@
 package com.kowalczyk.iwill.model.dto;
 
-import com.kowalczyk.iwill.model.ClientCard;
-import com.kowalczyk.iwill.model.Visit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToOne;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 @Builder
 @AllArgsConstructor

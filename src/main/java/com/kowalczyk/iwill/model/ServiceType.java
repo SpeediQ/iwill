@@ -1,4 +1,4 @@
-package  com.kowalczyk.iwill.model;
+package com.kowalczyk.iwill.model;
 
 import javax.persistence.*;
 
@@ -59,7 +59,7 @@ public class ServiceType {
                 '}';
     }
 
-    public String niceString(){
-        return "Tytuł: "+ name+" ; Cena: "+value+" ; Opis: "+desc;
+    public String niceString() {
+        return "Tytuł: " + name + " ; Cena: " + value + " ; Opis: " + desc;
     }
 }

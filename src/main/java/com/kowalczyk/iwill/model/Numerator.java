@@ -19,7 +19,6 @@ public class Numerator {
     private String symbol;
 
 
-
     public Numerator() {
     }
 

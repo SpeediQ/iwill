@@ -3,35 +3,36 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>List Visits</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
 </head>
 <body>
-    <div class="container text-center">
-        <div><h1>List Visits</h1></div><br/>
-        <div>
-            <table class="table table-bordered">
-                <thead>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>ClientServs</th>
-                    <th></th>
-                </thead>
-                <tbody>
-                    <th:block th:each="visit : ${listVisits}">
-                    <tr>
-                        <td>[[${visit.id}]]</td>
-                        <td>[[${visit.desc}]]</td>
-                        <td>[[${visit.clientServSet}]]</td>
+<div class="container text-center">
+    <div><h1>List Visits</h1></div>
+    <br/>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+            <th>ID</th>
+            <th>Name</th>
+            <th>ClientServs</th>
+            <th></th>
+            </thead>
+            <tbody>
+            <th:block th:each="visit : ${listVisits}">
+                <tr>
+                    <td>[[${visit.id}]]</td>
+                    <td>[[${visit.desc}]]</td>
+                    <td>[[${visit.clientServSet}]]</td>
 
-                        <td>
-                            <a th:href="@{'/visits/edit/' + ${visit.id}}">Edit</a>
-                        </td>
-                    </tr>
-                    </th:block>
-                </tbody>
-            </table>
-        </div>
-
+                    <td>
+                        <a th:href="@{'/visits/edit/' + ${visit.id}}">Edit</a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
     </div>
+
+</div>
 </body>
 </html>

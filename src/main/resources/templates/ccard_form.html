@@ -3,53 +3,54 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>Client Card</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
 </head>
 <body>
-    <div class="container text-center">
-        <div><h2>Karta Klienta:</h2></div><br/>
-        <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 600px; margin: 0 auto;">
-            <input type="hidden" th:field="*{id}" th:value="${client.id}"/>
+<div class="container text-center">
+    <div><h2>Karta Klienta:</h2></div>
+    <br/>
+    <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 600px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}" th:value="${client.id}"/>
 
-            <div>
-                <span>Klient:</span>
-                <span th:text="${client.getNiceName}" th:remove="tag"></span>
-                <br>
-                <span>data urodzenia:</span>
-                <span th:text="${#dates.format(client.date, 'dd/MM/yyyy')}" th:remove="tag"></span>
+        <div>
+            <span>Klient:</span>
+            <span th:text="${client.getNiceName}" th:remove="tag"></span>
+            <br>
+            <span>data urodzenia:</span>
+            <span th:text="${#dates.format(client.date, 'dd/MM/yyyy')}" th:remove="tag"></span>
 
-            </div>
+        </div>
 
-            <div>
-                <table class="table table-bordered">
-                    <thead>
-                    <th>Code</th>
-                    <th>Title</th>
-                    <th>Desc</th>
-                    <th>ClientServSet</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Sum</th>
-                    <th>Action</th>
-                    </thead>
-                    <tbody>
-                    <th:block th:each="visit : ${visitSet}">
-                        <tr>
-                            <td>[[${visit.code}]]</td>
-                            <td>[[${visit.title}]]</td>
-                            <td>[[${visit.desc}]]</td>
-                            <td>[[${visit.clientServSet}]]</td>
-                            <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
-                            <td>[[${visit.time}]]</td>
-                            <td>[[${visit.getSum}]]</td>
-                            <td>
-                                <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
-                            </td>
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                <th>Code</th>
+                <th>Title</th>
+                <th>Desc</th>
+                <th>ClientServSet</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Sum</th>
+                <th>Action</th>
+                </thead>
+                <tbody>
+                <th:block th:each="visit : ${client.getClientCard().getSortedVisitListByVisitSet()}">
+                    <tr>
+                        <td>[[${visit.code}]]</td>
+                        <td>[[${visit.title}]]</td>
+                        <td>[[${visit.desc}]]</td>
+                        <td>[[${visit.clientServSet}]]</td>
+                        <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
+                        <td>[[${visit.time}]]</td>
+                        <td>[[${visit.getSum}]]</td>
+                        <td>
+                            <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
+                        </td>
 
-                        </tr>
-                    </th:block>
-                    </tbody>
-                </table>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
         </div>
         <div>
             <div>
@@ -58,16 +59,16 @@
 
         </div>
 
-        </form>
+    </form>
 
-        <form th:action="@{/c/new}" method="get" style="max-width: 300px; margin: 0 auto;">
+    <form th:action="@{/main/cform}" method="get" style="max-width: 300px; margin: 0 auto;">
 
-            <div>
-                <button type="submit" class="btn btn-primary">Cofnij</button>
-            </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Cofnij</button>
+        </div>
 
-        </form>
-    </div>
+    </form>
+</div>
 </body>
 </html>
 

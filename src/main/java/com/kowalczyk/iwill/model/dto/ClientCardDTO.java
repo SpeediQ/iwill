@@ -1,11 +1,8 @@
 package com.kowalczyk.iwill.model.dto;
 
-import com.kowalczyk.iwill.model.Client;
-import com.kowalczyk.iwill.model.Visit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 

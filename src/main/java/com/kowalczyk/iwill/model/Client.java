@@ -81,7 +81,7 @@ public class Client {
         this.date = date;
     }
 
-    public String getNiceName(){
+    public String getNiceName() {
         return name + " " + lastname;
     }
 

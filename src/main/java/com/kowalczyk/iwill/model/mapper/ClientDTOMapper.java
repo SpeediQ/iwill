@@ -13,20 +13,13 @@ import static com.kowalczyk.iwill.model.mapper.ClientCardDTOMapper.mapToClientCa
 @Transactional
 public class ClientDTOMapper {
 
-//    private int id;
-//    private String name;
-//    private String lastname;
-//    private String comment;
-//    private ClientCardDTO clientCardDTO;
-
-
     public static ClientDTO mapToClientDTO(Client client) {
         ClientDTO clientDTO = ClientDTO.builder()
                 .id(client.getId())
                 .name(client.getName())
                 .lastname(client.getLastname())
                 .comment(client.getComment())
-                .clientCardDTO(client.getClientCard() != null ? mapToClientCardDTO(client.getClientCard()) :  mapToClientCardDTO(new ClientCard()))
+                .clientCardDTO(client.getClientCard() != null ? mapToClientCardDTO(client.getClientCard()) : mapToClientCardDTO(new ClientCard()))
                 .date(client.getDate())
                 .code(client.getCode())
                 .build();

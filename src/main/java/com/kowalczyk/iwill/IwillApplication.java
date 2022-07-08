@@ -25,13 +25,13 @@ public class IwillApplication {
 
     @EventListener
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        if (statusRepository.findAll().size() == 0){
+        if (statusRepository.findAll().size() == 0) {
             Status status = new Status();
             status.setName("Wizyta");
             status.setName("Rezerwacja");
             statusRepository.save(status);
         }
-        if (numeratorRepository.findAll().size() == 0){
+        if (numeratorRepository.findAll().size() == 0) {
             Numerator visit = new Numerator("Wizyta", "Numerator wskazuje pierwszy wolny NR dla Wizyty", 1, "W");
             Numerator client = new Numerator("Klient", "Numerator wskazuje pierwszy wolny NR dla Klienta", 1, "C");
             numeratorRepository.save(visit);

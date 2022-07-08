@@ -3,40 +3,41 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>List Visits</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
 </head>
 <body>
-    <div class="container text-center">
-        <div><h1>List Items</h1></div><br/>
-        <div>
-            <table class="table table-bordered">
-                <thead>
-                    <th>ID</th>
-                    <th>TITLE</th>
-                    <th>Name</th>
-                    <th>Value</th>
-                    <th>Desc</th>
-                    <th></th>
-                </thead>
-                <tbody>
-                    <th:block th:each="item : ${listItems}">
-                    <tr>
-                        <td>[[${item.id}]]</td>
-                        <td>[[${item.title}]]</td>
+<div class="container text-center">
+    <div><h1>List Items</h1></div>
+    <br/>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+            <th>ID</th>
+            <th>TITLE</th>
+            <th>Name</th>
+            <th>Value</th>
+            <th>Desc</th>
+            <th></th>
+            </thead>
+            <tbody>
+            <th:block th:each="item : ${listItems}">
+                <tr>
+                    <td>[[${item.id}]]</td>
+                    <td>[[${item.title}]]</td>
 
-                        <td>[[${item.name}]]</td>
-                        <td>[[${item.value}]]</td>
-                        <td>[[${item.desc}]]</td>
-                        <td>
-                            <a th:href="@{'/items/edit/' + ${item.id}}">Edit</a>
-                        </td>
+                    <td>[[${item.name}]]</td>
+                    <td>[[${item.value}]]</td>
+                    <td>[[${item.desc}]]</td>
+                    <td>
+                        <a th:href="@{'/items/edit/' + ${item.id}}">Edit</a>
+                    </td>
 
-                    </tr>
-                    </th:block>
-                </tbody>
-            </table>
-        </div>
-
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
     </div>
+
+</div>
 </body>
 </html>

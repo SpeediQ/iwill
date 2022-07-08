@@ -5,7 +5,6 @@ import com.kowalczyk.iwill.model.*;
 import com.kowalczyk.iwill.repository.ClientCardRepository;
 import com.kowalczyk.iwill.repository.ClientRepository;
 import com.kowalczyk.iwill.repository.NumeratorRepository;
-import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
 
+import static com.kowalczyk.iwill.controller.VisitController.addAttributeForVisitForm;
 import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
@@ -29,29 +28,29 @@ public class ClientController {
     private NumeratorRepository numeratorRepository;
 
 
-
-
-    @GetMapping("/c/new")
-    public String showClientForm(Model model){
-        model.addAttribute("client", new Client("Brak komentarza"));
-        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
+    @GetMapping("/main/cform")
+    public String showClientForm(Model model) {
+        addAttributeForClientForm(model);
         return "choose_or_create_client_form";
     }
 
-    @PostMapping("/c/add")
-    public String addItemByVisitFlow(Client client, Model model){
+    @PostMapping("/main/save/client")
+    public String addItemByVisitFlow(Client client, Model model) {
         ClientCard clientCard = new ClientCard();
         client.setClientCard(clientCard);
         clientCard.setClient(client);
         setNumberForClient(client);
         clientRepository.save(client);
-        model.addAttribute("client", new Client("Brak komentarza"));
-        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
-
+        addAttributeForClientForm(model);
         return "choose_or_create_client_form";
     }
 
-    private void setNumberForClient(Client client){
+    private void addAttributeForClientForm(Model model) {
+        model.addAttribute("client", new Client("Brak komentarza"));
+        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
+    }
+
+    private void setNumberForClient(Client client) {
         if (client.getCode() == null || client.getCode().equals("")) {
             Numerator clientNumerator = numeratorRepository.getById(ConstanceNr.NUMERATOR_CLIENT);
             int freeClientNumber = clientNumerator.getValue();
@@ -66,51 +65,24 @@ public class ClientController {
 
     @GetMapping(value = "/c/add/{idClient}")
     public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {
-
-        List<Visit> visitList = new ArrayList<>();
-            Client client = clientRepository.getById(idClient);
-            if (client.getClientCard() != null) {
-                visitList = client.getClientCard().getSortedVisitListByVisitSet();
-            }
-
-            model.addAttribute("client", client);
-            model.addAttribute("visitSet", visitList);
-
-
+        Client client = clientRepository.getById(idClient);
+        addAttributeForClientCardForm(model, client);
         return "ccard_form";
     }
 
-    @GetMapping(value = "cc/view")
-    public String showClientCard(Model model, HttpServletRequest request) {
-
-        int idClient = Integer.parseInt(request.getParameter("idClient"));
-        List<Visit> visitList = new ArrayList<>();
-        Client client = clientRepository.getById(idClient);
-        if (client.getClientCard() != null) {
-            visitList = client.getClientCard().getSortedVisitListByVisitSet();
-        }
-
+    private void addAttributeForClientCardForm(Model model, Client client) {
         model.addAttribute("client", client);
-        model.addAttribute("visitSet", visitList);
-
-
-        return "ccard_form";
     }
 
     @PostMapping(value = "c/v/add")
     public String addVisitToClient(Client client, HttpServletRequest request, Model model) {
-
+        Visit visit = new Visit();
         Client newClient = clientRepository.getById(client.getId());
         ClientCard clientCard = newClient.getClientCard();
-        Visit visit = new Visit();
         clientCard.getVisitSet().add(visit);
         visit.setClientCard(clientCard);
         clientCardRepository.save(clientCard);
-
-
-        model.addAttribute("visit", visit);
-//        model.addAttribute("clientCard", clientCard);
-        model.addAttribute("idClient", request.getParameter("idClient"));
+        addAttributeForVisitForm(model, visit, visit.getClientServSet());
         return "visit_form";
     }
 

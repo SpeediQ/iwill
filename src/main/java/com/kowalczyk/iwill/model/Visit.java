@@ -127,7 +127,7 @@ public class Visit implements Serializable {
 
     public Double getSum() {
         double sum = 0;
-        if (getClientServSet() != null && getClientServSet().size() > 0){
+        if (getClientServSet() != null && getClientServSet().size() > 0) {
             for (ClientServ clientServ : getClientServSet()) {
                 sum += clientServ.getPrice();
             }

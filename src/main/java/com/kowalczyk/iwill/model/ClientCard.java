@@ -14,7 +14,7 @@ public class ClientCard {
     private int id;
 
     @OneToOne
-    @JoinColumn(name="CLIENT_ID")
+    @JoinColumn(name = "CLIENT_ID")
     private Client client;
 
     @OneToMany(mappedBy = "clientCard")
@@ -56,7 +56,7 @@ public class ClientCard {
 
     @Override
     public String toString() {
-        return "ClientCard "+ id;
+        return "ClientCard " + id;
     }
 
 }

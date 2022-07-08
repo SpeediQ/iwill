@@ -27,7 +27,6 @@ public class ClientServ {
     }
 
 
-
     public ClientServ(Visit visit) {
         this.visit = visit;
     }
@@ -86,6 +85,6 @@ public class ClientServ {
 
     @Override
     public String toString() {
-        return " {" + title + " " + desc+ "} ";
+        return " {" + title + " " + desc + "} ";
     }
 }
