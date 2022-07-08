@@ -22,6 +22,8 @@ public class ClientDTO {
     private String comment;
     private ClientCardDTO clientCardDTO;
     private Date date;
+    private String code;
+
 
     public int getId() {
         return id;
@@ -45,6 +47,14 @@ public class ClientDTO {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getComment() {

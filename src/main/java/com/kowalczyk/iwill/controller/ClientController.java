@@ -4,6 +4,7 @@ package com.kowalczyk.iwill.controller;
 import com.kowalczyk.iwill.model.*;
 import com.kowalczyk.iwill.repository.ClientCardRepository;
 import com.kowalczyk.iwill.repository.ClientRepository;
+import com.kowalczyk.iwill.repository.NumeratorRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,14 +26,14 @@ public class ClientController {
     @Autowired
     private ClientCardRepository clientCardRepository;
     @Autowired
-    private VisitRepository visitRepository;
+    private NumeratorRepository numeratorRepository;
 
 
 
 
     @GetMapping("/c/new")
     public String showClientForm(Model model){
-        model.addAttribute("client", new Client());
+        model.addAttribute("client", new Client("Brak komentarza"));
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
         return "choose_or_create_client_form";
     }
@@ -42,12 +43,26 @@ public class ClientController {
         ClientCard clientCard = new ClientCard();
         client.setClientCard(clientCard);
         clientCard.setClient(client);
+        setNumberForClient(client);
         clientRepository.save(client);
-        model.addAttribute("client", new Client());
+        model.addAttribute("client", new Client("Brak komentarza"));
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
 
         return "choose_or_create_client_form";
     }
+
+    private void setNumberForClient(Client client){
+        if (client.getCode() == null || client.getCode().equals("")) {
+            Numerator clientNumerator = numeratorRepository.getById(ConstanceNr.NUMERATOR_CLIENT);
+            int freeClientNumber = clientNumerator.getValue();
+            String symbol = clientNumerator.getSymbol();
+            String clientCode = symbol + "/" + freeClientNumber;
+            client.setCode(clientCode);
+            clientNumerator.setValue(freeClientNumber + 1);
+            numeratorRepository.save(clientNumerator);
+        }
+    }
+
 
     @GetMapping(value = "/c/add/{idClient}")
     public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {

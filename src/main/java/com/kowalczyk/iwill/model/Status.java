@@ -13,6 +13,13 @@ public class Status {
 
     private String name;
 
+    public Status() {
+    }
+
+    public Status(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

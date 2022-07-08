@@ -16,7 +16,6 @@
     <div>
         <table id="serviceTypeTable" class="table table-bordered">
             <thead>
-            <th>ID</th>
             <th>Name</th>
             <th>Desc</th>
             <th>Value</th>
@@ -25,7 +24,6 @@
             <tbody>
             <th:block th:each="serviceType : ${serviceTypeSet}">
                 <tr>
-                    <td>[[${serviceType.id}]]</td>
                     <td>[[${serviceType.name}]]</td>
                     <td>[[${serviceType.desc}]]</td>
                     <td>[[${serviceType.value}]]</td>
@@ -116,7 +114,6 @@
         console.log(table)
         table.innerHTML = ''
         var titleRow = `<tr>
-                                <td><b>Id</b></td>
                                 <td><b>Name</b></td>
                                 <td><b>Desc</b></td>
                                 <td><b>Value</b></td>
@@ -127,7 +124,6 @@
             var idd = data[i].id;
 
             var row = `<tr>
-                                <td>${idd}</td>
                                 <td>${data[i].name}</td>
                                 <td>${data[i].desc}</td>
                                 <td>${data[i].value}</td>

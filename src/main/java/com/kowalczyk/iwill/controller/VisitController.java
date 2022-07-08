@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -22,9 +23,7 @@ public class VisitController {
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
     @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
-    private ClientCardRepository clientCardRepository;
+    private NumeratorRepository numeratorRepository;
     @Autowired
     private StatusRepository statusRepository;
 
@@ -36,26 +35,17 @@ public class VisitController {
         return "visits";
     }
 
-/*
-Screen "New Visit"
-basic fields: Visit.title (mandatory), Visit.desc
-button "Add New Services to Visit" -> visits/save params = "addItem"
-button "Add New Services to Visit" -> visits/save params = "submit"
-* */
     @GetMapping("/visits/new")
     public String showVisitNewForm(Model model) {
         model.addAttribute("visit", new Visit());
         return "visit_form";
     }
 
-/*
-Screen "List Items"
-itemsList -> choose action -> /cs/new/{idItem}/{idVisit}"
-Ability to add new Item
-* */
+
     @PostMapping(value = "/visits/save", params = "addItem")
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
         setCurrentStatus(visit);
+        setNumberForClient(visit);
         visitRepository.save(visit);
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
@@ -63,10 +53,21 @@ Ability to add new Item
 
         return "choose_or_create_serviceType_form";
     }
+    private void setNumberForClient(Visit visit) {
+        if (visit.getCode() == null || visit.getCode().equals("")) {
+            Numerator visitNumerator = numeratorRepository.getById(ConstanceNr.NUMERATOR_VISIT);
+            int freeVisitNumber = visitNumerator.getValue();
+            String symbol = visitNumerator.getSymbol();
+            String clientCode = visit.getClientCard().getClient().getCode();
+            String visitCode = clientCode + "/" + symbol + "/" + freeVisitNumber;
+            visit.setCode(visitCode);
+            visitNumerator.setValue(freeVisitNumber + 1);
+            numeratorRepository.save(visitNumerator);
+        }
+    }
 
     private void setCurrentStatus(Visit visit) {
-        Status status = statusRepository.getById(ConstanceNr.STATUS_CURRENT);
-        visit.setStatus(status);
+
     }
 /*
 save Visit to db

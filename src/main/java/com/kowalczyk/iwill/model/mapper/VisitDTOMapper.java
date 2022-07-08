@@ -41,6 +41,10 @@ public class VisitDTOMapper {
         if (visit.getStatus() != null){
             visitDTO.setStatus(visit.getStatus());
         }
+
+        if (visit.getCode() != null){
+            visitDTO.setCode(visit.getCode());
+        }
         return visitDTO;
     }
 

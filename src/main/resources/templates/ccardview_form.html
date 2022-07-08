@@ -22,24 +22,24 @@
     <div>
         <table id="itemsTable" class="table table-bordered">
             <thead>
+            <th>Code</th>
             <th>Title</th>
             <th>Desc</th>
             <th>ClientServSet</th>
             <th>Date</th>
             <th>Time</th>
-            <th>Status</th>
             <th>Sum</th>
             <th>Action</th>
             </thead>
             <tbody>
             <th:block th:each="visit : ${visitSet}">
                 <tr>
+                    <td>[[${visit.code}]]</td>
                     <td>[[${visit.title}]]</td>
                     <td>[[${visit.desc}]]</td>
                     <td>[[${visit.clientServSet}]]</td>
                     <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
                     <td>[[${visit.time}]]</td>
-                    <td>[[${visit.status}]]</td>
                     <td>[[${visit.getSum}]]</td>
                     <td>
                         <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj Wizytę</a>
