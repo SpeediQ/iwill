@@ -59,6 +59,31 @@ public class ServiceType {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ServiceType)) return false;
+
+        ServiceType that = (ServiceType) o;
+
+        if (id != that.id) return false;
+        if (Double.compare(that.value, value) != 0) return false;
+        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
+        return name != null ? name.equals(that.name) : that.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + (desc != null ? desc.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        temp = Double.doubleToLongBits(value);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
     public String niceString() {
         return "Tytuł: " + name + " ; Cena: " + value + " ; Opis: " + desc;
     }

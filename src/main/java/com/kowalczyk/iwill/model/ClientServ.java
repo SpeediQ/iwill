@@ -84,6 +84,33 @@ public class ClientServ {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ClientServ)) return false;
+
+        ClientServ that = (ClientServ) o;
+
+        if (id != that.id) return false;
+        if (Double.compare(that.price, price) != 0) return false;
+        if (desc != null ? !desc.equals(that.desc) : that.desc != null) return false;
+        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        return serviceType != null ? serviceType.equals(that.serviceType) : that.serviceType == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = id;
+        result = 31 * result + (desc != null ? desc.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (serviceType != null ? serviceType.hashCode() : 0);
+        temp = Double.doubleToLongBits(price);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    @Override
     public String toString() {
         return " {" + title + " " + desc + "} ";
     }

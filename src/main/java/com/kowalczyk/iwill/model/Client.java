@@ -100,4 +100,32 @@ public class Client {
 
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Client)) return false;
+
+        Client client = (Client) o;
+
+        if (id != client.id) return false;
+        if (name != null ? !name.equals(client.name) : client.name != null) return false;
+        if (lastname != null ? !lastname.equals(client.lastname) : client.lastname != null) return false;
+        if (comment != null ? !comment.equals(client.comment) : client.comment != null) return false;
+        if (code != null ? !code.equals(client.code) : client.code != null) return false;
+        if (date != null ? !date.equals(client.date) : client.date != null) return false;
+        return clientCard != null ? clientCard.equals(client.clientCard) : client.clientCard == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
+        result = 31 * result + (comment != null ? comment.hashCode() : 0);
+        result = 31 * result + (code != null ? code.hashCode() : 0);
+        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (clientCard != null ? clientCard.hashCode() : 0);
+        return result;
+    }
 }
