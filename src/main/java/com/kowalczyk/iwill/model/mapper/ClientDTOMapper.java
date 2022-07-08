@@ -28,6 +28,7 @@ public class ClientDTOMapper {
                 .comment(client.getComment())
                 .clientCardDTO(client.getClientCard() != null ? mapToClientCardDTO(client.getClientCard()) :  mapToClientCardDTO(new ClientCard()))
                 .date(client.getDate())
+                .code(client.getCode())
                 .build();
 
 

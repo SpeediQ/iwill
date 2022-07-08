@@ -96,13 +96,6 @@ button "go to Visit Screen" -> cs/save
 
     }
 
-    /*
-Screen "Create New Visit"
-services has been added to Visit
-visit is save to db / we can add next CS to Visit
-button "Add New Services to Visit" -> visits/save params = "addItem"
-button "Add New Services to Visit" -> visits/save params = "submit"
-* */
     @PostMapping(value = "/cs/save")
     public String saveCS(ClientServ clientServ, HttpServletRequest request, Model model) {
         int visitId = Integer.parseInt(request.getParameter("visitId"));

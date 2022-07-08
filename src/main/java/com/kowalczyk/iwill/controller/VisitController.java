@@ -23,9 +23,7 @@ public class VisitController {
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
     @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
-    private ClientCardRepository clientCardRepository;
+    private NumeratorRepository numeratorRepository;
     @Autowired
     private StatusRepository statusRepository;
 
@@ -47,12 +45,25 @@ public class VisitController {
     @PostMapping(value = "/visits/save", params = "addItem")
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
         setCurrentStatus(visit);
+        setNumberForClient(visit);
         visitRepository.save(visit);
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
         model.addAttribute("serviceType", new ServiceType());
 
         return "choose_or_create_serviceType_form";
+    }
+    private void setNumberForClient(Visit visit) {
+        if (visit.getCode() == null || visit.getCode().equals("")) {
+            Numerator visitNumerator = numeratorRepository.getById(ConstanceNr.NUMERATOR_VISIT);
+            int freeVisitNumber = visitNumerator.getValue();
+            String symbol = visitNumerator.getSymbol();
+            String clientCode = visit.getClientCard().getClient().getCode();
+            String visitCode = clientCode + "/" + symbol + "/" + freeVisitNumber;
+            visit.setCode(visitCode);
+            visitNumerator.setValue(freeVisitNumber + 1);
+            numeratorRepository.save(visitNumerator);
+        }
     }
 
     private void setCurrentStatus(Visit visit) {

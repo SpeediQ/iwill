@@ -14,6 +14,7 @@ public class Client {
     private String name;
     private String lastname;
     private String comment;
+    private String code;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
@@ -82,6 +83,14 @@ public class Client {
 
     public String getNiceName(){
         return name + " " + lastname;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Override

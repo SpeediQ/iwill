@@ -13,9 +13,21 @@ public class Numerator {
 
     private String name;
 
+    private String description;
+
+    private int value;
+    private String symbol;
+
 
 
     public Numerator() {
+    }
+
+    public Numerator(String name, String description, int value, String symbol) {
+        this.name = name;
+        this.description = description;
+        this.value = value;
+        this.symbol = symbol;
     }
 
     public int getId() {
@@ -34,6 +46,29 @@ public class Numerator {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
+    }
 
     @Override
     public String toString() {
