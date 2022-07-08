@@ -26,7 +26,9 @@ public class IwillApplication {
     @EventListener
     public void onApplicationEvent(ApplicationReadyEvent event) {
         if (statusRepository.findAll().size() == 0){
-            Status status = new Status("Current");
+            Status status = new Status();
+            status.setName("Wizyta");
+            status.setName("Rezerwacja");
             statusRepository.save(status);
         }
         if (numeratorRepository.findAll().size() == 0){
