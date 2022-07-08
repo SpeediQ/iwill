@@ -50,6 +50,7 @@ public class VisitController {
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
         model.addAttribute("idVisit", visit.getId());
         model.addAttribute("serviceType", new ServiceType());
+        model.addAttribute("status", visit.getStatus());
 
         return "choose_or_create_serviceType_form";
     }
@@ -67,7 +68,8 @@ public class VisitController {
     }
 
     private void setCurrentStatus(Visit visit) {
-
+        Status currentStatus = statusRepository.getById(ConstanceNr.STATUS_CURRENT);
+        visit.setStatus(currentStatus);
     }
 /*
 save Visit to db

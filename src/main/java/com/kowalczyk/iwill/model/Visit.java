@@ -40,18 +40,6 @@ public class Visit implements Serializable {
     public Visit() {
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Visit(String desc) {
-        this.desc = desc;
-    }
-
     public int getId() {
         return id;
     }
@@ -66,6 +54,14 @@ public class Visit implements Serializable {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Set<ClientServ> getClientServSet() {
@@ -104,16 +100,16 @@ public class Visit implements Serializable {
         return status;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -138,4 +134,5 @@ public class Visit implements Serializable {
         }
         return sum;
     }
+
 }

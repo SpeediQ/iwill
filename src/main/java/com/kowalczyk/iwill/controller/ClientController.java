@@ -109,7 +109,7 @@ public class ClientController {
 
 
         model.addAttribute("visit", visit);
-        model.addAttribute("clientCard", clientCard);
+//        model.addAttribute("clientCard", clientCard);
         model.addAttribute("idClient", request.getParameter("idClient"));
         return "visit_form";
     }
