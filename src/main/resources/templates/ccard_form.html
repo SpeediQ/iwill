@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
     <title>Client Card</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
 </head>
 <body>
 <div class="container text-center">
-    <div><h2>Karta Klienta:</h2></div>
-    <br/>
+    <div><h1><b>Tworzenie wizyty</b></h1></div>
+    <div><h2><i>Ekran karty klienta</i></h2></div>
+
     <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 600px; margin: 0 auto;">
         <input type="hidden" th:field="*{id}" th:value="${client.id}"/>
 
@@ -16,45 +17,53 @@
             <span>Klient:</span>
             <span th:text="${client.getNiceName}" th:remove="tag"></span>
             <br>
-            <span>data urodzenia:</span>
-            <span th:text="${#dates.format(client.date, 'dd/MM/yyyy')}" th:remove="tag"></span>
+            <th:block th:unless="${client.getDate() == null}">
+                <span>data urodzenia:</span>
+                <span th:text="${#dates.format(client.getDate(), 'dd/MM/yyyy')}" th:remove="tag"></span>
+            </th:block>
+
 
         </div>
+        <th:block th:if="${client.getClientCard().getSortedVisitListByVisitSet().size() > 0}">
+            <div>
+                <table class="table table-bordered">
+                    <thead>
+                    <th>Kod</th>
+                    <th>Tytuł</th>
+                    <th>Opis</th>
+                    <th>Usługi</th>
+                    <th>Data</th>
+                    <th>Godzina</th>
+                    <th>Suma</th>
+                    <th>Akcja</th>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="visit : ${client.getClientCard().getSortedVisitListByVisitSet()}">
+                        <tr>
+                            <td>[[${visit.code}]]</td>
+                            <td>[[${visit.title}]]</td>
+                            <td>[[${visit.desc}]]</td>
+                            <td>[[${visit.clientServSet}]]</td>
+                            <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
+                            <td>[[${visit.time}]]</td>
+                            <td>[[${visit.getSum}]]</td>
+                            <td>
+                                <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
+                            </td>
 
-        <div>
-            <table class="table table-bordered">
-                <thead>
-                <th>Code</th>
-                <th>Title</th>
-                <th>Desc</th>
-                <th>ClientServSet</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Sum</th>
-                <th>Action</th>
-                </thead>
-                <tbody>
-                <th:block th:each="visit : ${client.getClientCard().getSortedVisitListByVisitSet()}">
-                    <tr>
-                        <td>[[${visit.code}]]</td>
-                        <td>[[${visit.title}]]</td>
-                        <td>[[${visit.desc}]]</td>
-                        <td>[[${visit.clientServSet}]]</td>
-                        <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
-                        <td>[[${visit.time}]]</td>
-                        <td>[[${visit.getSum}]]</td>
-                        <td>
-                            <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
-                        </td>
-
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
-        </div>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+        <th:block th:unless="${client.getClientCard().getSortedVisitListByVisitSet().size() > 0}">
+            <div><h3>Client nie posiada historii wizyt.</h3></div>
+            <div><h3>Dodaj pierwszą wizytę.</h3></div>
+        </th:block>
         <div>
             <div>
-                <button type="submit" class="btn btn-primary">Add new Visit</button>
+                <button type="submit" class="btn btn-primary">Dodaj nową wizytę</button>
             </div>
 
         </div>
@@ -64,7 +73,7 @@
     <form th:action="@{/main/cform}" method="get" style="max-width: 300px; margin: 0 auto;">
 
         <div>
-            <button type="submit" class="btn btn-primary">Cofnij</button>
+            <button type="submit" class="btn btn-primary">Wróć do poprzedniego ekranu</button>
         </div>
 
     </form>

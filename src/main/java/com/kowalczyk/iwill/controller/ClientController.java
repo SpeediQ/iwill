@@ -81,9 +81,15 @@ public class ClientController {
         ClientCard clientCard = newClient.getClientCard();
         clientCard.getVisitSet().add(visit);
         visit.setClientCard(clientCard);
+        prepareDefaultVisitTitleDesc(visit);
         clientCardRepository.save(clientCard);
         addAttributeForVisitForm(model, visit, visit.getClientServSet());
         return "visit_form";
+    }
+
+    private void prepareDefaultVisitTitleDesc(Visit visit) {
+        visit.setTitle("Wizyta ");
+        visit.setDesc("Szczegóły dot. wizyty: ");
     }
 
 }

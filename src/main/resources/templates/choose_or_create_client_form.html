@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
     <title>List Visits</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 <div class="container text-center">
-    <div><h1>Dodaj wizyte</h1></div>
-
+    <div><h1><b>Tworzenie wizyty</b></h1></div>
+    <div><h2><i>Ekran wyboru klienta</i></h2></div>
     <br/>
-
-
     <div>
         <span>Wyszukaj klienta </span><input id="txtSearch" type="text" name="txtSearch">
     </div>
@@ -21,11 +19,11 @@
     <div>
         <table id="clientsTable" class="table table-bordered">
             <thead>
-            <th>CODE</th>
-            <th>Name</th>
-            <th>Lastname</th>
-            <th>Comment</th>
-            <th>Date</th>
+            <th>Kod</th>
+            <th>Imię</th>
+            <th>Nazwisko</th>
+            <th>Notatka</th>
+            <th>Data urodzenia</th>
             <th></th>
             </thead>
             <tbody>
@@ -49,43 +47,45 @@
 <input type="hidden" name="name" id="myData" class="form-control"/>
 
 <form th:action="@{/main/save/client}" th:object="${client}" method="post" style="max-width: 300px; margin: 0 auto;">
+
     <div>
-        <h2>Create new Client: </h2>
+        <h2>Dodaj nowego klienta: </h2>
 
         <div class="form-group row">
-            <label>Name: </label>
+            <label>Imię: </label>
             <div>
                 <input type="text" th:field="*{name}" class="form-control" required/>
             </div>
         </div>
 
         <div class="form-group row">
-            <label>Lastname: </label>
+            <label>Nazwisko: </label>
             <div>
                 <input type="text" th:field="*{lastname}" class="form-control"/>
             </div>
         </div>
 
         <div class="form-group row">
-            <label>Comment: </label>
+            <label>Notatka: </label>
             <div>
                 <input type="text" th:field="*{comment}" class="form-control"/>
             </div>
         </div>
 
-        <div>
+        <div class="form-group row">
             <label for="clientDate">Data urodzenia:</label>
-            <input type="date" th:field="*{date}" id="clientDate" required/>
+            <input type="date" th:field="*{date}" id="clientDate"/>
         </div>
-
-        <div>
+        <b></b>
+        <div class="form-group row">
             <div>
-                <button type="submit" class="btn btn-primary">Add new Client</button>
+                <button type="submit" class="btn btn-primary">Stwórz clienta</button>
             </div>
         </div>
     </div>
-    <div class="p-2">
-        <a class="h2" th:href="@{/}">Back</a>
+    <br>
+    <div class="form-group row">
+        <a class="h2" th:href="@{/}">Wróć</a>
     </div>
 
 </form>
@@ -119,10 +119,10 @@
         console.log(table)
         table.innerHTML = ''
         var titleRow = `<tr>
-                                <td><b>Code</b></td>
-                                <td><b>Name</b></td>
-                                <td><b>Lastname</b></td>
-                                <td><b>Comment</b></td>
+                                <td><b>Kod</b></td>
+                                <td><b>Imię</b></td>
+                                <td><b>Nazwisko</b></td>
+                                <td><b>Notatka</b></td>
                                 <td><b>Action</b></td>
                            </tr>`
         table.innerHTML += titleRow;

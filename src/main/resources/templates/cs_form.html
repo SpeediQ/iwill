@@ -7,8 +7,8 @@
 </head>
 <body>
 <div class="container text-center">
-    <div><h1>Create New Client Service</h1></div>
-    <br/>
+    <div><h1><b>Tworzenie wizyty</b></h1></div>
+    <div><h2><i>Ekran główny usługi</i></h2></div>
 
     <form th:action="@{/cs/save}" th:object="${clientServ}" method="post" style="max-width: 300px; margin: 0 auto;">
         <input type="hidden" th:name="visitId" th:value="${visit.id}"/>
@@ -29,9 +29,7 @@
                 <div>
                     <textarea th:field="*{desc}" placeholder="Client Service Description" class="form-control"
                               required/>
-
                 </div>
-                <br>
                 <div>
                     <br>
                     <div>
@@ -48,9 +46,11 @@
                 <span>Wysokość promocji [%] - OBECNIE:</span>
                 <span th:text="${clientServ.getPromotion()}" th:remove="tag"></span>
 
-                <input type="number" th:field="*{promotion}" placeholder="Price of the Service" class="form-control" required/>
+                <input type="number" th:field="*{promotion}" placeholder="Price of the Service" class="form-control"
+                       required/>
 
-                <button type="submit" name="addPromotionToCS" value="AddPromotionToCS" class="btn btn-primary">Aktywuj promocje
+                <button type="submit" name="addPromotionToCS" value="AddPromotionToCS" class="btn btn-primary">Aktywuj
+                    promocje
                     dla usługi
                 </button>
             </div>

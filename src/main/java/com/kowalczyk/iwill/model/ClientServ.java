@@ -138,6 +138,6 @@ public class ClientServ {
 
     @Override
     public String toString() {
-        return " {" + title + " " + desc + "} ";
+        return title;
     }
 }
