@@ -57,6 +57,16 @@ public class ServiceTypeController {
         addAttributeForChooseOrCreateServiceTypeForm(model, visit);
         return "choose_or_create_serviceType_form";
     }
+    @GetMapping("/serviceTypeManager")
+    public String showServiceTypeManager(Model model) {
+        addAttributeForServiceTypeManager(model);
+        return "serviceType_manager_form";
+    }
+
+    private void addAttributeForServiceTypeManager(Model model) {
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
+        model.addAttribute("serviceType",new ServiceType());
+    }
 
 
     private void addAttributeForChooseOrCreateServiceTypeForm(Model model, Visit visit) {
