@@ -1,6 +1,7 @@
 package com.kowalczyk.iwill.model;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 
 @Entity
 public class ClientServ {
@@ -21,6 +22,9 @@ public class ClientServ {
     private ServiceType serviceType;
 
     private double price;
+
+    private int promotion;
+    private double finalPrice;
 
 
     public ClientServ() {
@@ -83,6 +87,28 @@ public class ClientServ {
         this.price = price;
     }
 
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
+    }
+
+    public double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
+    }
+
+    public double getFinalPriceIncludingPromotion() {
+        DecimalFormat decimalFormat = new DecimalFormat("##.00");
+        double sumIncludingPromotion = getPrice() * (1 - getPromotion() * 0.01);
+        return Math.round(sumIncludingPromotion * 100.0) / 100.0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,6 +138,6 @@ public class ClientServ {
 
     @Override
     public String toString() {
-        return " {" + title + " " + desc + "} ";
+        return title;
     }
 }

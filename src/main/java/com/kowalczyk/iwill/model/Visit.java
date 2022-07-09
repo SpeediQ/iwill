@@ -4,6 +4,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -36,6 +37,8 @@ public class Visit implements Serializable {
     private Status status;
 
     private String title;
+
+    private int promotion;
 
     public Visit() {
     }
@@ -112,6 +115,14 @@ public class Visit implements Serializable {
         this.title = title;
     }
 
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
+    }
+
     @Override
     public String toString() {
         return "Visit{" +
@@ -129,10 +140,22 @@ public class Visit implements Serializable {
         double sum = 0;
         if (getClientServSet() != null && getClientServSet().size() > 0) {
             for (ClientServ clientServ : getClientServSet()) {
-                sum += clientServ.getPrice();
+                sum += clientServ.getFinalPrice();
             }
         }
         return sum;
+    }
+    
+    public String getNiceStringSumIncludingPromotion() {
+        DecimalFormat decimalFormat = new DecimalFormat("##.00");
+        double sumIncludingPromotion = getSum() * (1 - getPromotion() * 0.01);
+        return "Cena po promocji: " + decimalFormat.format(sumIncludingPromotion) +" zł";
+    }
+    public String getNiceStringSum() {
+        return "Cena podstawowa: " + getSum()+" zł";
+    }
+    public String getNiceStringPromotion() {
+        return "Wysokość promocji: " + getPromotion()+"%";
     }
 
     @Override

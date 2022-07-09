@@ -1,25 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="ISO-8859-1">
+    <meta charset="UTF-8">
     <title>List Visits</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 <div class="container text-center">
-    <div><h1>List ServiceType</h1></div>
+    <div><h1><b>Tworzenie wizyty</b></h1></div>
+    <div><h2><i>Ekran wyboru typu usługi</i></h2></div>
     <br/>
     <div>
-        <input id="txtSearch" type="text" name="txtSearch">
+        <span>Wyszukaj typ usługi </span><input id="txtSearch" type="text" name="txtSearch">
     </div>
     <div>
         <table id="serviceTypeTable" class="table table-bordered">
             <thead>
-            <th>Name</th>
-            <th>Desc</th>
-            <th>Value</th>
-            <th></th>
+            <th>Nazwa</th>
+            <th>Opis</th>
+            <th>Domyślna Cena</th>
+            <th>Akcja</th>
             </thead>
             <tbody>
             <th:block th:each="serviceType : ${serviceTypeSet}">
@@ -28,7 +29,7 @@
                     <td>[[${serviceType.desc}]]</td>
                     <td>[[${serviceType.value}]]</td>
                     <td>
-                        <a th:href="@{'/cs/new/' + ${serviceType.id} + '/' + ${visit.getId()}}">Choose</a>
+                        <a th:href="@{'/cs/new/' + ${serviceType.id} + '/' + ${visit.getId()}}">Wybierz</a>
                     </td>
 
                 </tr>
@@ -45,24 +46,24 @@
 
 
     <div>
-        <label>Create New ServiceType: </label>
+        <h2>Dodaj nowy typ usługi: </h2>
 
         <div class="form-group row">
-            <label>ServiceType name: </label>
+            <label>Nazwa: </label>
             <div>
                 <input type="text" th:field="*{name}" class="form-control" required/>
             </div>
         </div>
 
         <div class="form-group row">
-            <label>ServiceType desc: </label>
+            <label>Opis: </label>
             <div>
                 <input type="text" th:field="*{desc}" class="form-control" required/>
             </div>
         </div>
 
         <div class="form-group row">
-            <label>ServiceType value: </label>
+            <label>Domyślna cena: </label>
             <div>
                 <input type="text" th:field="*{value}" class="form-control" required/>
 
@@ -71,14 +72,14 @@
     </div>
     <div>
         <div>
-            <button type="submit" class="btn btn-primary">Add new ServiceType</button>
+            <button type="submit" class="btn btn-primary">Stwórz typ usługi</button>
         </div>
     </div>
 </form>
 <form th:action="@{/cs/save}" method="post" style="max-width: 300px; margin: 0 auto;">
     <input type="hidden" th:name="idVisit" th:value="${visit.getId()}"/>
     <div>
-        <button type="submit" name="back" value="Back" class="btn btn-primary">Cofnij</button>
+        <button type="submit" name="back" value="Back" class="btn btn-primary">Wróć do poprzedniego ekranu</button>
     </div>
 
 </form>
@@ -115,10 +116,10 @@
         console.log(table)
         table.innerHTML = ''
         var titleRow = `<tr>
-                                <td><b>Name</b></td>
-                                <td><b>Desc</b></td>
-                                <td><b>Value</b></td>
-                                <td><b>Action</b></td>
+                                <td><b>Nazwa</b></td>
+                                <td><b>Opis</b></td>
+                                <td><b>Domyślna cena</b></td>
+                                <td><b>Akcja</b></td>
                            </tr>`
         table.innerHTML += titleRow;
         for (var i = 0; i < data.length; i++) {
