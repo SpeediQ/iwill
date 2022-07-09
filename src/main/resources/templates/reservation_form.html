@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Visits</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<!--private int id;-->
+<!--private String desc;-->
+<!--private Set<ClientServDTO> clientServSet = new HashSet<>();-->
+<!--    private Date date;-->
+<!--    private String time;-->
+<!--    private Status status;-->
+<!--    private String title;-->
+<!--    private String code;-->
+<div class="container text-center">
+    <div><h1>Lista Rezerwacji</h1></div>
+    <br/>
+    <div>
+        <input id="txtSearch" type="text" name="txtSearch">
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+            <th>Code</th>
+            <th>Title</th>
+            <th>Desc</th>
+            <th>ClientServSet</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Sum</th>
+            <th>Status</th>
+            <th>Action</th>
+
+            </thead>
+            <tbody>
+            <th:block th:each="reservation : ${allReservationsByStatus}">
+                <tr>
+                    <td>[[${reservation.code}]]</td>
+                    <td>[[${reservation.title}]]</td>
+                    <td>[[${reservation.desc}]]</td>
+                    <td>[[${reservation.clientServSet}]]</td>
+                    <td>[[${#dates.format(reservation.date, 'dd/MM/yyyy')}]]</td>
+                    <td>[[${reservation.time}]]</td>
+                    <td>[[${reservation.getSum}]]</td>
+                    <td>[[${reservation.getStatus}]]</td>
+                    <td>
+                        <a th:href="@{'/changeToVisit/' + ${reservation.getId()}}">Przekształć w wizytę</a>
+                    </td>
+
+
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+    <div class="p-2">
+        <a class="h2" th:href="@{/}">Back</a>
+    </div>
+</div>
+
+</body>
+</html>
