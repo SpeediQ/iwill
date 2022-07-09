@@ -13,6 +13,9 @@ public class ClientServDTO {
     private String title;
     private double price;
     private ServiceType serviceType;
+    private int promotion;
+    private double finalPrice;
+
 
 
     public int getId() {
@@ -53,6 +56,22 @@ public class ClientServDTO {
 
     public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
+    }
+
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
+    }
+
+    public double getFinalPrice() {
+        return finalPrice;
+    }
+
+    public void setFinalPrice(double finalPrice) {
+        this.finalPrice = finalPrice;
     }
 
     @Override

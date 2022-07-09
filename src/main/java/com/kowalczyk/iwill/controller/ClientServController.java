@@ -43,13 +43,8 @@ public class ClientServController {
         return "clientservs";
     }
 
-    /*
-Screen "Create New Client Service"
-set fields: title, desc, item, price
-button "go to Visit Screen" -> cs/save
-* */
-    @GetMapping(value = "/cs/new/{idserviceType}/{idVisit}")
-    public String newCS(@PathVariable("idserviceType") Integer idserviceType, @PathVariable("idVisit") Integer idVisit, Model model) {
+    @GetMapping(value = "/cs/new/{idServiceType}/{idVisit}")
+    public String newCS(@PathVariable("idServiceType") Integer idServiceType, @PathVariable("idVisit") Integer idVisit, Model model) {
         Visit visit;
         ServiceType serviceType;
         ClientServ clientServ;
@@ -57,8 +52,8 @@ button "go to Visit Screen" -> cs/save
             visit = visitRepository.getById(idVisit);
             model.addAttribute("visit", visit);
         }
-        if (idserviceType != null && idserviceType > 0) {
-            serviceType = serviceTypeRepository.getById(idserviceType);
+        if (idServiceType != null && idServiceType > 0) {
+            serviceType = serviceTypeRepository.getById(idServiceType);
             clientServ = new ClientServ(serviceType);
             copyDataFromItemToClientServ(serviceType, clientServ);
             addAttributeForClientServForm(model, serviceType, clientServ);
@@ -75,6 +70,7 @@ button "go to Visit Screen" -> cs/save
         clientServ.setPrice(item.getValue());
         clientServ.setDesc(item.getDesc());
         clientServ.setTitle(item.getName());
+        clientServ.setFinalPrice(clientServ.getFinalPriceIncludingPromotion());
     }
 
     @GetMapping("/clientservs/delete/{id}")
@@ -91,6 +87,7 @@ button "go to Visit Screen" -> cs/save
         Visit visit = visitRepository.getById(visitId);
         clientServ.setServiceType(serviceTypeRepository.getById(serviceTypeId));
         clientServ.setVisit(visit);
+        clientServ.setFinalPrice(clientServ.getFinalPriceIncludingPromotion());
         clientServRepository.save(clientServ);
         visit.getClientServSet().add(clientServ);
         visitRepository.save(visit);
@@ -127,9 +124,39 @@ button "go to Visit Screen" -> cs/save
         ServiceType selectedItem = clientServ.getServiceType();
         clientServ = updateCSByRequest(request);
         clientServ.setServiceType(selectedItem);
+        clientServ.setFinalPrice(clientServ.getFinalPriceIncludingPromotion());
         clientServRepository.save(clientServ);
         addAttributeForVisitForm(model, clientServ.getVisit(), clientServ.getVisit().getClientServSet());
         return "visit_form";
+    }
+
+    @PostMapping(value = "/cs/save", params = "addPromotionToCS")
+    public String refreshCSScreen(ClientServ clientServ, Model model, HttpServletRequest request) {
+        int visitId = Integer.parseInt(request.getParameter("visitId"));
+        int serviceTypeId = Integer.parseInt(request.getParameter("serviceTypeId"));
+        Visit visit = visitRepository.getById(visitId);
+        ServiceType serviceType = serviceTypeRepository.getById(serviceTypeId);
+        updatePromotion(clientServ);
+        addAttributeForClientServForm(model, serviceType, clientServ);
+        model.addAttribute("visit", visit);
+
+        return "cs_form";
+    }
+    private void updatePromotion(ClientServ source) {
+        if (source.getPromotion() <= ConstanceNr.PROMOTION_MIN_VALUE) {
+            source.setPromotion(ConstanceNr.PROMOTION_MIN_VALUE);
+        } else if (source.getPromotion() >= ConstanceNr.PROMOTION_MAX_VALUE) {
+            source.setPromotion(ConstanceNr.PROMOTION_MAX_VALUE);
+        }
+    }
+    private void updatePromotion(ClientServ source, ClientServ destiny) {
+        if (source.getPromotion() <= ConstanceNr.PROMOTION_MIN_VALUE) {
+            destiny.setPromotion(ConstanceNr.PROMOTION_MIN_VALUE);
+        } else if (source.getPromotion() >= ConstanceNr.PROMOTION_MAX_VALUE) {
+            destiny.setPromotion(ConstanceNr.PROMOTION_MAX_VALUE);
+        } else {
+            destiny.setPromotion(source.getPromotion());
+        }
     }
 
     private ClientServ updateCSByRequest(HttpServletRequest request) {
@@ -139,6 +166,7 @@ button "go to Visit Screen" -> cs/save
         clientServ.setTitle(request.getParameter("title"));
         clientServ.setDesc(request.getParameter("desc"));
         clientServ.setPrice(Double.parseDouble(request.getParameter("price")));
+        clientServ.setPromotion(Integer.parseInt(request.getParameter("promotion")));
         return clientServ;
     }
 }

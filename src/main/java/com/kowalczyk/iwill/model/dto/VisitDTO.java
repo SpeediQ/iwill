@@ -24,6 +24,7 @@ public class VisitDTO {
     private Status status;
     private String title;
     private String code;
+    private int promotion;
 
     public int getId() {
         return id;
@@ -87,6 +88,14 @@ public class VisitDTO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public int getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(int promotion) {
+        this.promotion = promotion;
     }
 
     @Override

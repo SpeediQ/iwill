@@ -44,6 +44,16 @@
                 </div>
 
             </div>
+            <div>
+                <span>Wysokość promocji [%] - OBECNIE:</span>
+                <span th:text="${clientServ.getPromotion()}" th:remove="tag"></span>
+
+                <input type="number" th:field="*{promotion}" placeholder="Price of the Service" class="form-control" required/>
+
+                <button type="submit" name="addPromotionToCS" value="AddPromotionToCS" class="btn btn-primary">Aktywuj promocje
+                    dla usługi
+                </button>
+            </div>
         </div>
         <div>
             <div>

@@ -22,6 +22,8 @@
                     <input type="text" name="desc" th:value="${clientServ.getDesc()}" class="form-control"/>
                     <span>Cena usługi:</span>
                     <input type="text" name="price" th:value="${clientServ.getPrice()}" class="form-control"/>
+                    <span>Wysokość promocji:</span>
+                    <input type="text" name="promotion" th:value="${clientServ.getPromotion()}" class="form-control"/>
                 </div>
                 <label>Item:</label>
                 <select th:field="*{serviceType}">

@@ -39,12 +39,22 @@
                               required/>
                 </div>
             </div>
+            <div>
+                <span>Wysokość promocji [%] - OBECNIE:</span>
+                <span th:text="${visit.getPromotion()}" th:remove="tag"></span>
+
+                <input type="number" th:field="*{promotion}" placeholder="Price of the Service" class="form-control" required/>
+
+                <button type="submit" name="addPromotion" value="AddPromotion" class="btn btn-primary">Aktywuj promocje
+                    dla wizyty
+                </button>
+            </div>
 
             <th:block th:unless="${visit.getClientServSet().size() == 0}">
                 <div class="form-group row">
                     <label>Services: </label>
 
-                    <table id="itemsTable" class="table table-bordered">
+                    <table id="itemsTable" class="table table-bordered" th:he>
                         <thead>
                         <th>TITLE</th>
                         <th>DESCRIPTION</th>
@@ -56,7 +66,7 @@
                             <tr>
                                 <td>[[${clientServ.getTitle}]]</td>
                                 <td>[[${clientServ.desc}]]</td>
-                                <td>[[${clientServ.price}]]</td>
+                                <td>[[${clientServ.finalPrice}]]</td>
                                 <td>
                                     <a th:href="@{'/cs/edit/' + ${clientServ.getId()}}">Edytuj Usługę</a>
                                 </td>
@@ -64,8 +74,13 @@
                         </th:block>
                         </tbody>
                     </table>
-                    <span>Suma:</span>
-                    <span th:text="${visit.getSum}" th:remove="tag"></span>
+                    <br>
+                    <span th:text="${visit.getNiceStringSum()}" th:remove="tag"></span><br>
+                    <th:block th:if="${visit.getPromotion() > 0}">
+                        <span th:text="${visit.getNiceStringPromotion()}" th:remove="tag"></span><br>
+                        <span th:text="${visit.getNiceStringSumIncludingPromotion()}" th:remove="tag"></span>
+                    </th:block>
+
 
                 </div>
             </th:block>

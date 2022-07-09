@@ -39,6 +39,46 @@ public class VisitController {
         return "choose_or_create_serviceType_form";
     }
 
+    @PostMapping(value = "/visits/save", params = "addPromotion")
+    public String addPromotion(Visit visit, Model model, HttpServletRequest request) {
+        Visit visitDB = null;
+
+        if (visit.getId() > 0) {
+            visitDB = visitRepository.getById(visit.getId());
+        } else {
+            visitDB = visit;
+        }
+        copyDateTimeTitleDescFromVisitToVisitPromotion(visit, visitDB);
+        addAttributeForVisitForm(model, visitDB, visitDB.getClientServSet());
+        return "visit_form";
+    }
+
+    private void copyDateTimeTitleDescFromVisitToVisitPromotion(Visit source, Visit destiny) {
+        if (source.getDate() != null) {
+            destiny.setDate(source.getDate());
+        }
+        if (source.getTime() != null) {
+            destiny.setTime(source.getTime());
+        }
+        if (source.getTitle() != null) {
+            destiny.setTitle(source.getTitle());
+        }
+        if (source.getDesc() != null) {
+            destiny.setDesc(source.getDesc());
+        }
+        updatePromotion(source, destiny);
+    }
+
+    private void updatePromotion(Visit source, Visit destiny) {
+        if (source.getPromotion() <= ConstanceNr.PROMOTION_MIN_VALUE) {
+            destiny.setPromotion(ConstanceNr.PROMOTION_MIN_VALUE);
+        } else if (source.getPromotion() >= ConstanceNr.PROMOTION_MAX_VALUE) {
+            destiny.setPromotion(ConstanceNr.PROMOTION_MAX_VALUE);
+        } else {
+            destiny.setPromotion(source.getPromotion());
+        }
+    }
+
     @PostMapping(value = "/visits/save", params = "doReservation")
     public String setReservationStatus(Visit visit, Model model, HttpServletRequest request) {
         setReservationStatus(visit);
