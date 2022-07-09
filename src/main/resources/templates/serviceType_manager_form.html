@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Visits</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <div><h1>Mened?er - Lista ServiceType</h1></div>
+    <br/>
+    <div>
+        <input id="txtSearch" type="text" name="txtSearch">
+    </div>
+    <div>
+        <table id="serviceTypeTable" class="table table-bordered">
+            <thead>
+            <th>Name</th>
+            <th>Desc</th>
+            <th>Value</th>
+            <td><b>Action</b></td>
+
+            </thead>
+            <tbody>
+            <th:block th:each="serviceType : ${serviceTypeSet}">
+                <tr>
+                    <td>[[${serviceType.name}]]</td>
+                    <td>[[${serviceType.desc}]]</td>
+                    <td>[[${serviceType.value}]]</td>
+                    <td>
+                        <a th:href="@{'/serviceTypeManager/' + ${serviceType.id}}">Choose</a>
+                    </td>
+
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+</div>
+<input type="hidden" name="name" id="myData" class="form-control"/>
+
+<form th:action="@{/serviceType/add}" th:object="${serviceType}" method="post"
+      style="max-width: 300px; margin: 0 auto;">
+
+
+    <div>
+        <label>Create New ServiceType: </label>
+
+        <div class="form-group row">
+            <label>ServiceType name: </label>
+            <div>
+                <input type="text" th:field="*{name}" class="form-control" required/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label>ServiceType desc: </label>
+            <div>
+                <input type="text" th:field="*{desc}" class="form-control" required/>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label>ServiceType value: </label>
+            <div>
+                <input type="text" th:field="*{value}" class="form-control" required/>
+
+            </div>
+        </div>
+    </div>
+    <div>
+        <div>
+            <button type="submit" class="btn btn-primary">Add new ServiceType</button>
+        </div>
+    </div>
+    <div class="p-2">
+        <a class="h2" th:href="@{/}">Back</a>
+    </div>
+</form>
+
+
+
+<script th:inline="javascript">
+    var serviceType = /*[[${serviceTypeSet}]]*/ 'serviceTypeSet';
+
+    $('#txtSearch').on('keyup', function () {
+        var value = $(this).val();
+
+        var data = FilterFunction(value, serviceType);
+        rebuildTable(data);
+    });
+
+    function FilterFunction(value, data) {
+        var filteredData = [];
+        for (var i = 0; i < data.length; i++) {
+            value = value.toLowerCase();
+            var description = data[i].desc.toLowerCase();
+            var name = data[i].name.toLowerCase();
+
+            if (description.includes(value) || name.includes(value)) {
+                filteredData.push(data[i])
+            }
+        }
+        return filteredData;
+    }
+
+    function rebuildTable(data) {
+        var table = document.getElementById('serviceTypeTable')
+        table.innerHTML = ''
+        var titleRow = `<tr>
+                                <td><b>Name</b></td>
+                                <td><b>Desc</b></td>
+                                <td><b>Value</b></td>
+                                <td><b>Action</b></td>
+                           </tr>`
+        table.innerHTML += titleRow;
+        for (var i = 0; i < data.length; i++) {
+
+
+            var row = `<tr>
+                                <td>${data[i].name}</td>
+                                <td>${data[i].desc}</td>
+                                <td>${data[i].value}</td>
+                                <td>
+                                    <a href="/serviceTypeManager/${data[i].id}">Choose</a>
+                                </td>
+                           </tr>`
+            table.innerHTML += row
+        }
+        // prepare selected table - with searching
+        prepareSelectedTable("#serviceTypeTable tr");
+    }
+
+    // prepare selected table - without searching
+    prepareSelectedTable("#serviceTypeTable tr");
+
+
+    function prepareSelectedTable(tableName) {
+        var elem = document.querySelectorAll(tableName);
+        for (var i = 0; i < elem.length; i++) {
+            bindMe(elem[i]);
+        }
+    }
+
+    function bindMe(elem) {
+        elem.addEventListener("click", function (evt) {
+            readValues(evt);
+            var table = document.getElementById('serviceTypeTable')
+
+        });
+    }
+
+    function readValues(evt) {
+        var elem = evt.target.parentElement.innerText;
+        document.getElementById("myData").textContent = elem;
+
+    }
+
+</script>
+</body>
+</html>
