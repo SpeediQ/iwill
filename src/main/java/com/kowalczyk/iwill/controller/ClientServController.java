@@ -1,11 +1,10 @@
 package com.kowalczyk.iwill.controller;
 
 
-import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.ServiceType;
-import com.kowalczyk.iwill.model.Visit;
+import com.kowalczyk.iwill.model.*;
 import com.kowalczyk.iwill.repository.ClientServRepository;
 import com.kowalczyk.iwill.repository.ServiceTypeRepository;
+import com.kowalczyk.iwill.repository.StatusRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +30,9 @@ public class ClientServController {
 
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
+
+    @Autowired
+    private StatusRepository statusRepository;
 
 
     @GetMapping("/clientservs")
@@ -103,6 +105,15 @@ button "go to Visit Screen" -> cs/save
         return "visit_form";
     }
 
+    @GetMapping(value = "/changeToVisit/{id}")
+    public String changeToVisit(@PathVariable("id") Integer id, Model model) {
+        Visit visit = visitRepository.getById(id);
+//        Status status = statusRepository.getById(ConstanceNr.STATUS_VISIT);
+//        visit.setStatus(status);
+        addAttributeForVisitForm(model, visit, visit.getClientServSet());
+        return "visit_form";
+    }
+
     @GetMapping(value = "/cs/edit/{id}")
     public String editCS(@PathVariable("id") Integer id, Model model) {
         ClientServ clientServ = clientServRepository.getById(id);
@@ -119,7 +130,6 @@ button "go to Visit Screen" -> cs/save
         clientServRepository.save(clientServ);
         addAttributeForVisitForm(model, clientServ.getVisit(), clientServ.getVisit().getClientServSet());
         return "visit_form";
-
     }
 
     private ClientServ updateCSByRequest(HttpServletRequest request) {

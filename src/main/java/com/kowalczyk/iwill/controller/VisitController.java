@@ -39,16 +39,33 @@ public class VisitController {
         return "choose_or_create_serviceType_form";
     }
 
+    @PostMapping(value = "/visits/save", params = "doReservation")
+    public String setReservationStatus(Visit visit, Model model, HttpServletRequest request) {
+        setReservationStatus(visit);
+        setNumberForClient(visit);
+        visitRepository.save(visit);
+        return "index";
+    }
+
     @PostMapping(value = "/visits/save", params = "submit")
     public String addVisit(Visit visit, Model model) {
+        if (visit.getStatus() == null || visit.getStatus().getId() == ConstanceNr.STATUS_RESERVATION){
+            Status status = statusRepository.getById(ConstanceNr.STATUS_VISIT);
+            visit.setStatus(status);
+        }
         visitRepository.save(visit);
         ClientCard clientCard = visit.getClientCard();
         Client client = clientCard.getClient();
         List<Visit> visitSet = clientCard.getSortedVisitListByVisitSet();
-        model.addAttribute("visitSet", visitSet);
-        model.addAttribute("client", client);
+        addAttribiuteForClientCardForm(model, client, visitSet);
         return "ccardview_form";
     }
+
+    private void addAttribiuteForClientCardForm(Model model, Client client, List<Visit> visitSet) {
+        model.addAttribute("visitSet", visitSet);
+        model.addAttribute("client", client);
+    }
+
 
     @GetMapping("/visits/edit/{id}")
     public String showClientServEditForm(@PathVariable("id") Integer id, Model model) {
@@ -58,6 +75,19 @@ public class VisitController {
         return "visit_form";
 
     }
+
+    @GetMapping("/reservations")
+    public String showReservationForm(Model model) {
+        List<Visit> allReservationsByStatus = visitRepository.getAllReservationsByStatus(ConstanceNr.STATUS_RESERVATION);
+        addAttributeForReservationForm(model, allReservationsByStatus);
+        return "reservation_form";
+
+    }
+
+    private void addAttributeForReservationForm(Model model, List<Visit> allReservationsByStatus) {
+        model.addAttribute("allReservationsByStatus", allReservationsByStatus);
+    }
+
 
     static public void addAttributeForVisitForm(Model model, Visit visit, Set<ClientServ> clientServSet) {
         model.addAttribute("visit", visit);
@@ -90,7 +120,11 @@ public class VisitController {
     }
 
     private void setCurrentStatus(Visit visit) {
-        Status currentStatus = statusRepository.getById(ConstanceNr.STATUS_CURRENT);
+        Status currentStatus = statusRepository.getById(ConstanceNr.STATUS_VISIT);
+        visit.setStatus(currentStatus);
+    }
+    private void setReservationStatus(Visit visit) {
+        Status currentStatus = statusRepository.getById(ConstanceNr.STATUS_RESERVATION);
         visit.setStatus(currentStatus);
     }
 

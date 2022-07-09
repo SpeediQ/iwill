@@ -49,6 +49,14 @@ public class ClientCard {
 
     public List<Visit> getSortedVisitListByVisitSet() {
         return getVisitSet().stream()
+                .filter(visit -> visit.getStatus().getId() == ConstanceNr.STATUS_VISIT)
+                .sorted(Comparator
+                        .comparing(Visit::getDate).reversed())
+                .collect(Collectors.toList());
+    }
+    public List<Visit> getSortedReservationListByVisitSet() {
+        return getVisitSet().stream()
+                .filter(visit -> visit.getStatus().getId() == ConstanceNr.STATUS_RESERVATION)
                 .sorted(Comparator
                         .comparing(Visit::getDate).reversed())
                 .collect(Collectors.toList());
