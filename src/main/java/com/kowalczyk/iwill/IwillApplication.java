@@ -9,6 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 public class IwillApplication {
     StatusRepository statusRepository;
@@ -24,12 +27,16 @@ public class IwillApplication {
     }
 
     @EventListener
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    public void prepareStatusAndNumerator(ApplicationReadyEvent event) {
+        List<Status> statuses = new ArrayList<>();
+
         if (statusRepository.findAll().size() == 0) {
-            Status status = new Status();
-            status.setName("Wizyta");
-            status.setName("Rezerwacja");
-            statusRepository.save(status);
+            statuses.add(new Status("Wizyta"));
+            statuses.add(new Status("Rezerwacja"));
+            statuses.add(new Status("Telefon"));
+            statuses.add(new Status("Email"));
+            statuses.add(new Status("Adres"));
+            statuses.stream().forEach(status -> statusRepository.save(status));
         }
         if (numeratorRepository.findAll().size() == 0) {
             Numerator visit = new Numerator("Wizyta", "Numerator wskazuje pierwszy wolny NR dla Wizyty", 1, "W");

@@ -4,6 +4,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Client {
@@ -15,6 +17,8 @@ public class Client {
     private String lastname;
     private String comment;
     private String code;
+    @OneToMany(mappedBy = "client")
+    private Set<ContactAddress> contactAddresses = new HashSet<>();
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
@@ -91,6 +95,14 @@ public class Client {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Set<ContactAddress> getContactAddresses() {
+        return contactAddresses;
+    }
+
+    public void setContactAddresses(Set<ContactAddress> contactAddresses) {
+        this.contactAddresses = contactAddresses;
     }
 
     @Override

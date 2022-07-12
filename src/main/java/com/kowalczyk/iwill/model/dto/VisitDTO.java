@@ -1,9 +1,6 @@
 package com.kowalczyk.iwill.model.dto;
 
-import com.kowalczyk.iwill.model.ClientCard;
-import com.kowalczyk.iwill.model.ClientServ;
-import com.kowalczyk.iwill.model.Status;
-import com.kowalczyk.iwill.model.Visit;
+import com.kowalczyk.iwill.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +22,8 @@ public class VisitDTO {
     private String title;
     private String code;
     private int promotion;
+    private Set<ContactAddress> contactAddresses = new HashSet<>();
+
 
     public int getId() {
         return id;

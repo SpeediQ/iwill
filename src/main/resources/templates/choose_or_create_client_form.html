@@ -36,6 +36,8 @@
                     <td>[[${#dates.format(client.date, 'dd/MM/yyyy')}]]</td>
                     <td>
                         <a th:href="@{'/c/add/' + ${client.id}}">Choose</a>
+                        <br>
+                        <a th:href="@{'/client/edit/' + ${client.id}}">Edit</a>
                     </td>
 
                 </tr>
