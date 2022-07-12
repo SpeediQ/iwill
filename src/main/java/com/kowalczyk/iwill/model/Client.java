@@ -140,4 +140,8 @@ public class Client {
         result = 31 * result + (clientCard != null ? clientCard.hashCode() : 0);
         return result;
     }
+
+    public Boolean isIdValid(){
+        return getId() > 0 ? true : false;
+    }
 }
