@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.kowalczyk.iwill.model.mapper.VisitDTOMapper.mapToVisitDTOList;
+import static com.kowalczyk.iwill.model.mapper.VisitDTOMapper.mapToVisitDTOSet;
 
 @Transactional
 public class ClientCardDTOMapper {
@@ -17,7 +17,7 @@ public class ClientCardDTOMapper {
                 .id(clientCard.getId())
                 .build();
         if (clientCard.getVisitSet() != null) {
-            clientCardDTO.setVisitSet(mapToVisitDTOList(clientCard.getVisitSet()));
+            clientCardDTO.setVisitSet(mapToVisitDTOSet(clientCard.getVisitSet()));
         }
         return clientCardDTO;
     }

@@ -4,6 +4,7 @@ import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.model.dto.VisitDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,8 @@ public class VisitDTOMapper {
 //    private String time;
 //    private Status status;
 //    private String title;
+//    private String code;
+//    private int promotion;
     public static VisitDTO mapToVisitDTO(Visit visit) {
 
         VisitDTO visitDTO = VisitDTO.builder()
@@ -26,6 +29,7 @@ public class VisitDTOMapper {
                 .date(visit.getDate())
                 .time(visit.getTime())
                 .title(visit.getTitle())
+                .promotion(visit.getPromotion())
                 .build();
         if (visit.getClientServSet() != null) {
             visitDTO.setClientServSet(mapToClientServDTOList(visit.getClientServSet()));
@@ -41,10 +45,15 @@ public class VisitDTOMapper {
         return visitDTO;
     }
 
-    public static Set<VisitDTO> mapToVisitDTOList(Set<Visit> visits) {
+    public static Set<VisitDTO> mapToVisitDTOSet(Set<Visit> visits) {
         return visits.stream()
                 .map(VisitDTOMapper::mapToVisitDTO)
                 .collect(Collectors.toSet());
+    }
+    public static List<VisitDTO> mapToVisitDTOList(List<Visit> visits) {
+        return visits.stream()
+                .map(VisitDTOMapper::mapToVisitDTO)
+                .collect(Collectors.toList());
     }
 
 }
