@@ -2,9 +2,9 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.*;
+import com.kowalczyk.iwill.repository.ClientRepository;
 import com.kowalczyk.iwill.repository.ClientServRepository;
 import com.kowalczyk.iwill.repository.ServiceTypeRepository;
-import com.kowalczyk.iwill.repository.StatusRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.kowalczyk.iwill.controller.VisitController.addAttributeForVisitForm;
+import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
 public class ClientServController {
@@ -32,7 +33,7 @@ public class ClientServController {
     private ServiceTypeRepository serviceTypeRepository;
 
     @Autowired
-    private StatusRepository statusRepository;
+    private ClientRepository clientRepository;
 
 
     @GetMapping("/clientservs")
@@ -76,8 +77,11 @@ public class ClientServController {
     @GetMapping("/clientservs/delete/{id}")
     public String showClientServDeleteForm(@PathVariable("id") Integer id, Model model) {
         clientServRepository.deleteById(id);
-        return "redirect:/clientservs";
 
+        model.addAttribute("client", new Client("Brak komentarza"));
+        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
+//        return "redirect:/clientservs";
+        return "choose_or_create_client_form";
     }
 
     @PostMapping(value = "/cs/save")
@@ -142,6 +146,7 @@ public class ClientServController {
 
         return "cs_form";
     }
+
     private void updatePromotion(ClientServ source) {
         if (source.getPromotion() <= ConstanceNr.PROMOTION_MIN_VALUE) {
             source.setPromotion(ConstanceNr.PROMOTION_MIN_VALUE);
@@ -149,6 +154,7 @@ public class ClientServController {
             source.setPromotion(ConstanceNr.PROMOTION_MAX_VALUE);
         }
     }
+
     private void updatePromotion(ClientServ source, ClientServ destiny) {
         if (source.getPromotion() <= ConstanceNr.PROMOTION_MIN_VALUE) {
             destiny.setPromotion(ConstanceNr.PROMOTION_MIN_VALUE);
