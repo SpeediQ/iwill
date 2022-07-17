@@ -179,7 +179,7 @@ public class VisitController {
 
 
     private void addAttributeForChooseOrCreateServiceTypeForm(Model model, Visit visit) {
-        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
         model.addAttribute("visit", visit);
         model.addAttribute("serviceType", new ServiceType());
     }

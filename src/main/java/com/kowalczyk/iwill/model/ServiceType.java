@@ -8,13 +8,16 @@ public class ServiceType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-
     @Column(name = "DESCRIPTION")
     private String desc;
 
     private String name;
 
     private double value;
+
+    @OneToOne
+    @JoinColumn(name = "STATUS_ID")
+    private Status status;
 
 
     public ServiceType() {
@@ -50,6 +53,14 @@ public class ServiceType {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override
