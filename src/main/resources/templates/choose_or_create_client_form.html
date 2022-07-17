@@ -36,6 +36,8 @@
                     <td>[[${#dates.format(client.date, 'dd/MM/yyyy')}]]</td>
                     <td>
                         <a th:href="@{'/c/add/' + ${client.id}}">Choose</a>
+                        <br>
+                        <a th:href="@{'/client/edit/' + ${client.id}}">Edit</a>
                     </td>
 
                 </tr>
@@ -72,9 +74,19 @@
             </div>
         </div>
 
-        <div class="form-group row">
+        <div align="right">
             <label for="clientDate">Data urodzenia:</label>
             <input type="date" th:field="*{date}" id="clientDate"/>
+        </div>
+        <div align="right">
+            <label>Tel:</label>
+                <input type="text" th:name="phoneValue"/>
+                <input type="checkbox" th:name="phoneAgreement"/>
+        </div>
+        <div align="right">
+            <label>Email:</label>
+                <input type="text" th:name="emailValue"/>
+                <input type="checkbox" th:name="emailAgreement"/>
         </div>
         <b></b>
         <div class="form-group row">
@@ -136,6 +148,9 @@
                                 <td>${data[i].comment}</td>
                                 <td>
                                     <a href="/c/add/${data[i].id}">Choose</a>
+<br>
+                                    <a href="/client/edit/${data[i].id}">Choose</a>
+
                                 </td>
                            </tr>`
             table.innerHTML += row

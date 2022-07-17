@@ -1,5 +1,8 @@
 package com.kowalczyk.iwill.model;
 
+//import javax.persistence.*;
+//import org.hibernate.annotations.CascadeType;
+
 import javax.persistence.*;
 import java.text.DecimalFormat;
 
@@ -11,13 +14,13 @@ public class ClientServ {
     @Column(name = "DESCRIPTION")
     private String desc;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "VISIT_ID")
     private Visit visit;
 
     private String title;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "SERVICE_TYPE_ID")
     private ServiceType serviceType;
 

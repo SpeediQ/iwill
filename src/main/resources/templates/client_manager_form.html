@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Client Manager</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<div class="container text-center">
+    <div><h1><b>Menedżer Klienta</b></h1></div>
+    <form th:action="@{/client/edit/save}" th:object="${client}" method="post"
+          style="max-width: 1000px; margin: 0 auto;">
+        <input type="hidden" th:field="*{clientCard}" th:value="${client.getClientCard()}"/>
+        <input type="hidden" th:field="*{id}" th:value="${client.getId()}"/>
+        <input type="hidden" th:field="*{code}" th:value="${client.getCode()}"/>
+        <input type="hidden" th:field="*{contactAddresses}" th:value="${client.getContactAddresses()}"/>
+
+        <b></b><label>Kod klienta:</b></label>
+        <span th:text="${client.getCode()}" th:remove="tag"></span>
+        <br>
+        <br>
+
+        <table th:border="0" th:align="center" th:width="800px">
+            <tr valign="top">
+                <td th:width="350px">
+                    <div>
+                        <br>
+                        <div align="right">
+                            <div>
+                                <label>Imię:</label>
+                                <input type="text" th:field="*{name}" required/>
+                            </div>
+                            <div>
+                                <label>Nazwisko:</label>
+                                <input type="text" th:field="*{lastname}" required/>
+                            </div>
+                            <div>
+                                <label for="clientDate">Data urodzenia:</label>
+                                <input type="date" th:field="*{date}" id="clientDate"/>
+                            </div>
+                            <div>
+                                <label>Tel:</label>
+                                <th:block th:if="${contactAddressPhone == null}">
+                                    <input type="text" th:name="phoneValue"/>
+                                    <input type="checkbox" th:name="phoneAgreement"/>
+                                </th:block>
+                                <th:block th:unless="${contactAddressPhone == null}">
+                                    <input type="text" th:name="phoneValue" th:value="${contactAddressPhone.getValue()}"/>
+                                    <input th:type="checkbox" th:name="phoneAgreement" th:checked="${contactAddressPhone.isAgreement()}"/>
+
+                                </th:block>
+                            </div>
+                            <div>
+                                <label>Email:</label>
+                                <th:block th:if="${contactAddressEmail == null}">
+                                    <input type="text" th:name="emailValue"/>
+                                    <input type="checkbox" th:name="emailAgreement"/>
+                                </th:block>
+                                <th:block th:unless="${contactAddressEmail == null}">
+                                    <input type="text" th:name="emailValue" th:value="${contactAddressEmail.getValue()}"/>
+                                    <input type="checkbox" th:name="emailAgreement" th:checked="${contactAddressEmail.isAgreement()}"/>
+                                </th:block>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+
+                    <div>
+                        <div>
+                            <label>Notatka:</label><br>
+                            <textarea rows="10" cols="40" th:field="*{comment}" required/>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <button type="submit" name="saveUpdatedContact" value="SaveUpdatedContact" class="btn btn-primary">Zapisz
+        </button>
+    </form>
+
+
+</div>
+</body>
+</html>

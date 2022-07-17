@@ -20,7 +20,7 @@ public class Visit implements Serializable {
 
     private String code;
 
-    @OneToMany(mappedBy = "visit")
+    @OneToMany(mappedBy = "visit", cascade = CascadeType.ALL)
     private Set<ClientServ> clientServSet = new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -32,7 +32,7 @@ public class Visit implements Serializable {
 
     private String time;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "STATUS_ID")
     private Status status;
 
@@ -145,17 +145,19 @@ public class Visit implements Serializable {
         }
         return sum;
     }
-    
+
     public String getNiceStringSumIncludingPromotion() {
         DecimalFormat decimalFormat = new DecimalFormat("##.00");
         double sumIncludingPromotion = getSum() * (1 - getPromotion() * 0.01);
-        return "Cena po promocji: " + decimalFormat.format(sumIncludingPromotion) +" zł";
+        return "Cena po promocji: " + decimalFormat.format(sumIncludingPromotion) + " zł";
     }
+
     public String getNiceStringSum() {
-        return "Cena podstawowa: " + getSum()+" zł";
+        return "Cena podstawowa: " + getSum() + " zł";
     }
+
     public String getNiceStringPromotion() {
-        return "Wysokość promocji: " + getPromotion()+"%";
+        return "Wysokość promocji: " + getPromotion() + "%";
     }
 
     @Override

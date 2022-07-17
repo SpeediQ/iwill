@@ -20,11 +20,11 @@ public class ClientDTOMapper {
                 .lastname(client.getLastname())
                 .comment(client.getComment())
                 .clientCardDTO(client.getClientCard() != null ? mapToClientCardDTO(client.getClientCard()) : mapToClientCardDTO(new ClientCard()))
-                .date(client.getDate())
                 .code(client.getCode())
                 .build();
-
-
+        if (client.getDate() != null){
+            clientDTO.setDate(client.getDate());
+        }
         return clientDTO;
     }
 

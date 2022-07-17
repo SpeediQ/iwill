@@ -113,7 +113,7 @@ public class VisitController {
     }
 
     @PostMapping(value = "/visits/save", params = "submit")
-    public String addVisit(Visit visit, Model model) {
+    public String addVisit(Visit visit, Model model, HttpServletRequest request) {
         if (visit.getStatus() == null || visit.getStatus().getId() == ConstanceNr.STATUS_RESERVATION) {
             Status status = statusRepository.getById(ConstanceNr.STATUS_VISIT);
             visit.setStatus(status);
