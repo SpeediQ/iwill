@@ -10,6 +10,7 @@ public class ConstanceNr {
     public static int STATUS_ADDRESS = 5;
     public static int STATUS_SERVICE_TYPE = 6;
     public static int STATUS_CANCELLED = 7;
+    public static int STATUS_INACTIVE = 8;
 
     // NUMERATOR
     public static int NUMERATOR_VISIT = 1;

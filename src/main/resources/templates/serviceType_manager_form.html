@@ -38,9 +38,9 @@
     <div>
         <table id="serviceTypeTable" class="table table-bordered">
             <thead>
-            <th>Name</th>
-            <th>Desc</th>
-            <th>Value</th>
+            <th>Domyślna nazwa usługi</th>
+            <th>Domyślny opis usługi</th>
+            <th>Domyślna cena usługi</th>
             <td><b>Action</b></td>
 
             </thead>
@@ -59,55 +59,55 @@
             </tbody>
         </table>
     </div>
+
+    <input type="hidden" name="name" id="myData" class="form-control"/>
+
+    <form th:action="@{/addServiceTypeManager}" th:object="${serviceType}" method="post"
+          style="max-width: 600px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+
+
+        <div>
+            <h2>Stwórz nowy Typ Usługi: </h2>
+
+            <div>
+                <label>Domyślna nazwa usługi: </label>
+                <div>
+                    <input type="text" th:field="*{name}" class="form-control" required/>
+                </div>
+            </div>
+
+            <div>
+                <label>Domyślny opis usługi: </label>
+                <div>
+                    <input type="text" th:field="*{desc}" class="form-control" required/>
+                </div>
+            </div>
+
+            <div>
+                <label>Domyślna cena usługi: </label>
+                <div>
+                    <input type="text" th:field="*{value}" class="form-control" required/>
+
+                </div>
+            </div>
+        </div>
+        <div>
+            <div>
+                <button type="submit" class="btn btn-primary">Dodaj Nowy Typ Usługi</button>
+
+                <!--            <button type="submit" class="btn btn-primary">Dodaj Nowy Typ Usługi</button>-->
+            </div>
+        </div>
+        <br>
+        <div class="p-2">
+            <a class="h2" th:href="@{/}">Wróć</a>
+        </div>
+    </form>
 </div>
-<input type="hidden" name="name" id="myData" class="form-control"/>
-
-<form th:action="@{/serviceTypeManager}" th:object="${serviceType}" method="post"
-      style="max-width: 600px; margin: 0 auto;">
-    <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
-
-
-    <div>
-        <h2>Stwórz nowy Typ Usługi: </h2>
-
-        <div>
-            <label>Domyślna nazwa usługi: </label>
-            <div>
-                <input type="text" th:field="*{name}" class="form-control" required/>
-            </div>
-        </div>
-
-        <div>
-            <label>Domyślny opis usługi: </label>
-            <div>
-                <input type="text" th:field="*{desc}" class="form-control" required/>
-            </div>
-        </div>
-
-        <div>
-            <label>Domyślna cena usługi: </label>
-            <div>
-                <input type="text" th:field="*{value}" class="form-control" required/>
-
-            </div>
-        </div>
-    </div>
-    <div>
-        <div>
-            <button type="submit" name="add" value="Add" class="btn btn-primary">Dodaj Nowy Typ Usługi</button>
-
-<!--            <button type="submit" class="btn btn-primary">Dodaj Nowy Typ Usługi</button>-->
-        </div>
-    </div>
-    <br>
-    <div class="p-2">
-        <a class="h2" th:href="@{/}">Wróć</a>
-    </div>
-</form>
-
 
 <script th:inline="javascript">
-    var serviceType = /*[[${serviceTypeSet}]]*/ 'serviceTypeSet';
+    var serviceType = [[${serviceTypeSet}]];
 
     $('#txtSearch').on('keyup', function () {
         var value = $(this).val();

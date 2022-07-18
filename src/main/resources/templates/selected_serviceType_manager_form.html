@@ -35,7 +35,7 @@
     <table th:border="0" th:align="center" th:width="800px">
         <tr>
             <td>
-                <form th:action="@{/serviceTypeManager}" th:object="${serviceType}" method="post"
+                <form th:action="@{/selectedServiceTypeManager/}" th:object="${serviceType}" method="post"
                       style="max-width: 600px; margin: 0 auto;">
                     <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
 
@@ -65,7 +65,7 @@
                     </div>
                     <div>
                         <div>
-                            <button type="submit" name="add" value="Add" class="btn btn-primary">Zapisz</button>
+                            <button type="submit" class="btn btn-primary">Zapisz</button>
 
                             <button type="submit" class="btn btn-primary">Cofnij</button>
                         </div>
@@ -75,7 +75,7 @@
                 </form>
             </td>
             <td>
-                <form th:action="@{/serviceTypeManager/action}" th:object="${serviceType}" method="post"
+                <form th:action="@{/selectedServiceTypeManager}" th:object="${serviceType}" method="post"
                       style="max-width: 600px; margin: 0 auto;">
                     <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
                     <input type="hidden" th:field="*{name}" th:value="${serviceType.getName()}"/>

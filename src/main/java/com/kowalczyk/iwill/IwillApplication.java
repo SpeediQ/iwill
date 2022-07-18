@@ -41,7 +41,8 @@ public class IwillApplication {
             statuses.add(new Status("Email"));
             statuses.add(new Status("Adres"));
             statuses.add(new Status("Typ Uslugi"));
-            statuses.add(new Status("Anulowane"));
+            statuses.add(new Status("Anulowany"));
+            statuses.add(new Status("Inactive"));
             statuses.stream().forEach(status -> statusRepository.save(status));
         }
         if (numeratorRepository.findAll().size() == 0) {

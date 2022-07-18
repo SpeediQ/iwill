@@ -1,9 +1,10 @@
 package com.kowalczyk.iwill.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class ServiceType {
+public class ServiceType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -21,6 +22,10 @@ public class ServiceType {
 
 
     public ServiceType() {
+    }
+
+    public ServiceType(Status status) {
+        this.status = status;
     }
 
     public int getId() {

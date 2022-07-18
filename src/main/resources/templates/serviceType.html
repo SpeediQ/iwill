@@ -4,40 +4,105 @@
     <meta charset="UTF-8">
     <title>List Visits</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <style type="text/css">
+        /*table {*/
+        /*    !*display: inline-block;*!*/
+        /*    !*width: 200px;*!*/
+        /*    margin: 15px;*/
+        /*    text-align: left;*/
+        /*}*/
+
+        /*table th, table td {*/
+        /*    padding: 10px;*/
+        /*}*/
+
+        label {
+            padding-top: 10px;
+        }
+
+        /*input[type=text], input[type=password], select {*/
+        /*    display: inline-block;*/
+        /*    width: 200px;*/
+
+        /*input[type=checkbox] {*/
+        /*    margin-right: 190px;*/
+        /*}*/
+        button {
+            padding: 10px;
+            margin: 10px;
+            width: 150px;
+        }
+    </style>
 </head>
 <body>
 <div class="container text-center">
-    <div><h1>List Items</h1></div>
-    <br/>
-    <div>
-        <table class="table table-bordered">
-            <thead>
-            <th>ID</th>
-            <th>TITLE</th>
-            <th>Name</th>
-            <th>Value</th>
-            <th>Desc</th>
-            <th></th>
-            </thead>
-            <tbody>
-            <th:block th:each="item : ${listItems}">
-                <tr>
-                    <td>[[${item.id}]]</td>
-                    <td>[[${item.title}]]</td>
+    <form th:action="@{/summaryServiceTypeManager}" th:object="${serviceType}" method="post"
+          style="max-width: 1100px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
 
-                    <td>[[${item.name}]]</td>
-                    <td>[[${item.value}]]</td>
-                    <td>[[${item.desc}]]</td>
-                    <td>
-                        <a th:href="@{'/items/edit/' + ${item.id}}">Edit</a>
-                    </td>
 
-                </tr>
+        <div><h1>Menedżer - Typ usługi</h1></div>
+        <br/>
+        <h3>Podsumowanie:</h3>
+        <div>
+            <label>Status: </label>
+            <th:block th:if="${serviceType.getStatus() != null && serviceType.getStatus().getId() == 7}">
+                <span>Anulowany</span>
             </th:block>
-            </tbody>
-        </table>
-    </div>
+            <th:block th:if="${serviceType.getStatus() != null && serviceType.getStatus().getId() == 6}">
+                <span>Aktywny</span>
+            </th:block>
+            <th:block th:if="${serviceType.getStatus() != null && serviceType.getStatus().getId() == 8}">
+                <span>Nieaktywny</span>
+            </th:block>
+        </div>
+        <div>
+            <label>Domyślna nazwa usługi: </label>
+            <span th:text="${serviceType.getName()}" th:remove="tag"></span>
+        </div>
+        <div>
+            <label>Domyślny opis usługi: </label>
+            <span th:text="${serviceType.getDesc()}" th:remove="tag"></span>
+        </div>
+        <div>
+            <label>Domyślna cena usługi: </label>
+            <span th:text="${serviceType.getValue()}" th:remove="tag"></span>
+        </div>
+    </form>
 
+    <form th:action="@{/saveServiceTypeManager}" th:object="${serviceType}" method="get"
+          style="max-width: 1100px; margin: 0 auto;">
+
+        <button type="submit" class="btn btn-primary">Akceptuj
+        </button>
+    </form>
+
+    <form th:action="@{/deleteServiceTypeManager}" th:object="${serviceType}" method="get"
+          style="max-width: 1100px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+        <button type="submit" class="btn btn-primary">Anuluj bez zapisu
+        </button>
+    </form>
+    <br>
+    <h3>Ustaw status na:</h3>
+    <form th:action="@{/activeServiceTypeManager}" th:object="${serviceType}" method="get"
+          style="max-width: 1100px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+        <button type="submit" class="btn btn-primary">AKTYWNY
+        </button>
+    </form>
+    <form th:action="@{/inactiveServiceTypeManager}" th:object="${serviceType}" method="get"
+          style="max-width: 1100px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+        <button type="submit" class="btn btn-primary">NIEAKTYWNY
+        </button>
+    </form>
+    <form th:action="@{/cancelServiceTypeManager}" th:object="${serviceType}" method="get"
+          style="max-width: 1100px; margin: 0 auto;">
+        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+        <button type="submit" class="btn btn-primary">ANULOWANY
+        </button>
+    </form>
 </div>
 </body>
 </html>
