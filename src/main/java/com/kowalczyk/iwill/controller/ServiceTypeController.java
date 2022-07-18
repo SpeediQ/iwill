@@ -93,6 +93,7 @@ public class ServiceTypeController {
         serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_SERVICE_TYPE));
         serviceTypeRepository.save(serviceType);
         model.addAttribute("serviceType", serviceType);
+        model.addAttribute("idVisit", request.getParameter("idVisit"));
         return "serviceType";
     }
 
@@ -104,33 +105,43 @@ public class ServiceTypeController {
 //        return "redirect:/serviceType";
 //    }
 
+    @GetMapping(value = "/saveServiceTypeManager")
+    public String saveServiceTypeManager(Model model, HttpServletRequest request) {
+        addAttributeForServiceTypeManager(model);
+        String idVisit = request.getParameter("idVisit");
+        if (idVisit == null || idVisit == ""){
+            return "serviceType_manager_form";
+        }else{
+            Visit visit = visitRepository.getById(Integer.parseInt(idVisit));
+            addAttributeForChooseOrCreateServiceTypeForm(model, visit);
+            return "choose_or_create_serviceType_form";
+        }
+    }
     @GetMapping(value = "/cancelServiceTypeManager")
-    public String deleteServiceType(ServiceType serviceType, Model model) {
+    public String deleteServiceType(ServiceType serviceType, Model model, HttpServletRequest request) {
         serviceType = serviceTypeRepository.getById(serviceType.getId());
         serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_CANCELLED));
         model.addAttribute("serviceType", serviceType);
+        model.addAttribute("idVisit", request.getParameter("idVisit"));
         serviceTypeRepository.save(serviceType);
         return "serviceType";
     }
-    @GetMapping(value = "/saveServiceTypeManager")
-    public String saveServiceTypeManager(Model model) {
-        addAttributeForServiceTypeManager(model);
-        return "serviceType_manager_form";
-    }
 
     @GetMapping(value = "/inactiveServiceTypeManager")
-    public String inactiveServiceTypeManager(ServiceType serviceType, Model model) {
+    public String inactiveServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
         serviceType = serviceTypeRepository.getById(serviceType.getId());
         serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_INACTIVE));
         model.addAttribute("serviceType", serviceType);
+        model.addAttribute("idVisit", request.getParameter("idVisit"));
         serviceTypeRepository.save(serviceType);
         return "serviceType";
     }
     @GetMapping(value = "/activeServiceTypeManager")
-    public String activeServiceTypeManager(ServiceType serviceType, Model model) {
+    public String activeServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
         serviceType = serviceTypeRepository.getById(serviceType.getId());
         serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_SERVICE_TYPE));
         model.addAttribute("serviceType", serviceType);
+        model.addAttribute("idVisit", request.getParameter("idVisit"));
         serviceTypeRepository.save(serviceType);
         return "serviceType";
     }

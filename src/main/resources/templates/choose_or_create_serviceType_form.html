@@ -40,7 +40,7 @@
 </div>
 <input type="hidden" name="name" id="myData" class="form-control"/>
 
-<form th:action="@{/serviceType/add}" th:object="${serviceType}" method="post"
+<form th:action="@{/addServiceTypeManager}" th:object="${serviceType}" method="post"
       style="max-width: 300px; margin: 0 auto;">
     <input type="hidden" th:name="idVisit" th:value="${visit.getId()}"/>
 
