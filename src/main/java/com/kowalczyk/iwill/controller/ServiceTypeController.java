@@ -40,18 +40,11 @@ public class ServiceTypeController {
         return "serviceType_form";
     }
 
-//    @PostMapping("/items/save")
-//    public String saveItem(ServiceType serviceType) {
-//        serviceTypeRepository.save(serviceType);
-//        return "redirect:/items";
-//    }
-
     @GetMapping("/items/edit/{id}")
     public String showItemEditForm(@PathVariable("id") Integer id, Model model) {
         ServiceType serviceType = serviceTypeRepository.findById(id).get();
         model.addAttribute("item", serviceType);
         return "serviceType_form";
-
     }
 
     @PostMapping("/serviceType/add")
@@ -183,7 +176,7 @@ public class ServiceTypeController {
     }
 
     private void addAttributeForServiceTypeManager(Model model) {
-        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
         model.addAttribute("serviceType", new ServiceType());
     }
 

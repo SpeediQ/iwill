@@ -88,36 +88,42 @@
         </form>
     </th:block>
     <th:block th:if="${isEditView == null || isEditView == ''}">
-    <form th:action="@{/deleteServiceTypeManager}" th:object="${serviceType}" method="get"
-          style="max-width: 1100px; margin: 0 auto;">
-        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
-        <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
-        <button type="submit" class="btn btn-primary">Anuluj bez zapisu
-        </button>
-    </form>
-    <br>
-    <h3>Ustaw status na:</h3>
-    <form th:action="@{/activeServiceTypeManager}" th:object="${serviceType}" method="get"
-          style="max-width: 1100px; margin: 0 auto;">
-        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
-        <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
-        <button type="submit" class="btn btn-primary">AKTYWNY
-        </button>
-    </form>
-    <form th:action="@{/inactiveServiceTypeManager}" th:object="${serviceType}" method="get"
-          style="max-width: 1100px; margin: 0 auto;">
-        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
-        <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
-        <button type="submit" class="btn btn-primary">NIEAKTYWNY
-        </button>
-    </form>
-    <form th:action="@{/cancelServiceTypeManager}" th:object="${serviceType}" method="get"
-          style="max-width: 1100px; margin: 0 auto;">
-        <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
-        <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
-        <button type="submit" class="btn btn-primary">ANULOWANY
-        </button>
-    </form>
+        <form th:action="@{/deleteServiceTypeManager}" th:object="${serviceType}" method="get"
+              style="max-width: 1100px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+            <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
+            <button type="submit" class="btn btn-primary">Anuluj bez zapisu
+            </button>
+        </form>
+        <br>
+        <h3>Ustaw status na:</h3>
+
+        <!--STATUS - Active-->
+        <form th:action="@{/activeServiceTypeManager}" th:object="${serviceType}" method="get"
+              style="max-width: 1100px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+            <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
+            <button type="submit" class="btn btn-primary">AKTYWNY
+            </button>
+        </form>
+
+        <!--STATUS - Inactive-->
+        <form th:action="@{/inactiveServiceTypeManager}" th:object="${serviceType}" method="get"
+              style="max-width: 1100px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+            <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
+            <button type="submit" class="btn btn-primary">NIEAKTYWNY
+            </button>
+        </form>
+
+        <!--STATUS - Cancel-->
+        <form th:action="@{/cancelServiceTypeManager}" th:object="${serviceType}" method="get"
+              style="max-width: 1100px; margin: 0 auto;">
+            <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
+            <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
+            <button type="submit" class="btn btn-primary">ANULOWANY
+            </button>
+        </form>
     </th:block>
 </div>
 </body>

@@ -42,6 +42,17 @@ public class Status implements Serializable {
         return name;
     }
 
+    public String getNiceStatus(){
+        if (id == ConstanceNr.STATUS_SERVICE_TYPE){
+            return "Aktywny";
+        } else if (id == ConstanceNr.STATUS_INACTIVE){
+            return "Nieaktywny";
+        }else if (id == ConstanceNr.STATUS_CANCELLED){
+            return "Anulowany";
+        }
+        return name;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -6,14 +6,6 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <style type="text/css">
-        /*table {*/
-        /*    margin: 15px;*/
-        /*    text-align: left;*/
-        /*}*/
-
-        /*table th, table td {*/
-        /*    padding: 10px;*/
-        /*}*/
         input[type=text], input[type=password], select {
             display: inline-block;
             width: 300px;
@@ -41,6 +33,7 @@
             <th>Domyślna nazwa usługi</th>
             <th>Domyślny opis usługi</th>
             <th>Domyślna cena usługi</th>
+            <th>Status</th>
             <td><b>Action</b></td>
 
             </thead>
@@ -50,6 +43,7 @@
                     <td>[[${serviceType.name}]]</td>
                     <td>[[${serviceType.desc}]]</td>
                     <td>[[${serviceType.value}]]</td>
+                    <td>[[${serviceType.status.getNiceStatus()}]]</td>
                     <td>
                         <a th:href="@{'/serviceTypeManager/' + ${serviceType.id}}">Choose</a>
                     </td>
