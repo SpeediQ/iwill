@@ -89,9 +89,13 @@ public class ServiceTypeController {
     public String showAddAndShowServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
         serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_SERVICE_TYPE));
         serviceTypeRepository.save(serviceType);
+        addAttributeForServiceType(serviceType, model, request);
+        return "serviceType";
+    }
+
+    private void addAttributeForServiceType(ServiceType serviceType, Model model, HttpServletRequest request) {
         model.addAttribute("serviceType", serviceType);
         model.addAttribute("idVisit", request.getParameter("idVisit"));
-        return "serviceType";
     }
 
     @GetMapping(value = "/saveServiceTypeManager")
@@ -109,70 +113,65 @@ public class ServiceTypeController {
 
     @PostMapping(value = "/saveSelectedServiceTypeManager")
     public String saveSelectedSTManager(Model model, HttpServletRequest request, ServiceType serviceType) {
-        String idStatus = request.getParameter("idStatus");
-        if (idStatus == null || idStatus == "") {
-            return null;
-        } else {
-            serviceType.setStatus(statusRepository.getById(Integer.parseInt(idStatus)));
-        }
+        setServiceTypeStatusByRequest(serviceType, request);
         serviceTypeRepository.save(serviceType);
         model.addAttribute("serviceType", serviceType);
         model.addAttribute("isEditView", true);
-
         return "serviceType";
     }
 
+    private void setServiceTypeStatusByRequest(ServiceType serviceType, HttpServletRequest request) {
+        String idStatus = request.getParameter("idStatus");
+        if (idStatus == null || idStatus == "") {
+            // todo
+        } else {
+            serviceType.setStatus(statusRepository.getById(Integer.parseInt(idStatus)));
+        }
+    }
 
     @GetMapping(value = "/cancelServiceTypeManager")
     public String candelServiceType(ServiceType serviceType, Model model, HttpServletRequest request) {
-        serviceType = serviceTypeRepository.getById(serviceType.getId());
-        serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_CANCELLED));
-
+        serviceType = setServiceTypeStatusByServiceTypeId(serviceType.getId(), ConstanceNr.STATUS_CANCELLED);
         serviceTypeRepository.save(serviceType);
-        model.addAttribute("idVisit", request.getParameter("idVisit"));
         String isEditView = request.getParameter("isEditView");
         model.addAttribute("isEditView", isEditView);
+        return setCorrectView(serviceType, model, request, isEditView);
+    }
+
+    private String setCorrectView(ServiceType serviceType, Model model, HttpServletRequest request, String isEditView) {
         if ("true".equals(isEditView)) {
             addAttributeForSelectedServiceTypeManagerForm(model, serviceType);
             return "selected_serviceType_manager_form";
         } else {
             model.addAttribute("serviceType", serviceType);
+            addAttributeForServiceType(serviceType, model, request);
             return "serviceType";
         }
     }
 
     @GetMapping(value = "/inactiveServiceTypeManager")
     public String inactiveServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
-        serviceType = serviceTypeRepository.getById(serviceType.getId());
-        serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_INACTIVE));
+        serviceType = setServiceTypeStatusByServiceTypeId(serviceType.getId(), ConstanceNr.STATUS_INACTIVE);
         serviceTypeRepository.save(serviceType);
-        model.addAttribute("idVisit", request.getParameter("idVisit"));
         String isEditView = request.getParameter("isEditView");
         model.addAttribute("isEditView", isEditView);
-        if ("true".equals(isEditView)) {
-            addAttributeForSelectedServiceTypeManagerForm(model, serviceType);
-            return "selected_serviceType_manager_form";
-        } else {
-            model.addAttribute("serviceType", serviceType);
-            return "serviceType";
-        }
+        return setCorrectView(serviceType, model, request, isEditView);
     }
 
     @GetMapping(value = "/activeServiceTypeManager")
     public String activeServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
-        serviceType = serviceTypeRepository.getById(serviceType.getId());
-        serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_SERVICE_TYPE));
+        serviceType = setServiceTypeStatusByServiceTypeId(serviceType.getId(), ConstanceNr.STATUS_SERVICE_TYPE);
         serviceTypeRepository.save(serviceType);
-        model.addAttribute("idVisit", request.getParameter("idVisit"));
         String isEditView = request.getParameter("isEditView");
         model.addAttribute("isEditView", isEditView);
-        if ("true".equals(isEditView)) {
-            addAttributeForSelectedServiceTypeManagerForm(model, serviceType);
-            return "selected_serviceType_manager_form";
-        } else {
-            model.addAttribute("serviceType", serviceType);
-            return "serviceType";
-        }
+        return setCorrectView(serviceType, model, request, isEditView);
+    }
+
+    private ServiceType setServiceTypeStatusByServiceTypeId(int serviceTypeId, int statusServiceType) {
+        ServiceType serviceType;
+        serviceType = serviceTypeRepository.getById(serviceTypeId);
+        serviceType.setStatus(statusRepository.getById(statusServiceType));
+        return serviceType;
     }
 
     private void addAttributeForServiceTypeManager(Model model) {

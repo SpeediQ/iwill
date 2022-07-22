@@ -42,12 +42,12 @@ public class Status implements Serializable {
         return name;
     }
 
-    public String getNiceStatus(){
-        if (id == ConstanceNr.STATUS_SERVICE_TYPE){
+    public String getNiceStatus() {
+        if (id == ConstanceNr.STATUS_SERVICE_TYPE) {
             return "Aktywny";
-        } else if (id == ConstanceNr.STATUS_INACTIVE){
+        } else if (id == ConstanceNr.STATUS_INACTIVE) {
             return "Nieaktywny";
-        }else if (id == ConstanceNr.STATUS_CANCELLED){
+        } else if (id == ConstanceNr.STATUS_CANCELLED) {
             return "Anulowany";
         }
         return name;
