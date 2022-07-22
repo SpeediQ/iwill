@@ -4,9 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
-public class Status {
+public class Status implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -38,6 +39,17 @@ public class Status {
 
     @Override
     public String toString() {
+        return name;
+    }
+
+    public String getNiceStatus() {
+        if (id == ConstanceNr.STATUS_SERVICE_TYPE) {
+            return "Aktywny";
+        } else if (id == ConstanceNr.STATUS_INACTIVE) {
+            return "Nieaktywny";
+        } else if (id == ConstanceNr.STATUS_CANCELLED) {
+            return "Anulowany";
+        }
         return name;
     }
 

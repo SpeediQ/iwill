@@ -46,8 +46,10 @@
                                     <input type="checkbox" th:name="phoneAgreement"/>
                                 </th:block>
                                 <th:block th:unless="${contactAddressPhone == null}">
-                                    <input type="text" th:name="phoneValue" th:value="${contactAddressPhone.getValue()}"/>
-                                    <input th:type="checkbox" th:name="phoneAgreement" th:checked="${contactAddressPhone.isAgreement()}"/>
+                                    <input type="text" th:name="phoneValue"
+                                           th:value="${contactAddressPhone.getValue()}"/>
+                                    <input th:type="checkbox" th:name="phoneAgreement"
+                                           th:checked="${contactAddressPhone.isAgreement()}"/>
 
                                 </th:block>
                             </div>
@@ -58,8 +60,10 @@
                                     <input type="checkbox" th:name="emailAgreement"/>
                                 </th:block>
                                 <th:block th:unless="${contactAddressEmail == null}">
-                                    <input type="text" th:name="emailValue" th:value="${contactAddressEmail.getValue()}"/>
-                                    <input type="checkbox" th:name="emailAgreement" th:checked="${contactAddressEmail.isAgreement()}"/>
+                                    <input type="text" th:name="emailValue"
+                                           th:value="${contactAddressEmail.getValue()}"/>
+                                    <input type="checkbox" th:name="emailAgreement"
+                                           th:checked="${contactAddressEmail.isAgreement()}"/>
                                 </th:block>
                             </div>
                         </div>

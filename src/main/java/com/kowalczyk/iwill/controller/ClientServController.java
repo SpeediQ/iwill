@@ -119,7 +119,7 @@ public class ClientServController {
     public String editCS(@PathVariable("id") Integer id, Model model) {
         ClientServ clientServ = clientServRepository.getById(id);
         model.addAttribute("clientServ", clientServ);
-        model.addAttribute("items", serviceTypeRepository.findAll());
+        model.addAttribute("items", serviceTypeRepository.findAllActive());
         return "cs_edit_form";
     }
 

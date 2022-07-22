@@ -1,13 +1,13 @@
 package com.kowalczyk.iwill.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
-public class ServiceType {
+public class ServiceType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
 
     @Column(name = "DESCRIPTION")
     private String desc;
@@ -16,8 +16,16 @@ public class ServiceType {
 
     private double value;
 
+    @OneToOne
+    @JoinColumn(name = "STATUS_ID")
+    private Status status;
+
 
     public ServiceType() {
+    }
+
+    public ServiceType(Status status) {
+        this.status = status;
     }
 
     public int getId() {
@@ -50,6 +58,14 @@ public class ServiceType {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override

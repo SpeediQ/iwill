@@ -22,7 +22,6 @@ public class VisitDTO {
     private String title;
     private String code;
     private int promotion;
-    private Set<ContactAddress> contactAddresses = new HashSet<>();
 
 
     public int getId() {
