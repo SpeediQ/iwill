@@ -6,7 +6,9 @@ import com.kowalczyk.iwill.repository.NumeratorRepository;
 import com.kowalczyk.iwill.repository.ServiceTypeRepository;
 import com.kowalczyk.iwill.repository.StatusRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
+import com.kowalczyk.iwill.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +32,24 @@ public class VisitController {
     private NumeratorRepository numeratorRepository;
     @Autowired
     private StatusRepository statusRepository;
+    @Autowired
+    private ServiceTypeService serviceTypeService;
 
+    @GetMapping("/v/st/{idVisit}/{pageNumber}")
+    public String getChooseOrCreateServiceForm(Model model, @PathVariable("idVisit") int idVisit, @PathVariable("pageNumber") int currentPage, HttpServletRequest request) {
+        Page<ServiceType> page = serviceTypeService.findPage(currentPage);
+
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalElements", page.getTotalElements());
+        model.addAttribute("serviceTypeList", page.getContent());
+        model.addAttribute("visit", visitRepository.getById(idVisit));
+        model.addAttribute("serviceType", new ServiceType());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
+
+
+        return "choose_or_create_serviceType_form";
+    }
 
     @PostMapping(value = "/visits/save", params = "addItem")
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {
@@ -38,7 +57,8 @@ public class VisitController {
         setNumberForClient(visit);
         visitRepository.save(visit);
         addAttributeForChooseOrCreateServiceTypeForm(model, visit);
-        return "choose_or_create_serviceType_form";
+        return getChooseOrCreateServiceForm(model, visit.getId(), 1, request);
+//        return "choose_or_create_serviceType_form";
     }
 
     @PostMapping(value = "/visits/save", params = "addPromotion")
@@ -179,9 +199,9 @@ public class VisitController {
 
 
     private void addAttributeForChooseOrCreateServiceTypeForm(Model model, Visit visit) {
-        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
-        model.addAttribute("visit", visit);
-        model.addAttribute("serviceType", new ServiceType());
+//        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
+//        model.addAttribute("visit", visit);
+//        model.addAttribute("serviceType", new ServiceType());
     }
 
     private void setCurrentStatus(Visit visit) {

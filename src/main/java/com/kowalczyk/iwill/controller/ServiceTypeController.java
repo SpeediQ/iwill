@@ -7,7 +7,10 @@ import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ServiceTypeRepository;
 import com.kowalczyk.iwill.repository.StatusRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
+import com.kowalczyk.iwill.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,8 @@ public class ServiceTypeController {
 
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
+    @Autowired
+    private ServiceTypeService serviceTypeService;
     @Autowired
     private VisitRepository visitRepository;
     @Autowired
@@ -185,6 +190,25 @@ public class ServiceTypeController {
         model.addAttribute("visit", visit);
         model.addAttribute("serviceType", new ServiceType());
     }
+
+    @GetMapping("/testt/{pageNumber}")
+    public String getOnePage(Model model, @PathVariable("pageNumber") int currentPage, HttpServletRequest request) {
+        Page<ServiceType> page = serviceTypeService.findPage(currentPage);
+
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalElements", page.getTotalElements());
+        model.addAttribute("serviceTypeList", page.getContent());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
+
+        return "paginationExample";
+    }
+
+    @GetMapping("/test")
+    public String getAllPages(Model model, HttpServletRequest request){
+        return getOnePage(model, 1, request);
+    }
+
 
 
 }
