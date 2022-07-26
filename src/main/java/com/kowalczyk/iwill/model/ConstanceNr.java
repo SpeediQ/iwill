@@ -20,5 +20,11 @@ public class ConstanceNr {
     public static int PROMOTION_MIN_VALUE = 0;
     public static int PROMOTION_MAX_VALUE = 100;
 
+    //
+    public static int MAX_CLIENT_LIST_SIZE_5 = 5;
+    public static int MAX_CLIENT_LIST_SIZE_10 = 10;
+    public static int MAX_SERVICE_TYPE_LIST_SIZE_5 = 5;
+    public static int MAX_SERVICE_TYPE_LIST_SIZE_10 = 10;
+
 
 }

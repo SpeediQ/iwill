@@ -3,7 +3,9 @@ package com.kowalczyk.iwill.controller;
 
 import com.kowalczyk.iwill.model.*;
 import com.kowalczyk.iwill.repository.*;
+import com.kowalczyk.iwill.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,8 @@ public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
+    private ClientService clientService;
+    @Autowired
     private ClientCardRepository clientCardRepository;
     @Autowired
     private NumeratorRepository numeratorRepository;
@@ -32,10 +36,20 @@ public class ClientController {
     private StatusRepository statusRepository;
 
 
-    @GetMapping("/main/cform")
-    public String showClientForm(Model model) {
-        addAttributeForClientForm(model);
+    @GetMapping("/main/cform/{pageNumber}")
+    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage) {
+        Page<Client> page = clientService.findAllClientsPage(currentPage);
+        addAttributeForClientFormPage(model, page, currentPage);
         return "choose_or_create_client_form";
+    }
+
+    private void addAttributeForClientFormPage(Model model, Page<Client> page, int currentPage) {
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalElements", page.getTotalElements());
+        model.addAttribute("clients", page.getContent());
+        model.addAttribute("client", new Client("Brak komentarza"));
+        model.addAttribute("clientsDTO", mapToClientDTOList(clientRepository.findAll()));
     }
 
     @PostMapping("/main/save/client")
@@ -46,8 +60,7 @@ public class ClientController {
         setCodeForClient(client);
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
-        addAttributeForClientForm(model);
-        return "choose_or_create_client_form";
+        return showClientForm(model, 1);
     }
 
     private void addAttributeForClientForm(Model model) {
@@ -103,10 +116,10 @@ public class ClientController {
     }
 
     @PostMapping(value = "/client/edit/save", params = "saveUpdatedContact")
-    public String showClientManager(Client client, HttpServletRequest request) {
+    public String showClientManager(Client client, Model model, HttpServletRequest request) {
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
-        return "index.html";
+        return showClientForm(model, 1);
     }
 
     private void setAndSaveToDbContactAddressByRequest(Client client, HttpServletRequest request) {
@@ -141,10 +154,10 @@ public class ClientController {
     private void createNewContactAddressAddToClientAndSaveToDb(Client client, String phoneValue, Boolean phoneAgreement, Status status) {
         ContactAddress contactAddressPhone = getContactAddressWithUpdatedValueAgreementClient(client, phoneValue, phoneAgreement);
         contactAddressPhone.setStatus(status);
-        if (client.isIdValid()){
+        if (client.isIdValid()) {
             contactAddressRepository.save(contactAddressPhone);
             client.getContactAddresses().add(contactAddressPhone);
-        } else{
+        } else {
             client.getContactAddresses().add(contactAddressPhone);
             clientRepository.save(client);
             contactAddressRepository.save(contactAddressPhone);
