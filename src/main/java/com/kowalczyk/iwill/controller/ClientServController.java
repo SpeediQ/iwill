@@ -76,12 +76,13 @@ public class ClientServController {
 
     @GetMapping("/clientservs/delete/{id}")
     public String showClientServDeleteForm(@PathVariable("id") Integer id, Model model) {
+        Visit visit = clientServRepository.getById(id).getVisit();
         clientServRepository.deleteById(id);
 
-        model.addAttribute("client", new Client("Brak komentarza"));
-        model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
-//        return "redirect:/clientservs";
-        return "choose_or_create_client_form";
+            addAttributeForVisitForm(model, visit, visit.getClientServSet());
+
+
+        return "visit_form";
     }
 
     @PostMapping(value = "/cs/save")

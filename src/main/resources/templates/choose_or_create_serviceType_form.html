@@ -5,6 +5,20 @@
     <title>List Visits</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style type="text/css">
+
+        label {
+            padding-top: 10px;
+        }
+
+        button {
+            padding:10px;
+            margin: 10px;
+        }
+        table th, table td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div class="container text-center">
@@ -87,14 +101,14 @@
         </div>
     </div>
     <div>
-        <div>
+        <div th:align="center">
             <button type="submit" class="btn btn-primary">Dodaj Nowy Typ Usługi</button>
         </div>
     </div>
 </form>
 <form th:action="@{/cs/save}" method="post" style="max-width: 300px; margin: 0 auto;">
     <input type="hidden" th:name="idVisit" th:value="${idVisit}"/>
-    <div>
+    <div th:align="center">
         <button type="submit" name="back" value="Back" class="btn btn-primary">Wróć do poprzedniego ekranu</button>
     </div>
 

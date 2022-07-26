@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>Create Client Services</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <style type="text/css">
+
+        label {
+            padding-top: 10px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="container text-center">
@@ -17,15 +28,16 @@
 
         <div>
             <div class="form-group row">
-                <span>Nazwa usługi:</span>
+                <label>Nazwa usługi: </label>
                 <div>
                     <input type="text" th:field="*{title}" placeholder="Client Service Title" class="form-control"/>
                 </div>
                 <div>
+                    <span>Domyślna nazwa: </span>
                     <span th:text="${serviceType.name}" th:remove="tag"></span>
                 </div>
                 <br>
-                <span>Opis Usługi:</span>
+                <label>Opis Usługi:</label>
                 <div>
                     <textarea th:field="*{desc}" placeholder="Client Service Description" class="form-control"
                               required/>
@@ -33,17 +45,18 @@
                 <div>
                     <br>
                     <div>
-                        <span>Cena usługi:</span>
+                        <label>Cena usługi: </label>
                         <input type="text" th:field="*{price}" placeholder="Price of the Service" class="form-control"/>
                     </div>
                     <div>
+                        <span>Domyślna cena: </span>
                         <span th:text="${serviceType.value}" th:remove="tag"></span>
                     </div>
                 </div>
 
             </div>
             <div>
-                <span>Wysokość promocji [%] - OBECNIE:</span>
+                <label>Wysokość promocji [%] - OBECNIE:</label>
                 <span th:text="${clientServ.getPromotion()}" th:remove="tag"></span>
 
                 <input type="number" th:field="*{promotion}" placeholder="Price of the Service" class="form-control"
