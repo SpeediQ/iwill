@@ -27,7 +27,7 @@
                 </div>
                 <label>Item:</label>
                 <select th:field="*{serviceType}">
-                    <option th:each="item : ${items}" th:value="${item.id}" th:text="${item.niceString}"/>
+                    <option th:each="serviceType : ${serviceTypeList}" th:value="${serviceType.id}" th:text="${serviceType.niceString}"/>
                 </select>
 
             </div>

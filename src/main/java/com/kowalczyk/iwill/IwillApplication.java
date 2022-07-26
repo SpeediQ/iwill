@@ -42,7 +42,7 @@ public class IwillApplication {
             statuses.add(new Status("Adres"));
             statuses.add(new Status("Typ Uslugi"));
             statuses.add(new Status("Anulowany"));
-            statuses.add(new Status("Inactive"));
+            statuses.add(new Status("Nieaktywny"));
             statuses.stream().forEach(status -> statusRepository.save(status));
         }
         if (numeratorRepository.findAll().size() == 0) {

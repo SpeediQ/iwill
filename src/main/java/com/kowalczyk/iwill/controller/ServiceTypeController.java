@@ -7,7 +7,9 @@ import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ServiceTypeRepository;
 import com.kowalczyk.iwill.repository.StatusRepository;
 import com.kowalczyk.iwill.repository.VisitRepository;
+import com.kowalczyk.iwill.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +25,13 @@ public class ServiceTypeController {
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
     @Autowired
+    private ServiceTypeService serviceTypeService;
+    @Autowired
     private VisitRepository visitRepository;
     @Autowired
     private StatusRepository statusRepository;
+//    @Autowired
+//    private VisitController visitController;
 
     @GetMapping("/items")
     public String listItems(Model model) {
@@ -47,19 +53,25 @@ public class ServiceTypeController {
         return "serviceType_form";
     }
 
-    @PostMapping("/serviceType/add")
-    public String addItemByVisitFlow(ServiceType serviceType, Model model, HttpServletRequest request) {
+//    @PostMapping("/serviceType/add")
+//    public String addItemByVisitFlow(ServiceType serviceType, Model model, HttpServletRequest request) {
+//
+//        serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_SERVICE_TYPE));
+//        serviceTypeRepository.save(serviceType);
+//        Visit visit = visitRepository.getById(Integer.parseInt(request.getParameter("idVisit")));
+//        addAttributeForChooseOrCreateServiceTypeForm(model, visit);
+//        return "choose_or_create_serviceType_form";
+//    }
 
-        serviceType.setStatus(statusRepository.getById(ConstanceNr.STATUS_SERVICE_TYPE));
-        serviceTypeRepository.save(serviceType);
-        Visit visit = visitRepository.getById(Integer.parseInt(request.getParameter("idVisit")));
-        addAttributeForChooseOrCreateServiceTypeForm(model, visit);
-        return "choose_or_create_serviceType_form";
-    }
-
-    @GetMapping("/serviceTypeManager")
-    public String showServiceTypeManager(Model model) {
-        addAttributeForServiceTypeManager(model);
+    @GetMapping("/serviceTypeManager/p/{pageNumber}")
+    public String showServiceTypeManager(Model model, @PathVariable("pageNumber") int currentPage) {
+        Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalElements", page.getTotalElements());
+        model.addAttribute("serviceTypeList", page.getContent());
+        model.addAttribute("serviceType", new ServiceType());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
         return "serviceType_manager_form";
     }
 
@@ -98,18 +110,21 @@ public class ServiceTypeController {
         model.addAttribute("idVisit", request.getParameter("idVisit"));
     }
 
-    @GetMapping(value = "/saveServiceTypeManager")
-    public String saveServiceTypeManager(Model model, HttpServletRequest request) {
-        addAttributeForServiceTypeManager(model);
-        String idVisit = request.getParameter("idVisit");
-        if (idVisit == null || idVisit == "") {
-            return "serviceType_manager_form";
-        } else {
-            Visit visit = visitRepository.getById(Integer.parseInt(idVisit));
-            addAttributeForChooseOrCreateServiceTypeForm(model, visit);
-            return "choose_or_create_serviceType_form";
-        }
-    }
+//    @GetMapping(value = "/saveServiceTypeManager")
+//    public String saveServiceTypeManager(Model model, HttpServletRequest request) {
+//        addAttributeForServiceTypeManager(model);
+//        String idVisit = request.getParameter("idVisit");
+//        if (idVisit == null || idVisit == "") {
+//            return "serviceType_manager_form";
+//        } else {
+//            Visit visit = visitRepository.getById(Integer.parseInt(idVisit));
+//            addAttributeForChooseOrCreateServiceTypeForm(model, visit);
+//            VisitController visitController = new VisitController();
+//            // tutaj
+//            return visitController.getChooseOrCreateServiceForm(model, visit.getId(), 1, request);
+////            return "choose_or_create_serviceType_form";
+//        }
+//    }
 
     @PostMapping(value = "/saveSelectedServiceTypeManager")
     public String saveSelectedSTManager(Model model, HttpServletRequest request, ServiceType serviceType) {
@@ -184,6 +199,24 @@ public class ServiceTypeController {
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
         model.addAttribute("visit", visit);
         model.addAttribute("serviceType", new ServiceType());
+    }
+
+    @GetMapping("/testt/{pageNumber}")
+    public String getOnePage(Model model, @PathVariable("pageNumber") int currentPage, HttpServletRequest request) {
+        Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
+
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalElements", page.getTotalElements());
+        model.addAttribute("serviceTypeList", page.getContent());
+        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
+
+        return "paginationExample";
+    }
+
+    @GetMapping("/test")
+    public String getAllPages(Model model, HttpServletRequest request) {
+        return getOnePage(model, 1, request);
     }
 
 
