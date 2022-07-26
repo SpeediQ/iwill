@@ -5,7 +5,11 @@ import com.kowalczyk.iwill.model.*;
 import com.kowalczyk.iwill.repository.*;
 import com.kowalczyk.iwill.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -81,10 +85,25 @@ public class ClientController {
     }
 
 
-    @GetMapping(value = "/c/add/{idClient}")
-    public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {
+    @GetMapping(value = "/c/add/{idClient}/{pageNumber}")
+    public String showClientCard(@PathVariable("idClient") Integer idClient, @PathVariable("pageNumber") int currentPage, Model model) {
         Client client = clientRepository.getById(idClient);
-        addAttributeForClientCardForm(model, client);
+        List<Visit> sortedVisitListByVisitSet = client.getClientCard().getSortedVisitListByVisitSet();
+        return getCCardFormPage(idClient, currentPage, model, client, sortedVisitListByVisitSet);
+    }
+
+    private String getCCardFormPage(Integer idClient, int currentPage, Model model, Client client, List<Visit> sortedVisitListByVisitSet) {
+        model.addAttribute("client", client);
+        PagedListHolder page = new PagedListHolder(sortedVisitListByVisitSet);
+        page.setPageSize(5);
+        page.setPage(currentPage -1);
+        page.getPageCount();
+        page.getPageList();
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", page.getPageCount());
+        model.addAttribute("totalElements", sortedVisitListByVisitSet.size());
+        model.addAttribute("visitList", page.getPageList());
+        model.addAttribute("idClient", idClient);
         return "ccard_form";
     }
 
@@ -177,9 +196,7 @@ public class ClientController {
         contactAddress.setValue(value);
     }
 
-    private void addAttributeForClientCardForm(Model model, Client client) {
-        model.addAttribute("client", client);
-    }
+
 
     @PostMapping(value = "c/v/add")
     public String addVisitToClient(Client client, Model model) {

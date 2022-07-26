@@ -151,7 +151,7 @@
     </form>
     <br>
     <th:block th:if="${visit.getStatus() == null || visit.getStatus().getId() == 1}">
-        <form th:action="@{/c/add/__${visit.getClientCard().getId()}__}" method="get">
+        <form th:action="@{/c/add/__${visit.getClientCard().getId()}__/1}" method="get">
 
             <div th:align="left">
                 <button type="submit" class="btn btn-primary">Cofnij</button>

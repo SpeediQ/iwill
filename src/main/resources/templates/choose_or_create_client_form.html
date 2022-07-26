@@ -53,7 +53,7 @@
                     <td>[[${client.comment}]]</td>
                     <td>[[${#dates.format(client.date, 'dd/MM/yyyy')}]]</td>
                     <td>
-                        <a th:href="@{'/c/add/' + ${client.id}}">Choose</a>
+                        <a th:href="@{'/c/add/' + ${client.id}+'/1'}">Choose</a>
                         <br>
                         <a th:href="@{'/client/edit/' + ${client.id}}">Edit</a>
                     </td>
@@ -178,7 +178,7 @@
                                 <td>${data[i].lastname}</td>
                                 <td>${data[i].comment}</td>
                                 <td>
-                                    <a href="/c/add/${data[i].id}">Choose</a>
+                                    <a href="/c/add/${data[i].id/1}">Choose</a>
 <br>
                                     <a href="/client/edit/${data[i].id}">Choose</a>
 

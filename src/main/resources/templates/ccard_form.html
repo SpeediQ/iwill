@@ -26,7 +26,8 @@
         </div>
         <th:block th:if="${client.getClientCard().getSortedVisitListByVisitSet().size() > 0}">
             <div>
-                <table class="table table-bordered">
+                <section class="panel">
+                <table class="table table-striped table-advance table-hover">
                     <thead>
                     <th>Kod</th>
                     <th>Tytuł</th>
@@ -38,7 +39,7 @@
                     <th>Akcja</th>
                     </thead>
                     <tbody>
-                    <th:block th:each="visit : ${client.getClientCard().getSortedVisitListByVisitSet()}">
+                    <th:block th:each="visit : ${visitList}">
                         <tr>
                             <td>[[${visit.code}]]</td>
                             <td>[[${visit.title}]]</td>
@@ -55,6 +56,15 @@
                     </th:block>
                     </tbody>
                 </table>
+                    </table><footer id="footerClient" class="panel-footer">
+                    Łącznie [[${totalItems}]] : Strona [[${currentPage}]] of [[${totalPages}]]
+                    &nbsp; &nbsp; - &nbsp;
+                    <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                <a th:href="@{'/c/add/'+${idClient}+'/' +${i}}">[[${i}]]</a>
+                &nbsp; &nbsp;
+            </span>
+                </footer>
+                </section>
             </div>
         </th:block>
         <th:block th:unless="${client.getClientCard().getSortedVisitListByVisitSet().size() > 0}">
