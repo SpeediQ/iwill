@@ -13,8 +13,8 @@ public class ServiceTypeService {
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
 
-    public Page<ServiceType> findPage(int pageNumber){
-        Pageable pageable = PageRequest.of(pageNumber -1 , 5);
+    public Page<ServiceType> findAllActiveServiceTypePage(int pageNumber){
+        Pageable pageable = PageRequest.of(pageNumber -1 , 10);
 
         return serviceTypeRepository.findAll(pageable);
     }

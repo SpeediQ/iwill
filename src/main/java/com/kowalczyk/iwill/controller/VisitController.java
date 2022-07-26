@@ -37,18 +37,34 @@ public class VisitController {
 
     @GetMapping("/v/st/{idVisit}/{pageNumber}")
     public String getChooseOrCreateServiceForm(Model model, @PathVariable("idVisit") int idVisit, @PathVariable("pageNumber") int currentPage, HttpServletRequest request) {
-        Page<ServiceType> page = serviceTypeService.findPage(currentPage);
+        Page<ServiceType> page = serviceTypeService.findAllActiveServiceTypePage(currentPage);
+        addAttributeForServiceTypePage(model, currentPage, page);
+        model.addAttribute("idVisit", idVisit);
+        return "choose_or_create_serviceType_form";
+    }
 
+    private void addAttributeForServiceTypePage(Model model, int currentPage, Page<ServiceType> page) {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
         model.addAttribute("serviceTypeList", page.getContent());
-        model.addAttribute("visit", visitRepository.getById(idVisit));
         model.addAttribute("serviceType", new ServiceType());
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
+    }
 
 
-        return "choose_or_create_serviceType_form";
+    @GetMapping(value = "/saveServiceTypeManager")
+    public String saveServiceTypeManager(Model model, HttpServletRequest request) {
+
+        String idVisit = request.getParameter("idVisit");
+        if (idVisit == null || idVisit == "") {
+            int currentPage = 1;
+            Page<ServiceType> page = serviceTypeService.findAllActiveServiceTypePage(currentPage);
+            addAttributeForServiceTypePage(model, currentPage, page);
+            return "serviceType_manager_form";
+        } else {
+            return getChooseOrCreateServiceForm(model, Integer.parseInt(idVisit), 1, request);
+        }
     }
 
     @PostMapping(value = "/visits/save", params = "addItem")
@@ -56,9 +72,7 @@ public class VisitController {
         setCurrentStatus(visit);
         setNumberForClient(visit);
         visitRepository.save(visit);
-        addAttributeForChooseOrCreateServiceTypeForm(model, visit);
         return getChooseOrCreateServiceForm(model, visit.getId(), 1, request);
-//        return "choose_or_create_serviceType_form";
     }
 
     @PostMapping(value = "/visits/save", params = "addPromotion")
@@ -195,13 +209,6 @@ public class VisitController {
         String clientCode = visit.getClientCard().getClient().getCode();
         String visitCode = clientCode + "/" + symbol + "/" + freeVisitNumber;
         return visitCode;
-    }
-
-
-    private void addAttributeForChooseOrCreateServiceTypeForm(Model model, Visit visit) {
-//        model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
-//        model.addAttribute("visit", visit);
-//        model.addAttribute("serviceType", new ServiceType());
     }
 
     private void setCurrentStatus(Visit visit) {
