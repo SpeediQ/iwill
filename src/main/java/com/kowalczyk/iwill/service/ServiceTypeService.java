@@ -13,10 +13,16 @@ public class ServiceTypeService {
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
 
-    public Page<ServiceType> findAllActiveServiceTypePage(int pageNumber){
+    public Page<ServiceType> findAllServiceTypePage(int pageNumber){
         Pageable pageable = PageRequest.of(pageNumber -1 , 10);
 
         return serviceTypeRepository.findAll(pageable);
     }
+    public Page<ServiceType> findAllActiveServiceTypePage(int pageNumber){
+        Pageable pageable = PageRequest.of(pageNumber -1 , 10);
+
+        return serviceTypeRepository.findAllByStatusId(6,pageable);
+    }
+
 
 }

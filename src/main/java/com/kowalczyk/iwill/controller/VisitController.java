@@ -59,7 +59,7 @@ public class VisitController {
         String idVisit = request.getParameter("idVisit");
         if (idVisit == null || idVisit == "") {
             int currentPage = 1;
-            Page<ServiceType> page = serviceTypeService.findAllActiveServiceTypePage(currentPage);
+            Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
             addAttributeForServiceTypePage(model, currentPage, page);
             return "serviceType_manager_form";
         } else {

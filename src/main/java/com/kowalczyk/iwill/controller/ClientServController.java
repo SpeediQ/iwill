@@ -119,8 +119,17 @@ public class ClientServController {
     public String editCS(@PathVariable("id") Integer id, Model model) {
         ClientServ clientServ = clientServRepository.getById(id);
         model.addAttribute("clientServ", clientServ);
-        model.addAttribute("items", serviceTypeRepository.findAllActive());
+        List<ServiceType> allActiveServiceTypeList = serviceTypeRepository.findAllActive();
+        addExistingServiceTypeToActiveList(clientServ, allActiveServiceTypeList);
+        model.addAttribute("serviceTypeList", allActiveServiceTypeList);
         return "cs_edit_form";
+    }
+
+    private void addExistingServiceTypeToActiveList(ClientServ clientServ, List<ServiceType> allActiveServiceTypeList) {
+        ServiceType serviceType = clientServ != null ? clientServ.getServiceType() : null;
+        if (serviceType != null && serviceType.getStatus() != null && serviceType.getStatus().getId() != ConstanceNr.STATUS_SERVICE_TYPE) {
+            allActiveServiceTypeList.add(serviceType);
+        }
     }
 
     @PostMapping(value = "/cs/save", params = "update")

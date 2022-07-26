@@ -65,7 +65,7 @@ public class ServiceTypeController {
 
     @GetMapping("/serviceTypeManager/p/{pageNumber}")
     public String showServiceTypeManager(Model model, @PathVariable("pageNumber") int currentPage) {
-        Page<ServiceType> page = serviceTypeService.findAllActiveServiceTypePage(currentPage);
+        Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
@@ -203,7 +203,7 @@ public class ServiceTypeController {
 
     @GetMapping("/testt/{pageNumber}")
     public String getOnePage(Model model, @PathVariable("pageNumber") int currentPage, HttpServletRequest request) {
-        Page<ServiceType> page = serviceTypeService.findAllActiveServiceTypePage(currentPage);
+        Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
 
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
