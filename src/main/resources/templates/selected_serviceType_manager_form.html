@@ -73,7 +73,7 @@
                     </div>
                     <div>
                         <div>
-                            <button type="submit" class="btn btn-primary">Zapisz</button>
+                            <button type="submit" class="btn btn-large btn-success">Zapisz</button>
                         </div>
                     </div>
                     <br>
@@ -96,7 +96,7 @@
                       style="max-width: 1100px; margin: 0 auto;">
                     <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
                     <input type="hidden" th:name="isEditView" th:value="${isEditView}"/>
-                    <button type="submit" class="btn btn-primary">NIEAKTYWNY
+                    <button type="submit" class="btn btn-danger">NIEAKTYWNY
                     </button>
 
                 </form>
@@ -106,7 +106,7 @@
                       style="max-width: 1100px; margin: 0 auto;">
                     <input type="hidden" th:field="*{id}" th:value="${serviceType.getId()}"/>
                     <input type="hidden" th:name="isEditView" th:value="${isEditView}"/>
-                    <button type="submit" class="btn btn-primary">ANULOWANY
+                    <button type="submit" class="btn btn-danger">ANULOWANY
                     </button>
                 </form>
 

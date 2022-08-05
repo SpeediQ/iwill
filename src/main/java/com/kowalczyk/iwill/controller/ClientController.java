@@ -7,9 +7,6 @@ import com.kowalczyk.iwill.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +42,12 @@ public class ClientController {
         Page<Client> page = clientService.findAllClientsPage(currentPage);
         addAttributeForClientFormPage(model, page, currentPage);
         return "choose_or_create_client_form";
+    }
+    @GetMapping("/c/{idClient}")
+    public String getVisit(Model model, @PathVariable("idClient") int idClient, HttpServletRequest request) {
+        Client client = clientRepository.getById(idClient);
+        model.addAttribute("client", client);
+        return "client";
     }
 
     private void addAttributeForClientFormPage(Model model, Page<Client> page, int currentPage) {

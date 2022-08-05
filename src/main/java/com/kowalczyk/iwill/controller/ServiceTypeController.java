@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -63,16 +64,29 @@ public class ServiceTypeController {
 //        return "choose_or_create_serviceType_form";
 //    }
 
+    // /page/1?sortField=name@sortDir=asc
     @GetMapping("/serviceTypeManager/p/{pageNumber}")
-    public String showServiceTypeManager(Model model, @PathVariable("pageNumber") int currentPage) {
-        Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
+    public String showServiceTypeManager(Model model,
+                                         @PathVariable("pageNumber") int currentPage,
+                                         @RequestParam("sortField") String sortField,
+                                         @RequestParam("sortDir") String sortDir
+                                         ) {
+//        Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
+        Page<ServiceType> page = serviceTypeService.findAllSortedActiveServiceTypePage(currentPage, sortField, sortDir);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
         model.addAttribute("serviceTypeList", page.getContent());
         model.addAttribute("serviceType", new ServiceType());
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAll());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "serviceType_manager_form";
+    }
+    @GetMapping("/serviceTypeManager/p")
+    public String showMainServiceTypeManager(Model model) {
+        return showServiceTypeManager(model,1, "name", "asc");
     }
 
     @GetMapping("/deleteServiceTypeManager")

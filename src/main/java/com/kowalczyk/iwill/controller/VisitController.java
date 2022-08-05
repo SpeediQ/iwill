@@ -51,6 +51,9 @@ public class VisitController {
         model.addAttribute("serviceTypeList", page.getContent());
         model.addAttribute("serviceType", new ServiceType());
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
+        model.addAttribute("sortField", "name");
+        model.addAttribute("sortDir", "asc");
+        model.addAttribute("reverseSortDir", "asc");
     }
 
 
@@ -60,7 +63,7 @@ public class VisitController {
         String idVisit = request.getParameter("idVisit");
         if (idVisit == null || idVisit == "") {
             int currentPage = 1;
-            Page<ServiceType> page = serviceTypeService.findAllServiceTypePage(currentPage);
+            Page<ServiceType> page = serviceTypeService.findAllSortedActiveServiceTypePage(currentPage, "name", "asc");
             addAttributeForServiceTypePage(model, currentPage, page);
             return "serviceType_manager_form";
         } else {
