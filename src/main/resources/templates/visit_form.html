@@ -138,11 +138,11 @@
         <div th:align="left">
             <br>
             <th:block th:unless="${visit.getClientServSet().size() == 0}">
-                <button type="submit" name="submit" value="Submit" class="btn btn-primary">Zapisz</button>
+                <button type="submit" name="submit" value="Submit" class="btn btn-large btn-success">Zapisz</button>
             </th:block>
             <button type="submit" name="addItem" value="AddItem" class="btn btn-primary">Dodaj usługę
             </button>
-            <button type="submit" name="doReservation" value="DoReservation" class="btn btn-primary">Ustaw jako
+            <button type="submit" name="doReservation" value="DoReservation" class="btn btn-danger">Ustaw jako
                 rezerwacja
             </button>
 
@@ -154,7 +154,7 @@
         <form th:action="@{/c/add/__${visit.getClientCard().getId()}__/1}" method="get">
 
             <div th:align="left">
-                <button type="submit" class="btn btn-primary">Cofnij</button>
+                <button type="submit" class="btn btn-warning">Cofnij</button>
             </div>
 
         </form>
@@ -165,7 +165,7 @@
               style="max-width: 300px; margin: 0 auto;">
 
             <div>
-                <button type="submit" class="btn btn-primary">Cofnij</button>
+                <button type="submit" class="btn btn-warning">Cofnij</button>
             </div>
         </form>
     </th:block>

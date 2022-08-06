@@ -9,12 +9,12 @@ import com.kowalczyk.iwill.repository.VisitRepository;
 import com.kowalczyk.iwill.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
@@ -36,24 +36,33 @@ public class VisitController {
     @Autowired
     private ServiceTypeService serviceTypeService;
 
+    @GetMapping("/v/st/{idVisit}")
+    public String getChooseOrCreateServiceForm(Model model, @PathVariable("idVisit") int idVisit) {
+        return getChooseOrCreateServiceFormPage(model, idVisit, 1, "name", "asc");
+    }
+
     @GetMapping("/v/st/{idVisit}/{pageNumber}")
-    public String getChooseOrCreateServiceForm(Model model, @PathVariable("idVisit") int idVisit, @PathVariable("pageNumber") int currentPage, HttpServletRequest request) {
-        Page<ServiceType> page = serviceTypeService.findAllActiveServiceTypePage(currentPage);
-        addAttributeForServiceTypePage(model, currentPage, page);
+    public String getChooseOrCreateServiceFormPage(Model model, @PathVariable("idVisit") int idVisit,
+                                                   @PathVariable("pageNumber") int currentPage,
+                                                   @RequestParam("sortField") String sortField,
+                                                   @RequestParam("sortDir") String sortDir
+    ) {
+        Page<ServiceType> page = serviceTypeService.findAllActiveServiceTypePage(currentPage, sortField, sortDir);
+        addAttributeForServiceTypePage(model, currentPage, page, sortField, sortDir);
         model.addAttribute("idVisit", idVisit);
         return "choose_or_create_serviceType_form";
     }
 
-    private void addAttributeForServiceTypePage(Model model, int currentPage, Page<ServiceType> page) {
+    private void addAttributeForServiceTypePage(Model model, int currentPage, Page<ServiceType> page,String sortField, String sortDir) {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
         model.addAttribute("serviceTypeList", page.getContent());
         model.addAttribute("serviceType", new ServiceType());
         model.addAttribute("serviceTypeSet", serviceTypeRepository.findAllActive());
-        model.addAttribute("sortField", "name");
-        model.addAttribute("sortDir", "asc");
-        model.addAttribute("reverseSortDir", "asc");
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
     }
 
 
@@ -63,11 +72,11 @@ public class VisitController {
         String idVisit = request.getParameter("idVisit");
         if (idVisit == null || idVisit == "") {
             int currentPage = 1;
-            Page<ServiceType> page = serviceTypeService.findAllSortedActiveServiceTypePage(currentPage, "name", "asc");
-            addAttributeForServiceTypePage(model, currentPage, page);
+            Page<ServiceType> page = serviceTypeService.findAllSortedServiceTypePage(currentPage, "name", "asc");
+            addAttributeForServiceTypePage(model, currentPage, page, "name", "asc");
             return "serviceType_manager_form";
         } else {
-            return getChooseOrCreateServiceForm(model, Integer.parseInt(idVisit), 1, request);
+            return getChooseOrCreateServiceFormPage(model, Integer.parseInt(idVisit), 1, "name", "asc");
         }
     }
 
@@ -76,7 +85,7 @@ public class VisitController {
         setCurrentStatus(visit);
         setNumberForClient(visit);
         visitRepository.save(visit);
-        return getChooseOrCreateServiceForm(model, visit.getId(), 1, request);
+        return getChooseOrCreateServiceForm(model, visit.getId());
     }
 
     @PostMapping(value = "/visits/save", params = "addPromotion")

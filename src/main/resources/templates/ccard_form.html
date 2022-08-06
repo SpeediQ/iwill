@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>Client Card</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <style type="text/css">
+        button {
+            padding:10px;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
 <div class="container text-center">
@@ -79,11 +85,10 @@
         </div>
 
     </form>
-
     <form th:action="@{/main/cform/1}" method="get" style="max-width: 300px; margin: 0 auto;">
 
         <div>
-            <button type="submit" class="btn btn-primary">Wróć do poprzedniego ekranu</button>
+            <button type="submit" class="btn btn-warning">Wróć do ekranu wyboru klienta</button>
         </div>
 
     </form>
