@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <title>Create Client Services</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <style type="text/css">
+        button {
+            padding: 10px;
+            margin: 10px;
+            width: 150px;
+        }
+    </style>
 </head>
 <body>
 <div class="container text-center">
-    <div><h1>Create New Client Service</h1></div>
+    <div><h1>Usługa</h1></div>
     <br/>
 
     <form th:action="@{/cs/save}" th:object="${clientServ}" method="post" style="max-width: 300px; margin: 0 auto;">
@@ -27,16 +34,31 @@
                 </div>
                 <label>Item:</label>
                 <select th:field="*{serviceType}">
-                    <option th:each="serviceType : ${serviceTypeList}" th:value="${serviceType.id}" th:text="${serviceType.niceString}"/>
+                    <option th:each="serviceType : ${serviceTypeList}" th:value="${serviceType.id}"
+                            th:text="${serviceType.niceString}"/>
                 </select>
 
             </div>
         </div>
         <div>
             <div>
-                <button type="submit" name="update" value="Update" class="btn btn-primary">Zapisz</button>
+                <button type="submit" name="update" value="Update" class="btn btn-large btn-success">Zapisz</button>
             </div>
         </div>
+        <div>
+            <div>
+                <button type="submit" name="return" value="Return" class="btn btn-large btn-warning">Powrót bez zapisu
+                </button>
+            </div>
+        </div>
+        <br>
+        <th:block th:if="${isDeleteAction == 'true'}">
+            <div>
+                <div>
+                    <button type="submit" name="delete" value="Delete" class="btn btn-large btn-danger">Usuń</button>
+                </div>
+            </div>
+        </th:block>
 
 
     </form>

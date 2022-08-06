@@ -5,12 +5,14 @@ import com.kowalczyk.iwill.model.*;
 import com.kowalczyk.iwill.repository.*;
 import com.kowalczyk.iwill.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -35,21 +37,36 @@ public class ClientController {
     @Autowired
     private StatusRepository statusRepository;
 
-
-    @GetMapping("/main/cform/{pageNumber}")
-    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage) {
-        Page<Client> page = clientService.findAllClientsPage(currentPage);
-        addAttributeForClientFormPage(model, page, currentPage);
-        return "choose_or_create_client_form";
+    @GetMapping("/main/cform")
+    public String getClientsForm(Model model) {
+        return showClientForm(model,1, "name", "asc");
     }
 
-    private void addAttributeForClientFormPage(Model model, Page<Client> page, int currentPage) {
+    @GetMapping("/main/cform/{pageNumber}")
+    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage,
+                                 @RequestParam("sortField") String sortField,
+                                 @RequestParam("sortDir") String sortDir) {
+        Page<Client> page = clientService.findAllSorteredClientsPage(currentPage, sortField, sortDir);
+        addAttributeForClientFormPage(model, page, currentPage, sortField, sortDir);
+        return "choose_or_create_client_form";
+    }
+    @GetMapping("/c/{idClient}")
+    public String getVisit(Model model, @PathVariable("idClient") int idClient, HttpServletRequest request) {
+        Client client = clientRepository.getById(idClient);
+        model.addAttribute("client", client);
+        return "client";
+    }
+
+    private void addAttributeForClientFormPage(Model model, Page<Client> page, int currentPage, String sortField, String sortDir) {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
         model.addAttribute("clients", page.getContent());
         model.addAttribute("client", new Client("Brak komentarza"));
         model.addAttribute("clientsDTO", mapToClientDTOList(clientRepository.findAll()));
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
     }
 
     @PostMapping("/main/save/client")
@@ -60,7 +77,7 @@ public class ClientController {
         setCodeForClient(client);
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
-        return showClientForm(model, 1);
+        return showClientForm(model, 1, "name", "asc");
     }
 
     private void addAttributeForClientForm(Model model) {
@@ -81,10 +98,25 @@ public class ClientController {
     }
 
 
-    @GetMapping(value = "/c/add/{idClient}")
-    public String showClientCard(@PathVariable("idClient") Integer idClient, Model model) {
+    @GetMapping(value = "/c/add/{idClient}/{pageNumber}")
+    public String showClientCard(@PathVariable("idClient") Integer idClient, @PathVariable("pageNumber") int currentPage, Model model) {
         Client client = clientRepository.getById(idClient);
-        addAttributeForClientCardForm(model, client);
+        List<Visit> sortedVisitListByVisitSet = client.getClientCard().getSortedVisitListByVisitSet();
+        return getCCardFormPage(idClient, currentPage, model, client, sortedVisitListByVisitSet);
+    }
+
+    private String getCCardFormPage(Integer idClient, int currentPage, Model model, Client client, List<Visit> sortedVisitListByVisitSet) {
+        model.addAttribute("client", client);
+        PagedListHolder page = new PagedListHolder(sortedVisitListByVisitSet);
+        page.setPageSize(5);
+        page.setPage(currentPage -1);
+        page.getPageCount();
+        page.getPageList();
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", page.getPageCount());
+        model.addAttribute("totalElements", sortedVisitListByVisitSet.size());
+        model.addAttribute("visitList", page.getPageList());
+        model.addAttribute("idClient", idClient);
         return "ccard_form";
     }
 
@@ -119,7 +151,7 @@ public class ClientController {
     public String showClientManager(Client client, Model model, HttpServletRequest request) {
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
-        return showClientForm(model, 1);
+        return showClientForm(model, 1, "name", "asc");
     }
 
     private void setAndSaveToDbContactAddressByRequest(Client client, HttpServletRequest request) {
@@ -177,9 +209,7 @@ public class ClientController {
         contactAddress.setValue(value);
     }
 
-    private void addAttributeForClientCardForm(Model model, Client client) {
-        model.addAttribute("client", client);
-    }
+
 
     @PostMapping(value = "c/v/add")
     public String addVisitToClient(Client client, Model model) {

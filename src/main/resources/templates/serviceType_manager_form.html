@@ -28,7 +28,7 @@
         <span>Wyszukaj Typ Usługi </span><input id="txtSearch" type="text" name="txtSearch">
     </div>
     <div>
-        <a th:href="@{'/serviceTypeManager/p/1'}">Wyczyść filtrowanie</a>
+        <a th:href="@{'/serviceTypeManager/p'}">Wyczyść filtrowanie</a>
     </div>
     <br>
     <div>
@@ -36,10 +36,18 @@
             <table id="serviceTypeTable" class="table table-striped table-advance table-hover">
 
             <thead>
-            <th>Domyślna nazwa usługi</th>
-            <th>Domyślny opis usługi</th>
-            <th>Domyślna cena usługi</th>
-            <th>Status</th>
+            <th>
+                <a th:href="@{'/serviceTypeManager/p/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Domyślna nazwa usługi</a>
+            </th>
+            <th>
+                <a th:href="@{'/serviceTypeManager/p/' + ${currentPage} + '?sortField=desc&sortDir=' + ${reverseSortDir}}">Domyślny opis usługi</a>
+            </th>
+            <th>
+                <a th:href="@{'/serviceTypeManager/p/' + ${currentPage} + '?sortField=value&sortDir=' + ${reverseSortDir}}">Domyślna cena usługi</a>
+            </th>
+            <th>
+                Status
+            </th>
             <td><b>Action</b></td>
 
             </thead>
@@ -62,7 +70,7 @@
             Łącznie [[${totalItems}]] : Strona [[${currentPage}]] of [[${totalPages}]]
             &nbsp; &nbsp; - &nbsp;
             <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                <a th:href="@{'/serviceTypeManager/p/'+${i}}">[[${i}]]</a>
+                <a th:href="@{'/serviceTypeManager/p/'+${i} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
                 &nbsp; &nbsp;
             </span>
         </footer>
@@ -146,10 +154,11 @@
                                 <td><b>Name</b></td>
                                 <td><b>Desc</b></td>
                                 <td><b>Value</b></td>
+                                <td><b>Status</b></td>
                                 <td><b>Action</b></td>
                            </tr>`
         var footerRow = `<tr>
-                                        <a href="'/serviceTypeManager/p/1'">Wyczyść filtrowanie</a>
+                                        <a href="/serviceTypeManager/p">Wyczyść filtrowanie</a>
                            </tr>`
         table.innerHTML += titleRow;
         footerClient.innerHTML += footerRow;
@@ -160,9 +169,12 @@
                                 <td>${data[i].name}</td>
                                 <td>${data[i].desc}</td>
                                 <td>${data[i].value}</td>
+                                <td>${data[i].status.niceStatus}</td>
+
                                 <td>
                                     <a href="/serviceTypeManager/${data[i].id}">Choose</a>
                                 </td>
+
                            </tr>`
             table.innerHTML += row
         }

@@ -30,7 +30,7 @@
         /*}*/
         button {
             padding: 5px;
-            /*margin: 10px;*/
+            width: 200px;
         }
     </style>
 </head>
@@ -118,7 +118,7 @@
                         <td>
                             <a th:href="@{'/cs/edit/' + ${clientServ.getId()}}">Edytuj Usługę</a>
                             <br>
-                            <a th:href="@{'/clientservs/delete/' + ${clientServ.getId()}}">Usuń Usługę</a>
+                            <a th:href="@{'/cs/delete/' + ${clientServ.getId()}}">Usuń Usługę</a>
                         </td>
                     </tr>
                 </block>
@@ -138,11 +138,11 @@
         <div th:align="left">
             <br>
             <th:block th:unless="${visit.getClientServSet().size() == 0}">
-                <button type="submit" name="submit" value="Submit" class="btn btn-primary">Zapisz</button>
+                <button type="submit" name="submit" value="Submit" class="btn btn-large btn-success">Zapisz</button>
             </th:block>
             <button type="submit" name="addItem" value="AddItem" class="btn btn-primary">Dodaj usługę
             </button>
-            <button type="submit" name="doReservation" value="DoReservation" class="btn btn-primary">Ustaw jako
+            <button type="submit" name="doReservation" value="DoReservation" class="btn btn-danger">Ustaw jako
                 rezerwacja
             </button>
 
@@ -151,10 +151,10 @@
     </form>
     <br>
     <th:block th:if="${visit.getStatus() == null || visit.getStatus().getId() == 1}">
-        <form th:action="@{/c/add/__${visit.getClientCard().getId()}__}" method="get">
+        <form th:action="@{/c/add/__${visit.getClientCard().getId()}__/1}" method="get">
 
             <div th:align="left">
-                <button type="submit" class="btn btn-primary">Cofnij</button>
+                <button type="submit" class="btn btn-warning">Cofnij</button>
             </div>
 
         </form>
@@ -164,8 +164,8 @@
         <form th:action="@{/reservations}" method="get"
               style="max-width: 300px; margin: 0 auto;">
 
-            <div>
-                <button type="submit" class="btn btn-primary">Cofnij</button>
+            <div th:align="left">
+                <button type="submit" class="btn btn-warning">Cofnij</button>
             </div>
         </form>
     </th:block>

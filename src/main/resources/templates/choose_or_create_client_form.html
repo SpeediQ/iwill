@@ -14,6 +14,7 @@
         button {
             padding:10px;
             margin: 10px;
+            width: 150px;
         }
         table th, table td {
             text-align: center;
@@ -28,7 +29,7 @@
     <div>
         <span>Wyszukaj klienta </span><input id="txtSearch" type="text" name="txtSearch">
     </div><div>
-    <a th:href="@{'/main/cform/1'}">Wyczyść filtrowanie</a>
+    <a th:href="@{'/main/cform'}">Wyczyść filtrowanie</a>
 </div>
     <br>
 
@@ -37,11 +38,20 @@
 
         <table id="clientsTable" class="table table-striped table-advance table-hover">
             <thead>
-            <th>Kod</th>
-            <th>Imię</th>
-            <th>Nazwisko</th>
+            <th>
+                Kod
+            </th>
+            <th>
+                <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Imię</a>
+            </th>
+            <th><a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">Nazwisko</a>
+            </th>
             <th>Notatka</th>
-            <th>Data urodzenia</th>
+
+            <th>
+                <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Data
+                    urodzenia</a>
+            </th>
             <th></th>
             </thead>
             <tbody>
@@ -53,7 +63,7 @@
                     <td>[[${client.comment}]]</td>
                     <td>[[${#dates.format(client.date, 'dd/MM/yyyy')}]]</td>
                     <td>
-                        <a th:href="@{'/c/add/' + ${client.id}}">Choose</a>
+                        <a th:href="@{'/c/add/' + ${client.id}+'/1'}">Choose</a>
                         <br>
                         <a th:href="@{'/client/edit/' + ${client.id}}">Edit</a>
                     </td>
@@ -65,7 +75,7 @@
             Łącznie [[${totalItems}]] : Strona [[${currentPage}]] of [[${totalPages}]]
             &nbsp; &nbsp; - &nbsp;
             <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                <a th:href="@{'/main/cform/' +${i}}">[[${i}]]</a>
+                <a th:href="@{'/main/cform/' +${i} + '?sortField='+ ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
                 &nbsp; &nbsp;
             </span>
         </footer>
@@ -165,7 +175,7 @@
                                 <td><b>Action</b></td>
                            </tr>`
         var footerRow = `<tr>
-                                        <a href="/main/cform/1">Wyczyść filtrowanie</a>
+                                        <a href="/main/cform">Wyczyść filtrowanie</a>
                            </tr>`
         table.innerHTML += titleRow;
         footerClient.innerHTML += footerRow;
@@ -178,7 +188,7 @@
                                 <td>${data[i].lastname}</td>
                                 <td>${data[i].comment}</td>
                                 <td>
-                                    <a href="/c/add/${data[i].id}">Choose</a>
+                                    <a href="/c/add/${data[i].id/1}">Choose</a>
 <br>
                                     <a href="/client/edit/${data[i].id}">Choose</a>
 
