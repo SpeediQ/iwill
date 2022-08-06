@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -36,11 +37,17 @@ public class ClientController {
     @Autowired
     private StatusRepository statusRepository;
 
+    @GetMapping("/main/cform")
+    public String getClientsForm(Model model) {
+        return showClientForm(model,1, "name", "asc");
+    }
 
     @GetMapping("/main/cform/{pageNumber}")
-    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage) {
-        Page<Client> page = clientService.findAllClientsPage(currentPage);
-        addAttributeForClientFormPage(model, page, currentPage);
+    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage,
+                                 @RequestParam("sortField") String sortField,
+                                 @RequestParam("sortDir") String sortDir) {
+        Page<Client> page = clientService.findAllSorteredClientsPage(currentPage, sortField, sortDir);
+        addAttributeForClientFormPage(model, page, currentPage, sortField, sortDir);
         return "choose_or_create_client_form";
     }
     @GetMapping("/c/{idClient}")
@@ -50,13 +57,16 @@ public class ClientController {
         return "client";
     }
 
-    private void addAttributeForClientFormPage(Model model, Page<Client> page, int currentPage) {
+    private void addAttributeForClientFormPage(Model model, Page<Client> page, int currentPage, String sortField, String sortDir) {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
         model.addAttribute("clients", page.getContent());
         model.addAttribute("client", new Client("Brak komentarza"));
         model.addAttribute("clientsDTO", mapToClientDTOList(clientRepository.findAll()));
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
     }
 
     @PostMapping("/main/save/client")
@@ -67,7 +77,7 @@ public class ClientController {
         setCodeForClient(client);
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
-        return showClientForm(model, 1);
+        return showClientForm(model, 1, "name", "asc");
     }
 
     private void addAttributeForClientForm(Model model) {
@@ -141,7 +151,7 @@ public class ClientController {
     public String showClientManager(Client client, Model model, HttpServletRequest request) {
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
-        return showClientForm(model, 1);
+        return showClientForm(model, 1, "name", "asc");
     }
 
     private void setAndSaveToDbContactAddressByRequest(Client client, HttpServletRequest request) {

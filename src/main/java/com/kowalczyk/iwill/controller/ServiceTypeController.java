@@ -108,22 +108,6 @@ public class ServiceTypeController {
         model.addAttribute("idVisit", request.getParameter("idVisit"));
     }
 
-//    @GetMapping(value = "/saveServiceTypeManager")
-//    public String saveServiceTypeManager(Model model, HttpServletRequest request) {
-//        addAttributeForServiceTypeManager(model);
-//        String idVisit = request.getParameter("idVisit");
-//        if (idVisit == null || idVisit == "") {
-//            return "serviceType_manager_form";
-//        } else {
-//            Visit visit = visitRepository.getById(Integer.parseInt(idVisit));
-//            addAttributeForChooseOrCreateServiceTypeForm(model, visit);
-//            VisitController visitController = new VisitController();
-//            // tutaj
-//            return visitController.getChooseOrCreateServiceForm(model, visit.getId(), 1, request);
-////            return "choose_or_create_serviceType_form";
-//        }
-//    }
-
     @PostMapping(value = "/saveSelectedServiceTypeManager")
     public String saveSelectedSTManager(Model model, HttpServletRequest request, ServiceType serviceType) {
         setServiceTypeStatusByRequest(serviceType, request);
