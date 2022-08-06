@@ -74,16 +74,10 @@ public class ServiceTypeController {
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         return "serviceType_manager_form";
     }
+
     @GetMapping("/serviceTypeManager/p")
     public String showMainServiceTypeManager(Model model) {
-        return showServiceTypeManager(model,1, "name", "asc");
-    }
-
-    @GetMapping("/deleteServiceTypeManager")
-    public String deleteServiceTypeManager(Model model, ServiceType serviceType) {
-        serviceTypeRepository.deleteById(serviceType.getId());
-        addAttributeForServiceTypeManager(model);
-        return "serviceType_manager_form";
+        return showServiceTypeManager(model, 1, "name", "asc");
     }
 
     @GetMapping("/serviceTypeManager/{id}")
@@ -147,6 +141,7 @@ public class ServiceTypeController {
             serviceType.setStatus(statusRepository.getById(Integer.parseInt(idStatus)));
         }
     }
+
     @PostMapping(value = "/saveSelectedServiceTypeManager", params = "cancelServiceTypeManager")
     public String candelServiceType(ServiceType serviceType, Model model, HttpServletRequest request) {
         serviceType = setServiceTypeStatusByServiceTypeId(serviceType, ConstanceNr.STATUS_CANCELLED);
@@ -166,6 +161,7 @@ public class ServiceTypeController {
             return "serviceType";
         }
     }
+
     @PostMapping(value = "/saveSelectedServiceTypeManager", params = "inactiveServiceTypeManager")
     public String inactiveServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
         serviceType = setServiceTypeStatusByServiceTypeId(serviceType, ConstanceNr.STATUS_INACTIVE);
@@ -174,6 +170,7 @@ public class ServiceTypeController {
         model.addAttribute("isEditView", isEditView);
         return setCorrectView(serviceType, model, request, isEditView);
     }
+
     @PostMapping(value = "/saveSelectedServiceTypeManager", params = "activeServiceTypeManager")
     public String activeServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
         serviceType = setServiceTypeStatusByServiceTypeId(serviceType, ConstanceNr.STATUS_SERVICE_TYPE);

@@ -13,6 +13,7 @@
         button {
             padding: 10px;
             margin: 10px;
+            width: 200px;
         }
     </style>
 </head>
@@ -68,9 +69,10 @@
                 </button>
             </div>
         </div>
+        <br>
         <div>
             <div>
-                <button type="submit" class="btn btn-primary">Dodaj usługę do wizyty</button>
+                <button type="submit" class="btn btn-success">Dodaj usługę do wizyty</button>
             </div>
         </div>
 
@@ -79,7 +81,7 @@
     <form th:action="@{/cs/save}" method="post" style="max-width: 300px; margin: 0 auto;">
         <input type="hidden" th:name="idVisit" th:value="${visit.id}"/>
         <div>
-            <button type="submit" name="back" value="Back" class="btn btn-primary">Cofnij</button>
+            <button type="submit" name="back" value="Back" class="btn btn-warning">Cofnij</button>
         </div>
 
     </form>

@@ -53,7 +53,7 @@ public class VisitController {
         return "choose_or_create_serviceType_form";
     }
 
-    private void addAttributeForServiceTypePage(Model model, int currentPage, Page<ServiceType> page,String sortField, String sortDir) {
+    private void addAttributeForServiceTypePage(Model model, int currentPage, Page<ServiceType> page, String sortField, String sortDir) {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
@@ -79,6 +79,21 @@ public class VisitController {
             return getChooseOrCreateServiceFormPage(model, Integer.parseInt(idVisit), 1, "name", "asc");
         }
     }
+
+    @GetMapping(value = "/deleteServiceTypeManager")
+    public String deleteServiceTypeManager(ServiceType serviceType, Model model, HttpServletRequest request) {
+        serviceTypeRepository.deleteById(serviceType.getId());
+        String idVisit = request.getParameter("idVisit");
+        if (idVisit == null || idVisit == "") {
+            int currentPage = 1;
+            Page<ServiceType> page = serviceTypeService.findAllSortedServiceTypePage(currentPage, "name", "asc");
+            addAttributeForServiceTypePage(model, currentPage, page, "name", "asc");
+            return "serviceType_manager_form";
+        } else {
+            return getChooseOrCreateServiceFormPage(model, Integer.parseInt(idVisit), 1, "name", "asc");
+        }
+    }
+
 
     @PostMapping(value = "/visits/save", params = "addItem")
     public String saveVisit(Visit visit, Model model, HttpServletRequest request) {

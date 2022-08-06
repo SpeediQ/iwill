@@ -30,7 +30,7 @@
         /*}*/
         button {
             padding: 5px;
-            /*margin: 10px;*/
+            width: 200px;
         }
     </style>
 </head>
@@ -118,7 +118,7 @@
                         <td>
                             <a th:href="@{'/cs/edit/' + ${clientServ.getId()}}">Edytuj Usługę</a>
                             <br>
-                            <a th:href="@{'/clientservs/delete/' + ${clientServ.getId()}}">Usuń Usługę</a>
+                            <a th:href="@{'/cs/delete/' + ${clientServ.getId()}}">Usuń Usługę</a>
                         </td>
                     </tr>
                 </block>
@@ -164,7 +164,7 @@
         <form th:action="@{/reservations}" method="get"
               style="max-width: 300px; margin: 0 auto;">
 
-            <div>
+            <div th:align="left">
                 <button type="submit" class="btn btn-warning">Cofnij</button>
             </div>
         </form>

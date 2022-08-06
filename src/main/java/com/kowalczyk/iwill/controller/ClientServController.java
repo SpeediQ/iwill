@@ -1,7 +1,10 @@
 package com.kowalczyk.iwill.controller;
 
 
-import com.kowalczyk.iwill.model.*;
+import com.kowalczyk.iwill.model.ClientServ;
+import com.kowalczyk.iwill.model.ConstanceNr;
+import com.kowalczyk.iwill.model.ServiceType;
+import com.kowalczyk.iwill.model.Visit;
 import com.kowalczyk.iwill.repository.ClientRepository;
 import com.kowalczyk.iwill.repository.ClientServRepository;
 import com.kowalczyk.iwill.repository.ServiceTypeRepository;
@@ -17,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static com.kowalczyk.iwill.controller.VisitController.addAttributeForVisitForm;
-import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
 public class ClientServController {
@@ -79,7 +81,7 @@ public class ClientServController {
         Visit visit = clientServRepository.getById(id).getVisit();
         clientServRepository.deleteById(id);
 
-            addAttributeForVisitForm(model, visit, visit.getClientServSet());
+        addAttributeForVisitForm(model, visit, visit.getClientServSet());
 
 
         return "visit_form";
@@ -126,6 +128,17 @@ public class ClientServController {
         return "cs_edit_form";
     }
 
+    @GetMapping(value = "/cs/delete/{id}")
+    public String deleteCS(@PathVariable("id") Integer id, Model model) {
+        ClientServ clientServ = clientServRepository.getById(id);
+        model.addAttribute("clientServ", clientServ);
+        List<ServiceType> allActiveServiceTypeList = serviceTypeRepository.findAllActive();
+        addExistingServiceTypeToActiveList(clientServ, allActiveServiceTypeList);
+        model.addAttribute("serviceTypeList", allActiveServiceTypeList);
+        model.addAttribute("isDeleteAction", "true");
+        return "cs_edit_form";
+    }
+
     private void addExistingServiceTypeToActiveList(ClientServ clientServ, List<ServiceType> allActiveServiceTypeList) {
         ServiceType serviceType = clientServ != null ? clientServ.getServiceType() : null;
         if (serviceType != null && serviceType.getStatus() != null && serviceType.getStatus().getId() != ConstanceNr.STATUS_SERVICE_TYPE) {
@@ -141,6 +154,21 @@ public class ClientServController {
         clientServ.setFinalPrice(clientServ.getFinalPriceIncludingPromotion());
         clientServRepository.save(clientServ);
         addAttributeForVisitForm(model, clientServ.getVisit(), clientServ.getVisit().getClientServSet());
+        return "visit_form";
+    }
+
+    @PostMapping(value = "/cs/save", params = "delete")
+    public String deleteCS(ClientServ clientServ, Model model) {
+        Visit visit = clientServRepository.getById(clientServ.getId()).getVisit();
+        clientServRepository.deleteById(clientServ.getId());
+        addAttributeForVisitForm(model, visit, visit.getClientServSet());
+        return "visit_form";
+    }
+
+    @PostMapping(value = "/cs/save", params = "return")
+    public String returnToVisitForm(ClientServ clientServ, Model model) {
+        Visit visit = clientServRepository.getById(clientServ.getId()).getVisit();
+        addAttributeForVisitForm(model, visit, visit.getClientServSet());
         return "visit_form";
     }
 
