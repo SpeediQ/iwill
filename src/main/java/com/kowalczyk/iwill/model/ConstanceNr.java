@@ -26,5 +26,10 @@ public class ConstanceNr {
     public static int MAX_SERVICE_TYPE_LIST_SIZE_5 = 5;
     public static int MAX_SERVICE_TYPE_LIST_SIZE_10 = 10;
 
+    // FLAGS
+    public final static String FLAG_IS_MANAGER_VIEW = "isManagerView";
+    public final static String FLAG_IS_EDIT_VIEW = "isEditView";
+    public final static String FLAG_IS_DELETE_ACTION = "isDeleteAction";
+
 
 }
