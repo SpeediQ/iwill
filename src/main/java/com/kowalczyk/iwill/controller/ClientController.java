@@ -91,9 +91,12 @@ public class ClientController {
     public String addItemByVisitFlow(Client client, Model model, HttpServletRequest request) {
         Boolean isManagerView = "true".equals(request.getParameter("isManagerView")) ? true : false;
         ClientCard clientCard = client.isIdValid() ? client.getClientCard() : new ClientCard();
+        client.setActive(ACTIVE_CLIENT);
         client.setClientCard(clientCard);
         clientCard.setClient(client);
-        setCodeForClient(client);
+        if (client.getCode() == null ||  "".equals(client.getCode())) {
+            setCodeForClient(client);
+        }
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
         if (isManagerView) {
@@ -110,15 +113,34 @@ public class ClientController {
         if (isManagerView) {
             if (isEditView) {
                 return showClientEditManager(client.getId(), model, request);
-            } else {
-                return getClientManager(model);
             }
+            return getClientManager(model);
         } else {
             if (isEditView) {
                 return showClientEdit(client.getId(), model);
-            } else {
-                return getClientsForm(model);
             }
+            return getClientsForm(model);
+        }
+    }
+    @PostMapping(value = "/main/save/client", params = "delete")
+    public String deleteAddClient(Client client, Model model, HttpServletRequest request) {
+        Boolean isManagerView = "true".equals(request.getParameter(FLAG_IS_MANAGER_VIEW)) ? true : false;
+        Boolean isEditView = "true".equals(request.getParameter(FLAG_IS_EDIT_VIEW)) ? true : false;
+        client = clientRepository.getById(client.getId());
+        client.setName(DEFAULT_CLIENT_NAME);
+        client.setLastname(DEFAULT_CLIENT_LASTNAME);
+        client.setComment(DEFAULT_CLIENT_COMMENT);
+        client.setCode(DEFAULT_CLIENT_CODE);
+        client.setActive(INACTIVE_CLIENT);
+        client.setClientCard(null);
+        client.setDate(null);
+        client.getContactAddresses().stream().forEach(contactAddress -> contactAddressRepository.delete(contactAddress));
+        client.setContactAddresses(null);
+        clientRepository.save(client);
+        if (isManagerView) {
+            return getClientManager(model);
+        } else {
+            return getClientsForm(model);
         }
     }
 
@@ -248,10 +270,10 @@ public class ClientController {
     }
 
     private void setAndSaveToDbContactAddressByRequest(Client client, HttpServletRequest request) {
-        String phoneValue = request.getParameter("phoneValue");
-        String emailValue = request.getParameter("emailValue");
-        Boolean phoneAgreement = "on".equals(request.getParameter("phoneAgreement")) ? true : false;
-        Boolean emailAgreement = "on".equals(request.getParameter("emailAgreement")) ? true : false;
+        String phoneValue = request.getParameter(PHONE_VALUE);
+        String emailValue = request.getParameter(EMAIL_VALUE);
+        Boolean phoneAgreement = "true".equals(request.getParameter(PHONE_AGREEMENT)) ? true : false;
+        Boolean emailAgreement = "true".equals(request.getParameter(EMAIL_AGREEMENT)) ? true : false;
         List<ContactAddress> phoneContactAddressListBeforeUpdate = getContactAddressesByStatus(client, STATUS_PHONE);
         List<ContactAddress> emailContactAddressListBeforeUpdate = getContactAddressesByStatus(client, STATUS_EMAIL);
         handleContactAddress(client, phoneValue, phoneAgreement, phoneContactAddressListBeforeUpdate, STATUS_PHONE);

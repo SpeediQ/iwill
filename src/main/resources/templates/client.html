@@ -21,13 +21,17 @@
     <form th:action="@{/main/save/client}" th:object="${client}" method="post"
           style="max-width: 500px; margin: 0 auto;">
         <input type="hidden" th:field="*{id}" th:value="${client.getId()}"/>
+        <input type="hidden" th:field="*{code}" th:value="${client.getCode()}"/>
         <input type="hidden" th:field="*{name}" th:value="${client.getName()}"/>
         <input type="hidden" th:field="*{lastname}" th:value="${client.getLastname()}"/>
         <input type="hidden" th:field="*{comment}" th:value="${client.getComment()}"/>
         <input type="hidden" th:field="*{date}" th:value="${client.getDate()}"/>
+        <input type="hidden" th:field="*{active}" th:value="${client.getActive()}"/>
+
         <th:block th:unless="${client.getClientCard() == null}">
         <input type="hidden" th:field="*{clientCard}" th:value="${client.getClientCard().getId()}"/>
         </th:block>
+        <input type="hidden" th:field="*{contactAddresses}" th:value="${client.getContactAddresses()}"/>
         <input type="hidden" th:name="phoneValue" th:value="${phoneValue}"/>
         <input type="hidden" th:name="emailValue" th:value="${emailValue}"/>
         <input type="hidden" th:name="phoneAgreement" th:value="${phoneAgreement}"/>
@@ -61,8 +65,8 @@
             </div>
             <div>
                 <th:block th:unless="${client.date == null}">
-                <label>Data urodzenia: </label>
-                <span th:text="${#dates.format(client.date, 'dd.MM.yyyy')}" th:remove="tag"></span>
+                    <label>Data urodzenia: </label>
+                    <span th:text="${#dates.format(client.date, 'dd.MM.yyyy')}" th:remove="tag"></span>
                 </th:block>
                 <th:block th:if="${client.date == null}">
                     <label>Data urodzenia: brak danych</label>
@@ -100,13 +104,12 @@
             </div>
         </div>
         <th:block th:unless="${isDeleteAction == true}">
-            <button type="submit" class="btn btn-success">Zatwierdź        </button>
+            <button type="submit" class="btn btn-success">Zatwierdź</button>
         </th:block>
         <th:block th:if="${isDeleteAction == true}">
-            <button type="submit" class="btn btn-danger">Usuń klienta</button>
+            <button type="submit" name="delete" value="Delete" class="btn btn-danger">Usuń klienta</button>
         </th:block>
-        <button type="submit" name="cancel" value="Cancel" class="btn btn-warning">Anuluj
-        </button>
+        <button type="submit" name="cancel" value="Cancel" class="btn btn-warning">Anuluj</button>
     </form>
     </th:block>
 </div>

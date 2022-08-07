@@ -31,5 +31,19 @@ public class ConstanceNr {
     public final static String FLAG_IS_EDIT_VIEW = "isEditView";
     public final static String FLAG_IS_DELETE_ACTION = "isDeleteAction";
 
+    // CONTACT ADDRESS
+    public final static String PHONE_AGREEMENT = "phoneAgreement";
+    public final static String EMAIL_AGREEMENT = "emailAgreement";
+    public final static String PHONE_VALUE = "phoneValue";
+    public final static String EMAIL_VALUE = "emailValue";
+
+    // CLIENT
+    public final static String DEFAULT_CLIENT_NAME = "Dane zostały usunięte";
+    public final static String DEFAULT_CLIENT_LASTNAME = "Dane zostały usunięte";
+    public final static String DEFAULT_CLIENT_COMMENT = "Dane zostały usunięte";
+    public final static String DEFAULT_CLIENT_CODE = "Dane zostały usunięte";
+    public final static Boolean ACTIVE_CLIENT = true;
+    public final static Boolean INACTIVE_CLIENT = false;
+
 
 }

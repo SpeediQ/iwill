@@ -17,6 +17,7 @@ public class Client {
     private String lastname;
     private String comment;
     private String code;
+    private Boolean active;
     @OneToMany(mappedBy = "client")
     private Set<ContactAddress> contactAddresses = new HashSet<>();
 
@@ -99,6 +100,14 @@ public class Client {
 
     public Set<ContactAddress> getContactAddresses() {
         return contactAddresses;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public void setContactAddresses(Set<ContactAddress> contactAddresses) {

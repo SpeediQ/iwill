@@ -16,6 +16,7 @@ public class ClientDTO {
     private ClientCardDTO clientCardDTO;
     private Date date;
     private String code;
+    private Boolean active;
 
 
     public int getId() {
@@ -64,6 +65,14 @@ public class ClientDTO {
 
     public void setClientCardDTO(ClientCardDTO clientCardDTO) {
         this.clientCardDTO = clientCardDTO;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public Date getDate() {
