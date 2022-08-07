@@ -90,7 +90,7 @@ public class ClientController {
     @PostMapping("/main/save/client")
     public String addItemByVisitFlow(Client client, Model model, HttpServletRequest request) {
         Boolean isManagerView = "true".equals(request.getParameter("isManagerView")) ? true : false;
-        ClientCard clientCard = new ClientCard();
+        ClientCard clientCard = client.isIdValid() ? client.getClientCard() : new ClientCard();
         client.setClientCard(clientCard);
         clientCard.setClient(client);
         setCodeForClient(client);
