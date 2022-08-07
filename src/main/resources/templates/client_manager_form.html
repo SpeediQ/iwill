@@ -5,6 +5,22 @@
     <title>Client Manager</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style type="text/css">
+
+        label {
+            padding-top: 10px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            width: 150px;
+        }
+
+        table th, table td {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div class="container text-center">
@@ -15,9 +31,21 @@
         <input type="hidden" th:field="*{id}" th:value="${client.getId()}"/>
         <input type="hidden" th:field="*{code}" th:value="${client.getCode()}"/>
         <input type="hidden" th:field="*{contactAddresses}" th:value="${client.getContactAddresses()}"/>
+        <input type="hidden" th:name="isManagerView" th:value="${isManagerView}"/>
+        <input type="hidden" th:name="isEditView" th:value="${isEditView}"/>
+
 
         <b></b><label>Kod klienta:</b></label>
         <span th:text="${client.getCode()}" th:remove="tag"></span>
+        <br>
+        <th:block th:if="${lastVisitDate != null}">
+            <b></b><label>Data ostatniej wizyty:</b></label>
+            <span th:text="${#dates.format(lastVisitDate, 'dd.MM.yyyy')}" th:remove="tag"></span>
+        </th:block>
+        <th:block th:unless="${lastVisitDate != null}">
+            <b></b><label>Brak wizyt</b></label>
+        </th:block>
+
         <br>
         <br>
 
@@ -80,7 +108,11 @@
                 </td>
             </tr>
         </table>
-        <button type="submit" name="saveUpdatedContact" value="SaveUpdatedContact" class="btn btn-primary">Zapisz
+        <button type="submit" name="saveUpdatedContact" value="SaveUpdatedContact" class="btn btn-success">Zapisz
+        </button>
+        <button type="submit" name="returnUpdatedContact" value="ReturnUpdatedContact" class="btn btn-warning">Powrót
+        </button>
+        <button type="submit" name="deleteUpdatedContact" value="DeleteUpdatedContact" class="btn btn-danger">Usuń klienta
         </button>
     </form>
 

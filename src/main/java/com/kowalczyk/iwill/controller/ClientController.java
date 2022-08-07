@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.controller.VisitController.addAttributeForVisitForm;
+import static com.kowalczyk.iwill.model.ConstanceNr.*;
 import static com.kowalczyk.iwill.model.mapper.ClientDTOMapper.mapToClientDTOList;
 
 @Controller
@@ -39,23 +42,38 @@ public class ClientController {
 
     @GetMapping("/main/cform")
     public String getClientsForm(Model model) {
-        return showClientForm(model,1, "name", "asc");
+        return showClientForm(model, 1, "name", "asc");
+    }
+
+    @GetMapping("/clientmanager")
+    public String getClientManager(Model model) {
+
+        return showClientManagerForm(model, 1, "name", "asc");
     }
 
     @GetMapping("/main/cform/{pageNumber}")
     public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage,
                                  @RequestParam("sortField") String sortField,
                                  @RequestParam("sortDir") String sortDir) {
+        return getChooseOrCreateClientForm(model, currentPage, sortField, sortDir);
+    }
+
+    @GetMapping("/clientmanager/{pageNumber}")
+    public String showClientManagerForm(Model model, @PathVariable("pageNumber") int currentPage,
+                                        @RequestParam("sortField") String sortField,
+                                        @RequestParam("sortDir") String sortDir) {
+        model.addAttribute("isManagerView", true);
+        Page<Client> page = clientService.findAllSorteredClientsManagerPage(currentPage, sortField, sortDir);
+        addAttributeForClientFormPage(model, page, currentPage, sortField, sortDir);
+        return "choose_or_create_client_form";
+    }
+
+    private String getChooseOrCreateClientForm(Model model, @PathVariable("pageNumber") int currentPage, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir) {
         Page<Client> page = clientService.findAllSorteredClientsPage(currentPage, sortField, sortDir);
         addAttributeForClientFormPage(model, page, currentPage, sortField, sortDir);
         return "choose_or_create_client_form";
     }
-    @GetMapping("/c/{idClient}")
-    public String getVisit(Model model, @PathVariable("idClient") int idClient, HttpServletRequest request) {
-        Client client = clientRepository.getById(idClient);
-        model.addAttribute("client", client);
-        return "client";
-    }
+
 
     private void addAttributeForClientFormPage(Model model, Page<Client> page, int currentPage, String sortField, String sortDir) {
         model.addAttribute("currentPage", currentPage);
@@ -71,13 +89,58 @@ public class ClientController {
 
     @PostMapping("/main/save/client")
     public String addItemByVisitFlow(Client client, Model model, HttpServletRequest request) {
+        Boolean isManagerView = "true".equals(request.getParameter("isManagerView")) ? true : false;
         ClientCard clientCard = new ClientCard();
         client.setClientCard(clientCard);
         clientCard.setClient(client);
         setCodeForClient(client);
         setAndSaveToDbContactAddressByRequest(client, request);
         clientRepository.save(client);
-        return showClientForm(model, 1, "name", "asc");
+        if (isManagerView) {
+            return showClientManagerForm(model, 1, "name", "asc");
+        } else {
+            return showClientForm(model, 1, "name", "asc");
+        }
+    }
+
+    @PostMapping(value = "/main/save/client", params = "cancel")
+    public String cancelAddClient(Client client, Model model, HttpServletRequest request) {
+        Boolean isManagerView = "true".equals(request.getParameter(FLAG_IS_MANAGER_VIEW)) ? true : false;
+        Boolean isEditView = "true".equals(request.getParameter(FLAG_IS_EDIT_VIEW)) ? true : false;
+        if (isManagerView) {
+            if (isEditView) {
+                return showClientEditManager(client.getId(), model, request);
+            } else {
+                return getClientManager(model);
+            }
+        } else {
+            if (isEditView) {
+                return showClientEdit(client.getId(), model);
+            } else {
+                return getClientsForm(model);
+            }
+        }
+    }
+
+    private void passAttribute(String attributeName, Model model, HttpServletRequest request) {
+        model.addAttribute(attributeName, "true".equals(request.getParameter(attributeName)) ? true : false);
+    }
+
+    @GetMapping("/c")
+    public String getClient(Model model, HttpServletRequest request, Client client) {
+        passAttribute(FLAG_IS_MANAGER_VIEW, model, request);
+        passAttribute(FLAG_IS_EDIT_VIEW, model, request);
+        String phoneValue = request.getParameter("phoneValue");
+        String emailValue = request.getParameter("emailValue");
+        Boolean phoneAgreement = "on".equals(request.getParameter("phoneAgreement")) ? true : false;
+        Boolean emailAgreement = "on".equals(request.getParameter("emailAgreement")) ? true : false;
+
+        model.addAttribute("client", client);
+        model.addAttribute("phoneValue", phoneValue);
+        model.addAttribute("emailValue", emailValue);
+        model.addAttribute("phoneAgreement", phoneAgreement);
+        model.addAttribute("emailAgreement", emailAgreement);
+        return "client";
     }
 
     private void addAttributeForClientForm(Model model) {
@@ -87,7 +150,7 @@ public class ClientController {
 
     private void setCodeForClient(Client client) {
         if (client.getCode() == null || client.getCode().equals("")) {
-            Numerator clientNumerator = numeratorRepository.getById(ConstanceNr.NUMERATOR_CLIENT);
+            Numerator clientNumerator = numeratorRepository.getById(NUMERATOR_CLIENT);
             int freeClientNumber = clientNumerator.getValue();
             String symbol = clientNumerator.getSymbol();
             String clientCode = symbol + "/" + freeClientNumber;
@@ -109,7 +172,7 @@ public class ClientController {
         model.addAttribute("client", client);
         PagedListHolder page = new PagedListHolder(sortedVisitListByVisitSet);
         page.setPageSize(5);
-        page.setPage(currentPage -1);
+        page.setPage(currentPage - 1);
         page.getPageCount();
         page.getPageList();
         model.addAttribute("currentPage", currentPage);
@@ -121,22 +184,38 @@ public class ClientController {
     }
 
     @GetMapping(value = "/client/edit/{idClient}")
-    public String showClientManager(@PathVariable("idClient") Integer idClient, Model model) {
+    public String showClientEdit(@PathVariable("idClient") Integer idClient, Model model) {
         Client client = clientRepository.getById(idClient);
+        model.addAttribute(FLAG_IS_EDIT_VIEW, true);
         addAttributeForClientManagerForm(model, client);
         return "client_manager_form";
     }
 
+    @GetMapping(value = "/clientmanager/edit/{idClient}")
+    public String showClientEditManager(@PathVariable("idClient") Integer idClient, Model model, HttpServletRequest request) {
+        Client client = clientRepository.getById(idClient);
+        addAttributeForClientManagerForm(model, client);
+        model.addAttribute(FLAG_IS_EDIT_VIEW, true);
+        model.addAttribute(FLAG_IS_MANAGER_VIEW, true);
+        return "client_manager_form";
+    }
+
     private void addAttributeForClientManagerForm(Model model, Client client) {
+        Date lastVisitDate = client.getClientCard().getVisitSet().stream()
+                .map(visit -> visit.getDate())
+                .sorted(Collections.reverseOrder())
+                .findFirst()
+                .orElse(null);
         addContactAddressAttribute(model, client);
         model.addAttribute("client", client);
+        model.addAttribute("lastVisitDate", lastVisitDate);
     }
 
     private void addContactAddressAttribute(Model model, Client client) {
         ContactAddress contactAddressPhone = null;
         ContactAddress contactAddressEmail = null;
-        List<ContactAddress> contactAddressPhoneList = getContactAddressesByStatus(client, ConstanceNr.STATUS_PHONE);
-        List<ContactAddress> contactAddressEmailList = getContactAddressesByStatus(client, ConstanceNr.STATUS_EMAIL);
+        List<ContactAddress> contactAddressPhoneList = getContactAddressesByStatus(client, STATUS_PHONE);
+        List<ContactAddress> contactAddressEmailList = getContactAddressesByStatus(client, STATUS_EMAIL);
         if (!contactAddressPhoneList.isEmpty()) {
             contactAddressPhone = contactAddressPhoneList.get(0);
         }
@@ -149,9 +228,23 @@ public class ClientController {
 
     @PostMapping(value = "/client/edit/save", params = "saveUpdatedContact")
     public String showClientManager(Client client, Model model, HttpServletRequest request) {
-        setAndSaveToDbContactAddressByRequest(client, request);
-        clientRepository.save(client);
-        return showClientForm(model, 1, "name", "asc");
+        return getClient(model, request, client);
+    }
+
+    @PostMapping(value = "/client/edit/save", params = "returnUpdatedContact")
+    public String returnClientManager(Client client, Model model, HttpServletRequest request) {
+        Boolean isManagerView = "true".equals(request.getParameter(FLAG_IS_MANAGER_VIEW)) ? true : false;
+        if (isManagerView) {
+            return getClientManager(model);
+        } else {
+            return getClientsForm(model);
+        }
+    }
+
+    @PostMapping(value = "/client/edit/save", params = "deleteUpdatedContact")
+    public String deleteClientManager(Client client, Model model, HttpServletRequest request) {
+        model.addAttribute(FLAG_IS_DELETE_ACTION, true);
+        return getClient(model, request, client);
     }
 
     private void setAndSaveToDbContactAddressByRequest(Client client, HttpServletRequest request) {
@@ -159,10 +252,10 @@ public class ClientController {
         String emailValue = request.getParameter("emailValue");
         Boolean phoneAgreement = "on".equals(request.getParameter("phoneAgreement")) ? true : false;
         Boolean emailAgreement = "on".equals(request.getParameter("emailAgreement")) ? true : false;
-        List<ContactAddress> phoneContactAddressListBeforeUpdate = getContactAddressesByStatus(client, ConstanceNr.STATUS_PHONE);
-        List<ContactAddress> emailContactAddressListBeforeUpdate = getContactAddressesByStatus(client, ConstanceNr.STATUS_EMAIL);
-        handleContactAddress(client, phoneValue, phoneAgreement, phoneContactAddressListBeforeUpdate, ConstanceNr.STATUS_PHONE);
-        handleContactAddress(client, emailValue, emailAgreement, emailContactAddressListBeforeUpdate, ConstanceNr.STATUS_EMAIL);
+        List<ContactAddress> phoneContactAddressListBeforeUpdate = getContactAddressesByStatus(client, STATUS_PHONE);
+        List<ContactAddress> emailContactAddressListBeforeUpdate = getContactAddressesByStatus(client, STATUS_EMAIL);
+        handleContactAddress(client, phoneValue, phoneAgreement, phoneContactAddressListBeforeUpdate, STATUS_PHONE);
+        handleContactAddress(client, emailValue, emailAgreement, emailContactAddressListBeforeUpdate, STATUS_EMAIL);
     }
 
     private List<ContactAddress> getContactAddressesByStatus(Client client, int statusPhone) {
@@ -208,7 +301,6 @@ public class ClientController {
         contactAddress.setAgreement(agreement);
         contactAddress.setValue(value);
     }
-
 
 
     @PostMapping(value = "c/v/add")
