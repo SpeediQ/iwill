@@ -141,7 +141,7 @@ public class Client {
         return result;
     }
 
-    public Boolean isIdValid(){
+    public Boolean isIdValid() {
         return getId() > 0 ? true : false;
     }
 }

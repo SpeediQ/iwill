@@ -22,7 +22,7 @@ public class ClientDTOMapper {
                 .clientCardDTO(client.getClientCard() != null ? mapToClientCardDTO(client.getClientCard()) : mapToClientCardDTO(new ClientCard()))
                 .code(client.getCode())
                 .build();
-        if (client.getDate() != null){
+        if (client.getDate() != null) {
             clientDTO.setDate(client.getDate());
         }
         return clientDTO;

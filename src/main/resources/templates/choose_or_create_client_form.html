@@ -52,16 +52,35 @@
                     Kod
                 </th>
                 <th>
-                    <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Imię</a>
+                    <th:block th:if="${isManagerView == true}">
+
+                        <a th:href="@{'/clientmanager/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Imię</a>
+                    </th:block>
+                    <th:block th:unless="${isManagerView == true}">
+                        <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Imię</a>
+                    </th:block>
+
                 </th>
                 <th>
-                    <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">Nazwisko</a>
+                    <th:block th:if="${isManagerView == true}">
+                        <a th:href="@{'/clientmanager/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">Nazwisko</a>
+                    </th:block>
+                    <th:block th:unless="${isManagerView == true}">
+                        <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">Nazwisko</a>
+                    </th:block>
+
                 </th>
                 <th>Notatka</th>
 
                 <th>
-                    <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Data
-                        urodzenia</a>
+                    <th:block th:if="${isManagerView == true}">
+                        <a th:href="@{'/clientmanager/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Data
+                            urodzenia</a>
+                    </th:block>
+                    <th:block th:unless="${isManagerView == true}">
+                        <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Data
+                            urodzenia</a>
+                    </th:block>
                 </th>
                 <th></th>
                 </thead>
