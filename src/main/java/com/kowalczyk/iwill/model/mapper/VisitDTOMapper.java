@@ -12,15 +12,6 @@ import static com.kowalczyk.iwill.model.mapper.ClientServDTOMapper.mapToClientSe
 
 @Transactional
 public class VisitDTOMapper {
-    //    private int id;
-//    private String desc;
-//    private Set<ClientServDTO> clientServSet = new HashSet<>();
-//    private Date date;
-//    private String time;
-//    private Status status;
-//    private String title;
-//    private String code;
-//    private int promotion;
     public static VisitDTO mapToVisitDTO(Visit visit) {
 
         VisitDTO visitDTO = VisitDTO.builder()
@@ -50,6 +41,7 @@ public class VisitDTOMapper {
                 .map(VisitDTOMapper::mapToVisitDTO)
                 .collect(Collectors.toSet());
     }
+
     public static List<VisitDTO> mapToVisitDTOList(List<Visit> visits) {
         return visits.stream()
                 .map(VisitDTOMapper::mapToVisitDTO)

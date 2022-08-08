@@ -14,7 +14,7 @@ public class ContactAddress {
     @JoinColumn(name = "CLIENT_ID")
     private Client client;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "STATUS_ID")
     private Status status;
 

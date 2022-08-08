@@ -31,8 +31,10 @@
         <input type="hidden" th:field="*{id}" th:value="${client.getId()}"/>
         <input type="hidden" th:field="*{code}" th:value="${client.getCode()}"/>
         <input type="hidden" th:field="*{contactAddresses}" th:value="${client.getContactAddresses()}"/>
+        <input type="hidden" th:field="*{active}" th:value="${client.getActive()}"/>
         <input type="hidden" th:name="isManagerView" th:value="${isManagerView}"/>
         <input type="hidden" th:name="isEditView" th:value="${isEditView}"/>
+        <input type="hidden" th:name="lastVisitDate" th:value="${lastVisitDate}"/>
 
 
         <b></b><label>Kod klienta:</b></label>

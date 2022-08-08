@@ -17,7 +17,6 @@ public class ClientServDTO {
     private double finalPrice;
 
 
-
     public int getId() {
         return id;
     }

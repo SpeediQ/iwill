@@ -17,6 +17,17 @@
             width: 150px;
         }
 
+        a.action {
+            color: #515156;
+            line-height: 30px;
+        }
+
+        a.mainaction {
+            color: black;
+            line-height: 30px;
+            font-weight: bold;
+        }
+
         table th, table td {
             text-align: center;
         }
@@ -52,22 +63,41 @@
                     Kod
                 </th>
                 <th>
-                    <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Imię</a>
+                    <th:block th:if="${isManagerView == true}">
+
+                        <a th:href="@{'/clientmanager/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Imię</a>
+                    </th:block>
+                    <th:block th:unless="${isManagerView == true}">
+                        <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">Imię</a>
+                    </th:block>
+
                 </th>
                 <th>
-                    <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">Nazwisko</a>
+                    <th:block th:if="${isManagerView == true}">
+                        <a th:href="@{'/clientmanager/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">Nazwisko</a>
+                    </th:block>
+                    <th:block th:unless="${isManagerView == true}">
+                        <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=lastname&sortDir=' + ${reverseSortDir}}">Nazwisko</a>
+                    </th:block>
+
                 </th>
                 <th>Notatka</th>
 
                 <th>
-                    <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Data
-                        urodzenia</a>
+                    <th:block th:if="${isManagerView == true}">
+                        <a th:href="@{'/clientmanager/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Data
+                            urodzenia</a>
+                    </th:block>
+                    <th:block th:unless="${isManagerView == true}">
+                        <a th:href="@{'/main/cform/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Data
+                            urodzenia</a>
+                    </th:block>
                 </th>
                 <th></th>
                 </thead>
                 <tbody>
                 <th:block th:each="client : ${clients}">
-                    <tr>
+                    <tr height="20">
                         <td>[[${client.code}]]</td>
                         <td>[[${client.name}]]</td>
                         <td>[[${client.lastname}]]</td>
@@ -76,15 +106,18 @@
                         <th:block th:unless="${isManagerView == true}">
 
                             <td>
-                                <a th:href="@{'/c/add/' + ${client.id}+'/1'}">Wybierz</a>
+                                <a class="mainaction" th:href="@{'/c/add/' + ${client.id}+'/1'}">Wybierz</a>
                                 <br>
-                                <a th:href="@{'/client/edit/' + ${client.id}}">Edytuj</a>
+                                <a class="action" th:href="@{'/client/edit/' + ${client.id}}">Edytuj / Usuń</a>
                             </td>
                         </th:block>
                         <th:block th:if="${isManagerView == true}">
 
                             <td>
-                                <a th:href="@{'/clientmanager/edit/' + ${client.id}}">Edytuj</a>
+                                <a class="mainaction" th:href="@{'/clientmanager/edit/' + ${client.id}}">Analizuj</a>
+                                <br>
+                                <a class="action" th:href="@{'/clientmanager/edit/' + ${client.id}}">Edytuj / Usuń</a>
+
                             </td>
                         </th:block>
 
@@ -216,17 +249,18 @@
         footerClient.innerHTML += footerRow;
         for (var i = 0; i < data.length; i++) {
 
-            if (isManagerView) {
-                var row = `<tr>
+            var row = `<tr>
                                 <td>${data[i].code}</td>
                                 <td>${data[i].name}</td>
                                 <td>${data[i].lastname}</td>
                                 <td>${data[i].comment}</td>
                                 <td>
-                                    <a href="/client/edit/${data[i].id}">Edytuj</a>
-
+                                    <a class="mainaction" href="/client/edit/${data[i].id}">Analizuj</a>
+                                    <br>
+                                    <a class="action" href="/client/edit/${data[i].id}">Edytuj / Usuń</a>
                                 </td>
                            </tr>`
+            if (isManagerView) {
             } else {
                 var row = `<tr>
                                 <td>${data[i].code}</td>
@@ -234,9 +268,9 @@
                                 <td>${data[i].lastname}</td>
                                 <td>${data[i].comment}</td>
                                 <td>
-                                    <a href="/c/add/${data[i].id / 1}">Wybierz</a>
-<br>
-                                    <a href="/client/edit/${data[i].id}">Edytuj</a>
+                                    <a class="mainaction" href="/c/add/${data[i].id}/1">Wybierz</a>
+                                    <br>
+                                    <a class="action" href="/client/edit/${data[i].id}">Edytuj / Usuń</a>
 
                                 </td>
                            </tr>`

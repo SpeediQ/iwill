@@ -17,6 +17,7 @@ public class Client {
     private String lastname;
     private String comment;
     private String code;
+    private Boolean active;
     @OneToMany(mappedBy = "client")
     private Set<ContactAddress> contactAddresses = new HashSet<>();
 
@@ -101,6 +102,14 @@ public class Client {
         return contactAddresses;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     public void setContactAddresses(Set<ContactAddress> contactAddresses) {
         this.contactAddresses = contactAddresses;
     }
@@ -141,7 +150,7 @@ public class Client {
         return result;
     }
 
-    public Boolean isIdValid(){
+    public Boolean isIdValid() {
         return getId() > 0 ? true : false;
     }
 }
