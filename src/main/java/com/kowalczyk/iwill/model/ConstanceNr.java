@@ -45,5 +45,9 @@ public class ConstanceNr {
     public final static Boolean ACTIVE_CLIENT = true;
     public final static Boolean INACTIVE_CLIENT = false;
 
+    public final static String LAST_VISIT_DATE = "lastVisitDate";
+    public final static String MESSAGE_5_YEARS_BEFORE_DELETE = "Dane powinny być przechowywane przez 5 lat.";
+    public final static String ALERT = "alert";
+
 
 }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -144,14 +146,17 @@ public class ClientController {
         }
     }
 
-    private void passAttribute(String attributeName, Model model, HttpServletRequest request) {
+    private void passBooleanAttribute(String attributeName, Model model, HttpServletRequest request) {
         model.addAttribute(attributeName, "true".equals(request.getParameter(attributeName)) ? true : false);
     }
+//    private void passAttribute(String attributeName, Model model, HttpServletRequest request) {
+//        model.addAttribute(attributeName, request.getParameter(attributeName));
+//    }
 
     @GetMapping("/c")
     public String getClient(Model model, HttpServletRequest request, Client client) {
-        passAttribute(FLAG_IS_MANAGER_VIEW, model, request);
-        passAttribute(FLAG_IS_EDIT_VIEW, model, request);
+        passBooleanAttribute(FLAG_IS_MANAGER_VIEW, model, request);
+        passBooleanAttribute(FLAG_IS_EDIT_VIEW, model, request);
         String phoneValue = request.getParameter("phoneValue");
         String emailValue = request.getParameter("emailValue");
         Boolean phoneAgreement = "on".equals(request.getParameter("phoneAgreement")) ? true : false;
@@ -266,6 +271,13 @@ public class ClientController {
     @PostMapping(value = "/client/edit/save", params = "deleteUpdatedContact")
     public String deleteClientManager(Client client, Model model, HttpServletRequest request) {
         model.addAttribute(FLAG_IS_DELETE_ACTION, true);
+        LocalDate date = LocalDate.parse(request.getParameter(LAST_VISIT_DATE).substring(0,10));
+
+        Period period = Period.between(date, LocalDate.now());
+        if (period.getYears() < 5){
+            model.addAttribute(ALERT, MESSAGE_5_YEARS_BEFORE_DELETE);
+        }
+        model.addAttribute(LAST_VISIT_DATE, date);
         return getClient(model, request, client);
     }
 
