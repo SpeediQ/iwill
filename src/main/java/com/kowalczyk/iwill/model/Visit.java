@@ -190,4 +190,21 @@ public class Visit implements Serializable {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         return result;
     }
+
+
+    public String niceOneLineServicesString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("");
+
+        if (!getClientServSet().isEmpty()) {
+            stringBuilder.append("Usługi: ");
+            getClientServSet().stream().forEach(clientServ -> stringBuilder.append(clientServ.getTitle() + " // "));
+        }
+
+        return String.valueOf(stringBuilder);
+    }
+
+    public String niceOneLineString() {
+        return code + " " + " | " + title + " | Opis: " + desc + " | Status: " + status + " | " + niceOneLineServicesString();
+    }
 }

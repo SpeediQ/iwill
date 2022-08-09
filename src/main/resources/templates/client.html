@@ -30,7 +30,7 @@
         <input type="hidden" th:field="*{active}" th:value="${client.getActive()}"/>
 
         <th:block th:unless="${client.getClientCard() == null}">
-        <input type="hidden" th:field="*{clientCard}" th:value="${client.getClientCard().getId()}"/>
+            <input type="hidden" th:field="*{clientCard}" th:value="${client.getClientCard().getId()}"/>
         </th:block>
         <input type="hidden" th:field="*{contactAddresses}" th:value="${client.getContactAddresses()}"/>
         <input type="hidden" th:name="phoneValue" th:value="${phoneValue}"/>
@@ -125,7 +125,6 @@
         </th:block>
         <button type="submit" name="cancel" value="Cancel" class="btn btn-warning">Anuluj</button>
     </form>
-    </th:block>
 </div>
 </body>
 </html>

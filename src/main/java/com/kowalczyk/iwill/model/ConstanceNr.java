@@ -1,5 +1,9 @@
 package com.kowalczyk.iwill.model;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
 public class ConstanceNr {
 
     // STATUS
@@ -45,9 +49,20 @@ public class ConstanceNr {
     public final static Boolean ACTIVE_CLIENT = true;
     public final static Boolean INACTIVE_CLIENT = false;
 
+    // ATTRIBUTE
     public final static String LAST_VISIT_DATE = "lastVisitDate";
     public final static String MESSAGE_5_YEARS_BEFORE_DELETE = "Dane powinny być przechowywane przez 5 lat.";
     public final static String ALERT = "alert";
+    public final static LocalDate VISIT_SEARCH_START_DATE = LocalDate.parse("2022-01-01");
+    public final static String ATTRIBUTE_SERVICE_TYPE_LIST = "serviceTypeList";
+    public final static String ATTRIBUTE_FIELDS_LIST = "fieldsList";
+
+
+    // SEARCH
+    public final static String DEFAULT_FIELD_TITLE = "Tytuł";
+    public final static String DEFAULT_FIELD_DESC = "Opis";
+    public final static String DEFAULT_FIELD_CODE = "Kod";
+    public final static List<String> SEARCH_DEFAULT_FIELDS_LIST = Arrays.asList(DEFAULT_FIELD_TITLE, DEFAULT_FIELD_DESC, DEFAULT_FIELD_CODE);
 
 
 }

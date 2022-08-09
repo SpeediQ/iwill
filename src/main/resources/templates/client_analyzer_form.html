@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Visits</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <style type="text/css">
+        label {
+            padding-top: 10px;
+        }
+
+        input.rightDate {
+            float: right;
+        }
+
+        div.left {
+            color: black;
+            text-align: left;
+            margin: 10px;
+
+        }
+
+        select.fields {
+            float: right;
+            width: 200px;
+        }
+
+        div.leftAgreement {
+            color: black;
+            font-weight: bold;
+            font-style: italic;
+            text-align: left;
+            margin: 20px;
+        }
+        div.test {
+            margin-left: 50px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            width: 100px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container text-center">
+    <form th:action="@{/clientanalyzer/__${client.getId()}__}" th:object="${client}" method="get"
+          style="max-width: 1100px; margin: 0 auto;">
+
+<!--        <input type="hidden" th:name="dateSearchAgreement" th:value="${dateSearchAgreement}"/>-->
+<!--        <input type="hidden" th:name="dateSearchAgreement" th:value="${startDate}"/>-->
+<!--        <input type="hidden" th:name="dateSearchAgreement" th:value="${endDate}"/>-->
+
+
+
+        <div><h1>Analiza Klienta</h1></div>
+        <label>Dane klienta: </label>
+        <span th:text="${client.getOneLineNiceString()}" th:remove="tag"></span>
+        <hr>
+        <h3>Wyszukiwanie wizyt</h3>
+        <br>
+        <div>
+        <table border="0" align="left" width="1100px">
+            <tr valign="top">
+                <td width="350px">
+                    <div class="leftAgreement">
+                        <input type="checkbox" th:name="dateSearchAgreement" th:checked="${dateSearchAgreement}"/>
+                        <span th:text="' - uzwględnij datę'"/>
+                    </div>
+                    <div class="left">
+                        <span for="startDate">Data początkowa:</span>
+                        <input class="rightDate" type="date" th:value="${startDate}" th:name="startDate"
+                               id="startDate"/>
+                    </div>
+                    <div class="left">
+                        <span for="endDate">Data końcowa:</span>
+                        <input class="rightDate" type="date" th:value="${endDate}" th:name="endDate" id="endDate"/>
+                    </div>
+
+                    <hr>
+
+                    <div class="leftAgreement">
+                        <input type="checkbox" th:name="serviceTypeSearchAgreement" th:checked="${serviceTypeSearchAgreement}"/>
+                        <span th:text="' - uzwględnij typ usługi'"/>
+                    </div>
+                    <div class="left">
+                        <select th:name="serviceTypeId">
+                            <th:block th:if="${serviceType != null}">
+                                <option th:value="${serviceType.getId()}" th:text="${serviceType.niceChooseString()}"/>
+                            </th:block>
+                            <th:block th:unless="${serviceType != null}">
+                                <option></option>
+                            </th:block>
+
+                            <option th:each="serviceType : ${serviceTypeList}" th:value="${serviceType.getId()}"
+                                    th:text="${serviceType.niceString()}"/>
+                        </select>
+                    </div>
+                    <hr>
+
+                    <div class="leftAgreement">
+                        <input type="checkbox" th:name="fieldSearchAgreement"  th:checked="${fieldSearchAgreement}"/>
+                        <span th:text="' - uzwględnij szukanie po polu'"/>
+                    </div>
+                    <div class="left">
+                        <span th:text="'wybierz pole: '"/>
+                        <select class="fields" th:name="field">
+                            <th:block th:if="${field != null && field !=''}">
+                                <option th:value="${field}" th:text="'Wybrano: ' + ${field}"/>
+                            </th:block>
+                            <th:block th:unless="${field != null && field !=''}">
+                                <option></option>
+                            </th:block>
+                            <option th:each="field : ${fieldsList}" th:value="${field}"
+                                    th:text="${field}"/>
+                        </select>
+                    </div>
+                    <div class="left">
+                        <span th:text="'wyszukiwana treść: '"/>
+                        <input type="text" th:name="searchValue" th:value="${searchValue}" class="form-control"/>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary">Wyszukaj</button>
+                    </div>
+                    <br>
+                    <div class="form-group row" th:align="center">
+                        <a class="h2" th:href="@{/}">Wróć</a>
+                    </div>
+                </td>
+                <td align="left" width="700px">
+                    <div>
+                        <th:block th:if="${'visitList' != null && field !=''}">
+                            <div>
+                                <span th:text="'Kryteria wyszukiwania: '"/>
+                                <span th:text="${criteria}"/>
+                            </div>
+                            <br>
+                            <ol>
+                                <li th:each="visit: ${visitList}"><span th:text="${visit.niceOneLineString()}"></span></li>
+                            </ol>
+
+                        </th:block>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        </div>
+<!--<div class="test">-->
+<!--    <th:block th:if="${'visitList' != null && field !=''}">-->
+
+<!--        <ol>-->
+<!--            <li th:each="visit: ${visitList}"><span th:text="${visit.niceOneLineString()}"></span></li>-->
+<!--        </ol>-->
+
+<!--    </th:block>-->
+<!--</div>-->
+
+
+    </form>
+</div>
+</body>
+</html>

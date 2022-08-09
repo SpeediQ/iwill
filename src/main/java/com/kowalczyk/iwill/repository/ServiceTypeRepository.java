@@ -14,5 +14,8 @@ public interface ServiceTypeRepository extends JpaRepository<ServiceType, Intege
     @Query("select distinct st from ServiceType st where st.status.id = 6")
     List<ServiceType> findAllActive();
 
+    @Query("select distinct st from ServiceType st where st.status.id = 6 or st.status.id = 8")
+    List<ServiceType> findAllActiveAndInactive();
+
     Page<ServiceType> findAllByStatusId(int statusId, Pageable pageable);
 }

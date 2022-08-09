@@ -101,6 +101,9 @@ public class ServiceType implements Serializable {
     }
 
     public String niceString() {
-        return "Tytuł: " + name + " ; Cena: " + value + " ; Opis: " + desc;
+        return name + " ; Cena: " + value + " ; Opis: " + desc;
+    }
+    public String niceChooseString() {
+        return "Wybrano: " + name + " ; Cena: " + value + " ; Opis: " + desc;
     }
 }

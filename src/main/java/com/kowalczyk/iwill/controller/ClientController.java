@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.controller.VisitController.addAttributeForVisitForm;
@@ -41,6 +41,8 @@ public class ClientController {
     private ContactAddressRepository contactAddressRepository;
     @Autowired
     private StatusRepository statusRepository;
+    @Autowired
+    private ServiceTypeRepository serviceTypeRepository;
 
     @GetMapping("/main/cform")
     public String getClientsForm(Model model) {
@@ -53,11 +55,126 @@ public class ClientController {
         return showClientManagerForm(model, 1, "name", "asc");
     }
 
-    @GetMapping("/main/cform/{pageNumber}")
-    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage,
-                                 @RequestParam("sortField") String sortField,
-                                 @RequestParam("sortDir") String sortDir) {
-        return getChooseOrCreateClientForm(model, currentPage, sortField, sortDir);
+    @GetMapping("/clientanalyzer/{idClient}")
+    public String getClientAnalyzer(Model model, @PathVariable("idClient") Integer idClient, HttpServletRequest request) throws ParseException {
+        addDefaultAttributeForSearch(model);
+
+        Client client = clientRepository.getById(idClient);
+        model.addAttribute("client", client);
+        List<Visit> visitList = doSearchFilerList(client, request);
+        if (visitList.isEmpty()) {
+            model.addAttribute("visitList", new ArrayList<>());
+        } else {
+            model.addAttribute("visitList", visitList);
+        }
+
+        handleSearchAttribute(model, request);
+
+        return "client_analyzer_form";
+    }
+
+    private void addDefaultAttributeForSearch(Model model) {
+        model.addAttribute("startDate", VISIT_SEARCH_START_DATE);
+        model.addAttribute("endDate", LocalDate.now());
+        model.addAttribute(ATTRIBUTE_SERVICE_TYPE_LIST, geActiveAndInactiveServiceTypeList());
+        model.addAttribute(ATTRIBUTE_FIELDS_LIST, SEARCH_DEFAULT_FIELDS_LIST);
+    }
+
+    private void handleSearchAttribute(Model model, HttpServletRequest request) throws ParseException {
+        // agreement, startDate, endDate
+        handleStartEndDateAttribute(model, request);
+
+        // serviceType
+        handleServiceTypeAttribute(model, request);
+
+        // fields
+        handleFieldsAttribute(model, request);
+
+        // search criteria
+        handleCriteriaAttribute(model, request);
+    }
+
+    private void handleCriteriaAttribute(Model model, HttpServletRequest request) {
+        boolean dateSearchAgreement = "on".equals(request.getParameter("dateSearchAgreement")) ? true : false;
+        boolean serviceTypeSearchAgreement = "on".equals(request.getParameter("serviceTypeSearchAgreement")) ? true : false;
+        boolean fieldSearchAgreement = "on".equals(request.getParameter("fieldSearchAgreement")) ? true : false;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (dateSearchAgreement){
+            stringBuilder.append("Data");
+        }
+
+        if (serviceTypeSearchAgreement){
+            if (stringBuilder.toString().isEmpty()){
+                stringBuilder.append("Typ usługi");
+            }else {
+                stringBuilder.append(", Typ usługi");
+            }
+        }
+
+        if (fieldSearchAgreement){
+            if (stringBuilder.toString().isEmpty()){
+                stringBuilder.append("Pole");
+            }else{
+                stringBuilder.append(", Pole");
+            }
+        }
+        model.addAttribute("criteria", String.valueOf(stringBuilder));
+    }
+
+    private void handleFieldsAttribute(Model model, HttpServletRequest request) {
+        model.addAttribute("searchValue", request.getParameter("searchValue"));
+        boolean fieldSearchAgreement = "on".equals(request.getParameter("fieldSearchAgreement")) ? true : false;
+        model.addAttribute("fieldSearchAgreement", fieldSearchAgreement);
+        String fieldString = request.getParameter("field");
+        if (isStringNotEmpty(fieldString)) {
+            model.addAttribute("field", fieldString);
+        }
+    }
+
+    private boolean isStringNotEmpty(String fieldString) {
+        return fieldString != null && !"".equals(fieldString);
+    }
+
+    private void handleServiceTypeAttribute(Model model, HttpServletRequest request) {
+        String serviceTypeIdString = request.getParameter("serviceTypeId");
+        if (isStringNotEmpty(serviceTypeIdString)) {
+            int serviceTypeId = Integer.parseInt(serviceTypeIdString);
+            model.addAttribute("serviceTypeId", serviceTypeId);
+        } else {
+            model.addAttribute("serviceTypeId", 1);
+        }
+
+        boolean serviceTypeSearchAgreement = "on".equals(request.getParameter("serviceTypeSearchAgreement")) ? true : false;
+        model.addAttribute("serviceTypeSearchAgreement", serviceTypeSearchAgreement);
+
+        if (isStringNotEmpty(serviceTypeIdString)) {
+            int serviceTypeId = Integer.parseInt(serviceTypeIdString);
+            model.addAttribute("serviceTypeId", serviceTypeId);
+            model.addAttribute("serviceType", serviceTypeRepository.getById(serviceTypeId));
+        }
+    }
+
+    private void handleStartEndDateAttribute(Model model, HttpServletRequest request) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String startDateString = request.getParameter("startDate");
+        final LocalDate startDate = startDateString != null ? LocalDate.parse(startDateString) : null;
+        String endDateString = request.getParameter("endDate");
+        final LocalDate endDate = startDateString != null ? LocalDate.parse(endDateString) : null;
+
+        if (startDate == null) {
+            model.addAttribute("startDate", VISIT_SEARCH_START_DATE);
+        } else {
+            model.addAttribute("startDate", startDate);
+        }
+        if (endDate == null) {
+            model.addAttribute("endDate", LocalDate.now());
+        } else {
+            model.addAttribute("endDate", endDate);
+        }
+        boolean dateSearchAgreement = "on".equals(request.getParameter("dateSearchAgreement")) ? true : false;
+        model.addAttribute("dateSearchAgreement", dateSearchAgreement);
+
     }
 
     @GetMapping("/clientmanager/{pageNumber}")
@@ -68,6 +185,111 @@ public class ClientController {
         Page<Client> page = clientService.findAllSorteredClientsManagerPage(currentPage, sortField, sortDir);
         addAttributeForClientFormPage(model, page, currentPage, sortField, sortDir);
         return "choose_or_create_client_form";
+    }
+
+    @GetMapping("/main/cform/{pageNumber}")
+    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage,
+                                 @RequestParam("sortField") String sortField,
+                                 @RequestParam("sortDir") String sortDir) {
+        return getChooseOrCreateClientForm(model, currentPage, sortField, sortDir);
+    }
+
+    private List<Visit> doSearchFilerList(Client client, HttpServletRequest request) throws ParseException {
+
+        boolean dateSearchAgreement = "on".equals(request.getParameter("dateSearchAgreement")) ? true : false;
+        boolean serviceTypeSearchAgreement = "on".equals(request.getParameter("serviceTypeSearchAgreement")) ? true : false;
+        boolean fieldSearchAgreement = "on".equals(request.getParameter("fieldSearchAgreement")) ? true : false;
+
+        String startDateString = request.getParameter("startDate");
+        String endDateString = request.getParameter("endDate");
+        String fieldString = request.getParameter("field");
+        String searchValueString = request.getParameter("searchValue");
+        String serviceTypeIdString = request.getParameter("serviceTypeId");
+        int serviceTypeId = 0;
+        if (isStringNotEmpty(serviceTypeIdString)) {
+            serviceTypeId = Integer.parseInt(serviceTypeIdString);
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        final Date startDate = startDateString != null ? formatter.parse(startDateString) : null;
+        final Date endDate = endDateString != null ? formatter.parse(endDateString) : null;
+
+        List<Visit> currentVisitList = new ArrayList<>();
+
+        currentVisitList = client.getClientCard().getVisitSet().stream().collect(Collectors.toList());
+
+
+        // FIELD SEARCH
+        if (fieldSearchAgreement) {
+            currentVisitList = filerListByField(currentVisitList, fieldString, searchValueString);
+        }
+
+        // DATE SEARCH
+        if (dateSearchAgreement) {
+            currentVisitList = filerListByDate(currentVisitList, startDate, endDate);
+        }
+
+        // SERVICE TYPE SEARCH
+        if (serviceTypeSearchAgreement) {
+            currentVisitList = filerListByServiceTypeId(currentVisitList, serviceTypeId);
+        }
+        return currentVisitList;
+    }
+
+    private List<Visit> filerListByField(List<Visit> currentVisitList, String fieldString, String searchValueString) {
+        if (!currentVisitList.isEmpty() && searchValueString != null && fieldString != null && !"".equals(fieldString) && !"".equals(searchValueString)) {
+            if (DEFAULT_FIELD_TITLE.equals(fieldString)) {
+                currentVisitList = currentVisitList.stream()
+                        .filter(visit -> visit.getTitle().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            } else if (DEFAULT_FIELD_DESC.equals(fieldString)) {
+                currentVisitList = currentVisitList.stream()
+                        .filter(visit -> visit.getDesc().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            } else if (DEFAULT_FIELD_CODE.equals(fieldString)) {
+                currentVisitList = currentVisitList.stream()
+                        .filter(visit -> visit.getCode().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+        }
+        return currentVisitList;
+    }
+
+    private List<Visit> filerListByDate(List<Visit> currentVisitList, Date startDate, Date endDate) {
+        if (!currentVisitList.isEmpty() && startDate != null && endDate != null) {
+            currentVisitList = currentVisitList.stream()
+                    .filter(visit -> visit.getDate() != null &&
+                            visit.getDate().compareTo(startDate) >= 0 &&
+                            visit.getDate().compareTo(endDate) <= 0)
+                    .collect(Collectors.toList());
+        }
+        return currentVisitList;
+    }
+
+    private List<Visit> filerListByServiceTypeId(List<Visit> currentVisitList, int serviceTypeId) {
+        List<Visit> visitsToRemoveFromList = new ArrayList<>();
+
+        if (!currentVisitList.isEmpty() && serviceTypeId > 0) {
+            for (Visit visit : currentVisitList) {
+                Optional<ClientServ> first = visit.getClientServSet().stream()
+                        .filter(clientServ -> clientServ.getServiceType().getId() == serviceTypeId)
+                        .findFirst();
+                if (first.isEmpty()) {
+                    visitsToRemoveFromList.add(visit);
+                }
+            }
+        }
+        if (!visitsToRemoveFromList.isEmpty()) {
+            return currentVisitList.stream()
+                    .filter(visit -> !visitsToRemoveFromList.contains(visit))
+                    .collect(Collectors.toList());
+        }
+        return currentVisitList;
+    }
+
+    private List<ServiceType> geActiveAndInactiveServiceTypeList() {
+        List<ServiceType> allActiveServiceTypeList = serviceTypeRepository.findAllActiveAndInactive();
+        return allActiveServiceTypeList;
     }
 
     private String getChooseOrCreateClientForm(Model model, @PathVariable("pageNumber") int currentPage, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir) {
@@ -96,7 +318,7 @@ public class ClientController {
         client.setActive(ACTIVE_CLIENT);
         client.setClientCard(clientCard);
         clientCard.setClient(client);
-        if (client.getCode() == null ||  "".equals(client.getCode())) {
+        if (client.getCode() == null || "".equals(client.getCode())) {
             setCodeForClient(client);
         }
         setAndSaveToDbContactAddressByRequest(client, request);
@@ -124,6 +346,7 @@ public class ClientController {
             return getClientsForm(model);
         }
     }
+
     @PostMapping(value = "/main/save/client", params = "delete")
     public String deleteAddClient(Client client, Model model, HttpServletRequest request) {
         Boolean isManagerView = "true".equals(request.getParameter(FLAG_IS_MANAGER_VIEW)) ? true : false;
@@ -271,10 +494,10 @@ public class ClientController {
     @PostMapping(value = "/client/edit/save", params = "deleteUpdatedContact")
     public String deleteClientManager(Client client, Model model, HttpServletRequest request) {
         model.addAttribute(FLAG_IS_DELETE_ACTION, true);
-        LocalDate date = LocalDate.parse(request.getParameter(LAST_VISIT_DATE).substring(0,10));
+        LocalDate date = LocalDate.parse(request.getParameter(LAST_VISIT_DATE).substring(0, 10));
 
         Period period = Period.between(date, LocalDate.now());
-        if (period.getYears() < 5){
+        if (period.getYears() < 5) {
             model.addAttribute(ALERT, MESSAGE_5_YEARS_BEFORE_DELETE);
         }
         model.addAttribute(LAST_VISIT_DATE, date);

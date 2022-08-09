@@ -32,7 +32,7 @@
                     <span>Wysokość promocji:</span>
                     <input type="text" name="promotion" th:value="${clientServ.getPromotion()}" class="form-control"/>
                 </div>
-                <label>Item:</label>
+                <label>Typ usługi:</label>
                 <select th:field="*{serviceType}">
                     <option th:each="serviceType : ${serviceTypeList}" th:value="${serviceType.id}"
                             th:text="${serviceType.niceString}"/>
