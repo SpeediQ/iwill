@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.kowalczyk.iwill.controller.VisitController.addAttributeForVisitForm;
@@ -32,6 +32,8 @@ public class ClientController {
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
+    private VisitRepository visitRepository;
+    @Autowired
     private ClientService clientService;
     @Autowired
     private ClientCardRepository clientCardRepository;
@@ -41,6 +43,20 @@ public class ClientController {
     private ContactAddressRepository contactAddressRepository;
     @Autowired
     private StatusRepository statusRepository;
+    @Autowired
+    private ServiceTypeRepository serviceTypeRepository;
+
+
+    public static Boolean DATE_SEARCH_AGREEMENT_VALUE = null;
+    public static Boolean SERVICE_TYPE_SEARCH_AGREEMENT_VALUE = null;
+    public static Boolean FIELD_SEARCH_AGREEMENT_VALUE = null;
+    public static Boolean IS_VISIT_FORM = false;
+    public static LocalDate START_DATE_VALUE = null;
+    public static LocalDate END_DATE_VALUE = null;
+    public static Integer SERVICE_TYPE_ID_VALUE = null;
+    public static String FIELD_VALUE = null;
+    public static String SEARCH_VALUE = null;
+
 
     @GetMapping("/main/cform")
     public String getClientsForm(Model model) {
@@ -53,11 +69,303 @@ public class ClientController {
         return showClientManagerForm(model, 1, "name", "asc");
     }
 
-    @GetMapping("/main/cform/{pageNumber}")
-    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage,
-                                 @RequestParam("sortField") String sortField,
-                                 @RequestParam("sortDir") String sortDir) {
-        return getChooseOrCreateClientForm(model, currentPage, sortField, sortDir);
+    @GetMapping("/analyzer")
+    public String getClientManager(Model model, HttpServletRequest request) throws ParseException {
+        return getAnalyzerPage(model, 1, request);
+    }
+
+    @GetMapping("/analyzer/{pageNumber}")
+    public String getAnalyzerPage(Model model, @PathVariable("pageNumber") int currentPage, HttpServletRequest request) throws ParseException {
+        clearStiticFieldsForAnalyzer();
+        return getAnalyzerSc(model, request);
+    }
+
+    @GetMapping("/clientanalyzer/{idClient}")
+    public String getClientAnalyzer(Model model, @PathVariable("idClient") Integer idClient, HttpServletRequest request) throws ParseException {
+        clearStiticFieldsForAnalyzer();
+        return getClientAnalyzerSc(model, idClient, request);
+    }
+
+    @GetMapping(value = "/clientanalyzer/{idClient}", params = "editVisit")
+    public String getEditVisitFromCAnalyzer(Model model, @PathVariable("idClient") Integer idClient, HttpServletRequest request) throws ParseException {
+        Visit visit = visitRepository.getById(Integer.parseInt(request.getParameter("idVisit")));
+        model.addAttribute("visit", visit);
+        model.addAttribute("clientServSet", visit.getClientServSet());
+        model.addAttribute("visitForm", true);
+
+        model.addAttribute("idClient", idClient);
+        return "visit_form";
+    }
+
+    @GetMapping(value = "/analyzer", params = "editVisit")
+    public String getEditVisitFromAnalyzer(Model model, HttpServletRequest request) throws ParseException {
+        Visit visit = visitRepository.getById(Integer.parseInt(request.getParameter("idVisit")));
+        model.addAttribute("visit", visit);
+        model.addAttribute("idClient", visit.getClientCard().getClient().getId());
+        model.addAttribute("clientServSet", visit.getClientServSet());
+        model.addAttribute("visitForm", true);
+        model.addAttribute("isMainAnalyzer", true);
+        return "visit_form";
+    }
+
+    private String getClientAnalyzerSc(Model model, Integer idClient, HttpServletRequest request) throws ParseException {
+        addDefaultAttributeForSearch(model);
+        String visitsCounterString = null;
+        String totalValueString = null;
+        String clientServCounterString = null;
+        Client client = clientRepository.getById(idClient);
+        model.addAttribute("client", client);
+        model.addAttribute("idClient", client.getId());
+        List<Visit> visitList = doSearchFilerList(client, request);
+        if (visitList.isEmpty()) {
+            model.addAttribute("visitList", new ArrayList<>());
+
+
+        } else {
+            model.addAttribute("visitList", visitList);
+            int visitsCounter = visitList.size();
+            int clientServCounter = 0;
+            double totalValue = 0;
+
+            for (Visit visit : visitList) {
+                totalValue += visit.getClientServSet().stream().mapToDouble(ClientServ::getFinalPriceIncludingPromotion).sum();
+                clientServCounter += visit.getClientServSet().size();
+            }
+            if (visitsCounter != 0) {
+                visitsCounterString = "Łączna ilość wizyt: " + visitsCounter;
+                clientServCounterString = "Łączna ilość usług: " + clientServCounter;
+                totalValueString = "Łączna wartość: " + totalValue;
+            }
+            if (visitsCounter != 0) {
+                model.addAttribute("visitsCounterString", visitsCounterString);
+
+            }
+            if (clientServCounter != 0) {
+                model.addAttribute("totalValueString", totalValueString);
+
+            }
+            if (totalValue != 0) {
+                model.addAttribute("clientServCounterString", clientServCounterString);
+
+            }
+        }
+
+        handleSearchAttribute(model, request);
+
+        return "client_analyzer_form";
+    }
+
+    private String getAnalyzerSc(Model model, HttpServletRequest request) throws ParseException {
+        addDefaultAttributeForSearch(model);
+        String visitsCounterString = null;
+        String totalValueString = null;
+        String clientServCounterString = null;
+
+        List<Visit> visitList = doSearchFilerList(null, request);
+        if (visitList.isEmpty()) {
+            model.addAttribute("visitList", new ArrayList<>());
+
+
+        } else {
+            model.addAttribute("visitList", visitList);
+            int visitsCounter = visitList.size();
+            int clientServCounter = 0;
+            double totalValue = 0;
+
+            for (Visit visit : visitList) {
+                totalValue += visit.getClientServSet().stream().mapToDouble(ClientServ::getFinalPriceIncludingPromotion).sum();
+                clientServCounter += visit.getClientServSet().size();
+            }
+            if (visitsCounter != 0) {
+                visitsCounterString = "Łączna ilość wizyt: " + visitsCounter;
+                clientServCounterString = "Łączna ilość usług: " + clientServCounter;
+                totalValueString = "Łączna wartość: " + totalValue;
+            }
+            if (visitsCounter != 0) {
+                model.addAttribute("visitsCounterString", visitsCounterString);
+
+            }
+            if (clientServCounter != 0) {
+                model.addAttribute("totalValueString", totalValueString);
+
+            }
+            if (totalValue != 0) {
+                model.addAttribute("clientServCounterString", clientServCounterString);
+
+            }
+        }
+
+        handleSearchAttribute(model, request);
+
+        return "analyzer_form";
+    }
+
+    @GetMapping("/clientanalyzer/{idClient}/{idVisit}")
+    public String getClientAnalyzerVisit(Model model, @PathVariable("idClient") Integer idClient, @PathVariable("idVisit") Integer idVisit, HttpServletRequest request) throws ParseException {
+        Visit visit = visitRepository.getById(idVisit);
+        model.addAttribute("visit", visit);
+        model.addAttribute("clientServSet", visit.getClientServSet());
+        model.addAttribute("visitForm", true);
+        IS_VISIT_FORM = Boolean.TRUE;
+
+        return getClientAnalyzerSc(model, idClient, request);
+    }
+
+    @GetMapping("/analyzer/{idVisit}/{pageNumber}")
+    public String getClientAnalyzerVisit(Model model, @PathVariable("pageNumber") int currentPage, @PathVariable("idVisit") Integer idVisit, HttpServletRequest request) throws ParseException {
+        Visit visit = visitRepository.getById(idVisit);
+        model.addAttribute("visit", visit);
+        model.addAttribute("clientServSet", visit.getClientServSet());
+        model.addAttribute("visitForm", true);
+        IS_VISIT_FORM = Boolean.TRUE;
+
+        return getAnalyzerSc(model, request);
+    }
+
+    private void addDefaultAttributeForSearch(Model model) {
+        model.addAttribute("startDate", VISIT_SEARCH_START_DATE);
+        model.addAttribute("endDate", LocalDate.now());
+        model.addAttribute(ATTRIBUTE_SERVICE_TYPE_LIST, geActiveAndInactiveServiceTypeList());
+        model.addAttribute(ATTRIBUTE_FIELDS_LIST, SEARCH_DEFAULT_FIELDS_LIST);
+    }
+
+    private void handleSearchAttribute(Model model, HttpServletRequest request) throws ParseException {
+        // agreement, startDate, endDate
+        handleStartEndDateAttribute(model, request);
+
+        // serviceType
+        handleServiceTypeAttribute(model, request);
+
+        // fields
+        handleFieldsAttribute(model, request);
+
+        // search criteria
+        handleCriteriaAttribute(model, request);
+    }
+
+    private void handleCriteriaAttribute(Model model, HttpServletRequest request) {
+        boolean dateSearchAgreement = "on".equals(request.getParameter("dateSearchAgreement")) ? true : false;
+        boolean serviceTypeSearchAgreement = "on".equals(request.getParameter("serviceTypeSearchAgreement")) ? true : false;
+        boolean fieldSearchAgreement = "on".equals(request.getParameter("fieldSearchAgreement")) ? true : false;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        if (dateSearchAgreement) {
+            stringBuilder.append("Data");
+        }
+
+        if (serviceTypeSearchAgreement) {
+            if (stringBuilder.toString().isEmpty()) {
+                stringBuilder.append("Typ usługi");
+            } else {
+                stringBuilder.append(", Typ usługi");
+            }
+        }
+
+        if (fieldSearchAgreement) {
+            if (stringBuilder.toString().isEmpty()) {
+                stringBuilder.append("Pole");
+            } else {
+                stringBuilder.append(", Pole");
+            }
+        }
+        model.addAttribute("criteria", String.valueOf(stringBuilder));
+    }
+
+    private void handleFieldsAttribute(Model model, HttpServletRequest request) {
+
+        String searchValue = request.getParameter("searchValue");
+        model.addAttribute("searchValue", searchValue);
+        boolean fieldSearchAgreement = "on".equals(request.getParameter("fieldSearchAgreement")) ? true : false;
+        model.addAttribute("fieldSearchAgreement", fieldSearchAgreement);
+        String fieldString = request.getParameter("field");
+        if (isStringNotEmpty(fieldString)) {
+            model.addAttribute("field", fieldString);
+        }
+
+        if (fieldSearchAgreement) {
+            FIELD_SEARCH_AGREEMENT_VALUE = fieldSearchAgreement;
+            FIELD_VALUE = fieldString;
+            SEARCH_VALUE = searchValue;
+        }
+        if (IS_VISIT_FORM) {
+            model.addAttribute("fieldSearchAgreement", FIELD_SEARCH_AGREEMENT_VALUE);
+            model.addAttribute("field", FIELD_VALUE);
+            model.addAttribute("searchValue", SEARCH_VALUE);
+        }
+    }
+
+    private boolean isStringNotEmpty(String fieldString) {
+        return fieldString != null && !"".equals(fieldString);
+    }
+
+    private void handleServiceTypeAttribute(Model model, HttpServletRequest request) {
+        String serviceTypeIdString = request.getParameter("serviceTypeId");
+        Integer serviceTypeId = null;
+        if (isStringNotEmpty(serviceTypeIdString)) {
+            serviceTypeId = Integer.parseInt(serviceTypeIdString);
+            model.addAttribute("serviceTypeId", serviceTypeId);
+        } else {
+//            model.addAttribute("serviceTypeId", 1);
+        }
+        if (isStringNotEmpty(serviceTypeIdString)) {
+            serviceTypeId = Integer.parseInt(serviceTypeIdString);
+            model.addAttribute("serviceTypeId", serviceTypeId);
+            model.addAttribute("serviceType", serviceTypeRepository.getById(serviceTypeId));
+        }
+
+        boolean serviceTypeSearchAgreement = "on".equals(request.getParameter("serviceTypeSearchAgreement")) ? true : false;
+        model.addAttribute("serviceTypeSearchAgreement", serviceTypeSearchAgreement);
+
+
+        if (serviceTypeSearchAgreement) {
+            SERVICE_TYPE_SEARCH_AGREEMENT_VALUE = serviceTypeSearchAgreement;
+            SERVICE_TYPE_ID_VALUE = serviceTypeId;
+        }
+        if (IS_VISIT_FORM) {
+            model.addAttribute("serviceTypeSearchAgreement", SERVICE_TYPE_SEARCH_AGREEMENT_VALUE);
+            model.addAttribute("serviceTypeId", SERVICE_TYPE_ID_VALUE);
+
+            if (SERVICE_TYPE_ID_VALUE != null) {
+                model.addAttribute("serviceType", serviceTypeRepository.getById(SERVICE_TYPE_ID_VALUE));
+            }
+        }
+
+    }
+
+    private void handleStartEndDateAttribute(Model model, HttpServletRequest request) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String startDateString = request.getParameter("startDate");
+        final LocalDate startDate = startDateString != null ? LocalDate.parse(startDateString) : null;
+        String endDateString = request.getParameter("endDate");
+        final LocalDate endDate = startDateString != null ? LocalDate.parse(endDateString) : null;
+
+        if (startDate == null) {
+            model.addAttribute("startDate", VISIT_SEARCH_START_DATE);
+        } else {
+            model.addAttribute("startDate", startDate);
+        }
+        if (endDate == null) {
+            model.addAttribute("endDate", LocalDate.now());
+        } else {
+            model.addAttribute("endDate", endDate);
+        }
+        boolean dateSearchAgreement = "on".equals(request.getParameter("dateSearchAgreement")) ? true : false;
+        model.addAttribute("dateSearchAgreement", dateSearchAgreement);
+
+
+        if (dateSearchAgreement) {
+            DATE_SEARCH_AGREEMENT_VALUE = dateSearchAgreement;
+            START_DATE_VALUE = startDate;
+            END_DATE_VALUE = endDate;
+
+        }
+        if (IS_VISIT_FORM) {
+            model.addAttribute("dateSearchAgreement", DATE_SEARCH_AGREEMENT_VALUE);
+            model.addAttribute("startDate", START_DATE_VALUE != null ? START_DATE_VALUE : VISIT_SEARCH_START_DATE);
+            model.addAttribute("endDate", END_DATE_VALUE != null ? END_DATE_VALUE : LocalDate.now());
+        }
+
+
     }
 
     @GetMapping("/clientmanager/{pageNumber}")
@@ -68,6 +376,242 @@ public class ClientController {
         Page<Client> page = clientService.findAllSorteredClientsManagerPage(currentPage, sortField, sortDir);
         addAttributeForClientFormPage(model, page, currentPage, sortField, sortDir);
         return "choose_or_create_client_form";
+    }
+
+    @GetMapping("/main/cform/{pageNumber}")
+    public String showClientForm(Model model, @PathVariable("pageNumber") int currentPage,
+                                 @RequestParam("sortField") String sortField,
+                                 @RequestParam("sortDir") String sortDir) {
+        return getChooseOrCreateClientForm(model, currentPage, sortField, sortDir);
+    }
+
+    private List<Visit> doSearchFilerList(Client client, HttpServletRequest request) throws ParseException {
+
+        boolean dateSearchAgreement = "on".equals(request.getParameter("dateSearchAgreement")) ? true : false;
+        boolean serviceTypeSearchAgreement = "on".equals(request.getParameter("serviceTypeSearchAgreement")) ? true : false;
+        boolean fieldSearchAgreement = "on".equals(request.getParameter("fieldSearchAgreement")) ? true : false;
+
+        String startDateString = request.getParameter("startDate");
+        String endDateString = request.getParameter("endDate");
+        String fieldString = request.getParameter("field");
+        String searchValueString = request.getParameter("searchValue");
+        String serviceTypeIdString = request.getParameter("serviceTypeId");
+        int serviceTypeId = 0;
+        if (isStringNotEmpty(serviceTypeIdString)) {
+            serviceTypeId = Integer.parseInt(serviceTypeIdString);
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        final Date startDate = startDateString != null ? formatter.parse(startDateString) : null;
+        final Date endDate = endDateString != null ? formatter.parse(endDateString) : null;
+
+        List<Visit> currentVisitList = new ArrayList<>();
+        if (client != null) {
+            currentVisitList = client.getClientCard().getVisitSet().stream().sorted(Comparator
+                    .comparing(Visit::getId).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            currentVisitList = visitRepository.findAll().stream().sorted(Comparator
+                    .comparing(Visit::getId).reversed())
+                    .collect(Collectors.toList());
+        }
+
+
+        // FIELD SEARCH
+        if (fieldSearchAgreement) {
+            currentVisitList = filerListByField(currentVisitList, fieldString, searchValueString);
+        }
+
+        // DATE SEARCH
+        if (dateSearchAgreement) {
+            currentVisitList = filerListByDate(currentVisitList, startDate, endDate);
+        }
+
+        // SERVICE TYPE SEARCH
+        if (serviceTypeSearchAgreement) {
+            currentVisitList = filerListByServiceTypeId(currentVisitList, serviceTypeId);
+        }
+        return currentVisitList.stream().sorted(Comparator
+                .comparing(Visit::getDate).reversed())
+                .collect(Collectors.toList());
+    }
+
+    private List<Visit> filerListByField(List<Visit> currentVisitList, String fieldString, String searchValueString) {
+        if (!currentVisitList.isEmpty() && searchValueString != null && fieldString != null && !"".equals(fieldString) && !"".equals(searchValueString)) {
+            if (DEFAULT_FIELD_VISIT_TITLE.equals(fieldString)) {
+                currentVisitList = currentVisitList.stream()
+                        .filter(visit -> visit.getTitle().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            } else if (DEFAULT_FIELD_VISIT_DESC.equals(fieldString)) {
+                currentVisitList = currentVisitList.stream()
+                        .filter(visit -> visit.getDesc().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            } else if (DEFAULT_FIELD_VISIT_CODE.equals(fieldString)) {
+                currentVisitList = currentVisitList.stream()
+                        .filter(visit -> visit.getCode().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            } else if (DEFAULT_FIELD_DESC.equals(fieldString)) {
+                return filerListByDesc(currentVisitList, fieldString, searchValueString);
+            } else if (DEFAULT_FIELD_TITLE.equals(fieldString)) {
+                return filerListByTitle(currentVisitList, fieldString, searchValueString);
+            }
+            currentVisitList = filerListByServiceTypeFields(currentVisitList, fieldString, searchValueString);
+        }
+        return currentVisitList;
+    }
+
+    private List<Visit> filerListByDate(List<Visit> currentVisitList, Date startDate, Date endDate) {
+        if (!currentVisitList.isEmpty() && startDate != null && endDate != null) {
+            currentVisitList = currentVisitList.stream()
+                    .filter(visit -> visit.getDate() != null &&
+                            visit.getDate().compareTo(startDate) >= 0 &&
+                            visit.getDate().compareTo(endDate) <= 0)
+                    .collect(Collectors.toList());
+        }
+        return currentVisitList;
+    }
+
+    private List<Visit> filerListByServiceTypeId(List<Visit> currentVisitList, int serviceTypeId) {
+        List<Visit> visitsToRemoveFromList = new ArrayList<>();
+
+        if (!currentVisitList.isEmpty() && serviceTypeId > 0) {
+            for (Visit visit : currentVisitList) {
+                Optional<ClientServ> first = visit.getClientServSet().stream()
+                        .filter(clientServ -> clientServ.getServiceType().getId() == serviceTypeId)
+                        .findFirst();
+                if (first.isEmpty()) {
+                    visitsToRemoveFromList.add(visit);
+                }
+            }
+        }
+        if (!visitsToRemoveFromList.isEmpty()) {
+            return currentVisitList.stream()
+                    .filter(visit -> !visitsToRemoveFromList.contains(visit))
+                    .collect(Collectors.toList());
+        }
+        return currentVisitList;
+    }
+
+    private List<Visit> filerListByServiceTypeFields(List<Visit> currentVisitList, String fieldString, String searchValueString) {
+        List<Visit> visitsToRemoveFromList = new ArrayList<>();
+        if (!currentVisitList.isEmpty() && searchValueString != null && fieldString != null && !"".equals(fieldString) && !"".equals(searchValueString)) {
+            if (DEFAULT_FIELD_CLIENT_SERVICE_DESC.equals(fieldString)) {
+                for (Visit visit : currentVisitList) {
+                    Optional<ClientServ> first = visit.getClientServSet().stream()
+                            .filter(clientServ -> clientServ.getDesc().toLowerCase().contains(searchValueString.toLowerCase()))
+                            .findFirst();
+                    if (first.isEmpty()) {
+                        visitsToRemoveFromList.add(visit);
+                    }
+                }
+            }
+            if (DEFAULT_FIELD_CLIENT_SERVICE_TITLE.equals(fieldString)) {
+                for (Visit visit : currentVisitList) {
+                    Optional<ClientServ> first = visit.getClientServSet().stream()
+                            .filter(clientServ -> clientServ.getTitle().toLowerCase().contains(searchValueString.toLowerCase()))
+                            .findFirst();
+                    if (first.isEmpty()) {
+                        visitsToRemoveFromList.add(visit);
+                    }
+                }
+            }
+        }
+        if (!visitsToRemoveFromList.isEmpty()) {
+            currentVisitList = currentVisitList.stream()
+                    .filter(visit -> !visitsToRemoveFromList.contains(visit))
+                    .collect(Collectors.toList());
+        }
+        return currentVisitList;
+    }
+
+    private List<Visit> filerListByDesc(List<Visit> currentVisitList, String fieldString, String searchValueString) {
+        List<Visit> visitsToRemoveFromList = new ArrayList<>();
+        List<Visit> visitListAfterClientServiceFilter;
+        List<Visit> visitAfterVisitFilter = new ArrayList<>();
+        Set<Visit> visitAfterDescFilterSet = new HashSet<>();
+
+        if (!currentVisitList.isEmpty() && searchValueString != null && fieldString != null && !"".equals(fieldString) && !"".equals(searchValueString)) {
+            if (DEFAULT_FIELD_DESC.equals(fieldString)) {
+                // 1 action
+                for (Visit visit : currentVisitList) {
+                    Optional<ClientServ> first = visit.getClientServSet().stream()
+                            .filter(clientServ -> clientServ.getDesc().toLowerCase().contains(searchValueString.toLowerCase()))
+                            .findFirst();
+                    if (first.isEmpty()) {
+                        visitsToRemoveFromList.add(visit);
+                    }
+                }
+
+                // 2 action
+                visitAfterVisitFilter = currentVisitList.stream()
+                        .filter(visit -> visit.getDesc().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+        }
+        // 1 action
+        if (!visitsToRemoveFromList.isEmpty()) {
+            visitListAfterClientServiceFilter = currentVisitList.stream()
+                    .filter(visit -> !visitsToRemoveFromList.contains(visit))
+                    .collect(Collectors.toList());
+        } else {
+            visitListAfterClientServiceFilter = currentVisitList.stream().collect(Collectors.toList());
+        }
+
+        if (!visitAfterVisitFilter.isEmpty()) {
+            visitAfterVisitFilter.stream().forEach(visit -> visitAfterDescFilterSet.add(visit));
+        }
+        if (!visitListAfterClientServiceFilter.isEmpty()) {
+            visitListAfterClientServiceFilter.stream().forEach(visit -> visitAfterDescFilterSet.add(visit));
+        }
+        return visitAfterDescFilterSet.stream().collect(Collectors.toList());
+    }
+
+    private List<Visit> filerListByTitle(List<Visit> currentVisitList, String fieldString, String searchValueString) {
+        List<Visit> visitsToRemoveFromList = new ArrayList<>();
+        List<Visit> visitListAfterClientServiceFilter;
+        List<Visit> visitAfterVisitFilter = new ArrayList<>();
+        Set<Visit> visitAfterTitleFilterSet = new HashSet<>();
+
+        if (!currentVisitList.isEmpty() && searchValueString != null && fieldString != null && !"".equals(fieldString) && !"".equals(searchValueString)) {
+            if (DEFAULT_FIELD_TITLE.equals(fieldString)) {
+                // 1 action
+                for (Visit visit : currentVisitList) {
+                    Optional<ClientServ> first = visit.getClientServSet().stream()
+                            .filter(clientServ -> clientServ.getTitle().toLowerCase().contains(searchValueString.toLowerCase()))
+                            .findFirst();
+                    if (first.isEmpty()) {
+                        visitsToRemoveFromList.add(visit);
+                    }
+                }
+
+                // 2 action
+                visitAfterVisitFilter = currentVisitList.stream()
+                        .filter(visit -> visit.getTitle().toLowerCase().contains(searchValueString.toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+        }
+        // 1 action
+        if (!visitsToRemoveFromList.isEmpty()) {
+            visitListAfterClientServiceFilter = currentVisitList.stream()
+                    .filter(visit -> !visitsToRemoveFromList.contains(visit))
+                    .collect(Collectors.toList());
+        } else {
+            visitListAfterClientServiceFilter = currentVisitList.stream().collect(Collectors.toList());
+        }
+
+        if (!visitAfterVisitFilter.isEmpty()) {
+            visitAfterVisitFilter.stream().forEach(visit -> visitAfterTitleFilterSet.add(visit));
+        }
+        if (!visitListAfterClientServiceFilter.isEmpty()) {
+            visitListAfterClientServiceFilter.stream().forEach(visit -> visitAfterTitleFilterSet.add(visit));
+        }
+        return visitAfterTitleFilterSet.stream().collect(Collectors.toList());
+    }
+
+
+    private List<ServiceType> geActiveAndInactiveServiceTypeList() {
+        List<ServiceType> allActiveServiceTypeList = serviceTypeRepository.findAllActiveAndInactive();
+        return allActiveServiceTypeList;
     }
 
     private String getChooseOrCreateClientForm(Model model, @PathVariable("pageNumber") int currentPage, @RequestParam("sortField") String sortField, @RequestParam("sortDir") String sortDir) {
@@ -82,7 +626,7 @@ public class ClientController {
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalElements", page.getTotalElements());
         model.addAttribute("clients", page.getContent());
-        model.addAttribute("client", new Client("Brak komentarza"));
+        model.addAttribute("client", new Client(DEFAULT_CLIENT_DESC));
         model.addAttribute("clientsDTO", mapToClientDTOList(clientRepository.findAll()));
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
@@ -96,7 +640,7 @@ public class ClientController {
         client.setActive(ACTIVE_CLIENT);
         client.setClientCard(clientCard);
         clientCard.setClient(client);
-        if (client.getCode() == null ||  "".equals(client.getCode())) {
+        if (client.getCode() == null || "".equals(client.getCode())) {
             setCodeForClient(client);
         }
         setAndSaveToDbContactAddressByRequest(client, request);
@@ -124,6 +668,7 @@ public class ClientController {
             return getClientsForm(model);
         }
     }
+
     @PostMapping(value = "/main/save/client", params = "delete")
     public String deleteAddClient(Client client, Model model, HttpServletRequest request) {
         Boolean isManagerView = "true".equals(request.getParameter(FLAG_IS_MANAGER_VIEW)) ? true : false;
@@ -171,7 +716,7 @@ public class ClientController {
     }
 
     private void addAttributeForClientForm(Model model) {
-        model.addAttribute("client", new Client("Brak komentarza"));
+        model.addAttribute("client", new Client(DEFAULT_CLIENT_DESC));
         model.addAttribute("clients", mapToClientDTOList(clientRepository.findAll()));
     }
 
@@ -271,10 +816,10 @@ public class ClientController {
     @PostMapping(value = "/client/edit/save", params = "deleteUpdatedContact")
     public String deleteClientManager(Client client, Model model, HttpServletRequest request) {
         model.addAttribute(FLAG_IS_DELETE_ACTION, true);
-        LocalDate date = LocalDate.parse(request.getParameter(LAST_VISIT_DATE).substring(0,10));
+        LocalDate date = LocalDate.parse(request.getParameter(LAST_VISIT_DATE).substring(0, 10));
 
         Period period = Period.between(date, LocalDate.now());
-        if (period.getYears() < 5){
+        if (period.getYears() < 5) {
             model.addAttribute(ALERT, MESSAGE_5_YEARS_BEFORE_DELETE);
         }
         model.addAttribute(LAST_VISIT_DATE, date);
@@ -353,6 +898,16 @@ public class ClientController {
     private void prepareDefaultVisitTitleDesc(Visit visit) {
         visit.setTitle("Wizyta ");
         visit.setDesc("Szczegóły dot. wizyty: ");
+    }
+
+    private void clearStiticFieldsForAnalyzer() {
+        IS_VISIT_FORM = Boolean.FALSE;
+        DATE_SEARCH_AGREEMENT_VALUE = null;
+        SERVICE_TYPE_SEARCH_AGREEMENT_VALUE = null;
+        FIELD_SEARCH_AGREEMENT_VALUE = null;
+        START_DATE_VALUE = null;
+        END_DATE_VALUE = null;
+        SERVICE_TYPE_ID_VALUE = null;
     }
 
 }

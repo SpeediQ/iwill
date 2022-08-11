@@ -151,6 +151,10 @@ public class Visit implements Serializable {
         double sumIncludingPromotion = getSum() * (1 - getPromotion() * 0.01);
         return "Cena po promocji: " + decimalFormat.format(sumIncludingPromotion) + " zł";
     }
+    public Double getNiceDoubleSumIncludingPromotion() {
+        DecimalFormat decimalFormat = new DecimalFormat("##.00");
+        return getSum() * (1 - getPromotion() * 0.01);
+    }
 
     public String getNiceStringSum() {
         return "Cena podstawowa: " + getSum() + " zł";
@@ -190,4 +194,32 @@ public class Visit implements Serializable {
         result = 31 * result + (title != null ? title.hashCode() : 0);
         return result;
     }
+
+
+    public String niceOneLineServicesString() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+
+        if (!getClientServSet().isEmpty()) {
+            if (stringBuilder.toString().isEmpty()){
+
+            }
+            getClientServSet().stream().forEach(clientServ -> {
+                if (stringBuilder.toString().isEmpty()){
+                    stringBuilder.append(clientServ.getTitle());
+                }else{
+                    stringBuilder.append(" || " + clientServ.getTitle());
+                }
+            });
+            return "Usługi: " + String.valueOf(stringBuilder);
+        }
+
+        return null;
+    }
+
+    public String niceOneLineString() {
+        return code + " " + " | " + title + " | Opis: " + desc + " | Status: " + status;
+    }
+
+
 }

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List Visits</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
+    <style type="text/css">
+        label {
+            padding-top: 10px;
+        }
+
+        input.rightDate {
+            float: right;
+        }
+
+        div.left {
+            color: black;
+            text-align: left;
+            margin: 10px;
+
+        }
+
+        select.fields {
+            float: right;
+            width: 200px;
+        }
+
+        div.leftAgreement {
+            color: black;
+            font-weight: bold;
+            font-style: italic;
+            text-align: left;
+            margin: 20px;
+        }
+        ol.link {
+
+            font-weight: bold;
+        }
+        span.linkserv {
+            color: black;
+            font-weight: normal;
+        }
+        span.link {
+            color: black;
+        }
+        span.linkserv {
+            color: black;
+            font-weight: normal;
+        }
+
+        span.title {
+            font-weight: bold;
+            padding: 10px;
+
+        }
+        select{
+            width: 340px;
+        }
+
+        span.content {
+            padding: 20px;
+        }
+
+        span.criteria {
+            color: black;
+        }
+
+        span.statistics {
+            padding: 20px;
+        }
+
+        div.test {
+            margin-left: 50px;
+        }
+
+        button.left {
+            padding: 10px;
+            margin: 10px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container text-center">
+
+    <form th:action="@{/clientanalyzer/__${client.getId()}__}" th:object="${client}" method="get"
+          style="max-width: 1100px; margin: 0 auto;">
+<!--TITLE PART-->
+        <th:block th:if="${client != null}">
+        <div><h1>Analiza Klienta</h1></div>
+        <label>Dane klienta: </label>
+        <span th:text="${client.getOneLineNiceString()}" th:remove="tag"></span>
+        </th:block>
+<!--MAIN PART-->
+            <hr>
+        <th:block th:unless="${visitForm == true}">
+            <h3>Wyszukiwanie wizyt</h3>
+        </th:block>
+        <th:block th:if="${visitForm == true}">
+            <h3>Szczegóły wizyty</h3>
+            <span th:text="${visit.getCode()}"/>
+        </th:block>
+        <br>
+        <br>
+        <div>
+            <table border="0" align="left" width="1100px">
+                <tr valign="top">
+                    <td width="300px">
+                        <div class="leftAgreement">
+                            <input type="checkbox" th:name="dateSearchAgreement" th:checked="${dateSearchAgreement}"/>
+                            <span th:text="' - uzwględnij datę'"/>
+                        </div>
+                        <div class="left">
+                            <span for="startDate">Data początkowa:</span>
+                            <input class="rightDate" type="date" th:value="${startDate}" th:name="startDate"
+                                   id="startDate"/>
+                        </div>
+                        <div class="left">
+                            <span for="endDate">Data końcowa:</span>
+                            <input class="rightDate" type="date" th:value="${endDate}" th:name="endDate" id="endDate"/>
+                        </div>
+
+                        <hr>
+
+                        <div class="leftAgreement">
+                            <input type="checkbox" th:name="serviceTypeSearchAgreement"
+                                   th:checked="${serviceTypeSearchAgreement}"/>
+                            <span th:text="' - uzwględnij typ usługi'"/>
+                        </div>
+                        <div class="left">
+                            <select  th:name="serviceTypeId">
+                                <th:block th:if="${serviceType != null}">
+                                    <option th:value="${serviceType.getId()}"
+                                            th:text="${serviceType.niceChooseString()}"/>
+                                </th:block>
+                                <th:block th:unless="${serviceType != null}">
+                                    <option></option>
+                                </th:block>
+
+                                <option th:each="serviceType : ${serviceTypeList}" th:value="${serviceType.getId()}"
+                                        th:text="${serviceType.niceString()}"/>
+                            </select>
+                        </div>
+                        <hr>
+
+                        <div class="leftAgreement">
+                            <input type="checkbox" th:name="fieldSearchAgreement" th:checked="${fieldSearchAgreement}"/>
+                            <span th:text="' - uzwględnij szukanie po polu'"/>
+                        </div>
+                        <div class="left">
+                            <span th:text="'wybierz pole: '"/>
+                            <select class="fields" th:name="field">
+                                <th:block th:if="${field != null && field !=''}">
+                                    <option th:value="${field}" th:text="'Wybrano: ' + ${field}"/>
+                                </th:block>
+                                <option th:each="field : ${fieldsList}" th:value="${field}"
+                                        th:text="${field}"/>
+                            </select>
+                        </div>
+                        <div class="left">
+                            <span th:text="'wyszukiwana treść: '"/>
+                            <input type="text" th:name="searchValue" th:value="${searchValue}" class="form-control"/>
+                        </div>
+                        <div>
+                            <button with="100px" type="submit" class="btn btn-primary">Wyszukaj</button>
+                        </div>
+
+                        <br>
+                        <div class="form-group row" th:align="center">
+                            <a class="h2" th:href="@{/}">Wróć</a>
+                        </div>
+                    </td>
+
+
+<!--                    right-->
+
+                    <div>
+                        <th:block th:unless="${visitForm == true}">
+                            <td align="left" width="700px">
+                                <!--                             SEARCH SECTION-->
+
+                                <th:block th:if="${visitList != null && field !=''}">
+                                    <div>
+                                        <span class="title" th:text="'Kryteria wyszukiwania: '"/>
+                                        <span class="criteria" th:text="${criteria}"/>
+                                    </div>
+                                    <br>
+                                    <div>
+                                        <span class="statistics" th:text="${visitsCounterString}"/><br>
+                                        <span class="statistics" th:text="${clientServCounterString}"/><br>
+                                        <span class="statistics" th:text="${totalValueString} + ' zł'"/><br>
+                                    </div>
+                                    <br>
+                                    <!--link for client Search-->
+                                    <th:block th:if="${client != null}">
+                                    <ol class="link">
+                                        <li th:each="visit: ${visitList}"><a
+                                                th:href="@{'/clientanalyzer/'+${client.getId()}+'/'+ ${visit.id}}">
+                                            <span class="link" th:text="${visit.niceOneLineString()}"></span><br>
+                                            <span class="linkserv" th:text="${visit.niceOneLineServicesString()}"></span><br><br>
+                                        </a></li>
+                                    </ol>
+                                    </th:block>
+
+<!--                                    &lt;!&ndash;link for visit Search&ndash;&gt;-->
+<!--                                    <th:block th:unless="${client != null}">-->
+<!--                                        <ol class="link">-->
+<!--                                            <li th:each="visit: ${visitList}"><a-->
+<!--                                                    th:href="@{'/analyzer/'+ ${visit.id}}">-->
+<!--                                                <span class="link" th:text="${visit.niceOneLineString()}"></span><br>-->
+<!--                                                <span class="linkserv" th:text="${visit.niceOneLineServicesString()}"></span><br><br>-->
+<!--                                            </a></li>-->
+<!--                                        </ol>-->
+<!--                                    </th:block>-->
+
+                                </th:block>
+                            </td>
+                        </th:block>
+
+                        <!--                            VISIT SECTION-->
+
+
+                        <th:block th:if="${visitForm == true}">
+                            <input type="hidden" th:name="idVisit" th:value="${visit.getId()}"/>
+
+                            <td align="left" width="350px">
+                                <div>
+                                    <span class="title" th:text="'ID WIZYTY: ' + ${visit.getId()}"/><br>
+                                    <span class="title" th:text="'TYTUŁ:'"/><br>
+                                    <span class="content" th:text="${visit.getTitle()}"/><br><br>
+                                    <span class="title" th:text="'OPIS:'"/><br>
+                                    <span class="content" th:text="${visit.getDesc()}"/><br><br>
+                                    <span class="title" th:text="'TERMIN:'"/><br>
+                                    <span class="content"
+                                          th:text="${#dates.format(visit.getDate(), 'dd/MM/yyyy')} + ' ' + ${visit.getTime()}"/><br><br>
+                                    <span class="title" th:text="'NALEŻNOŚĆ:'"/><br>
+                                    <span class="content"
+                                          th:text="${visit.getNiceDoubleSumIncludingPromotion()} + 'zł (rabat: ' + ${visit.getPromotion()} + '%)'"/><br>
+                                </div>
+                                <br><br>
+                                <div align="center">
+                                    <button type="submit" name="editVisit" value="EditVisit" class="btn btn-primary">Edytuj wizytę
+                                    </button>
+
+                                </div>
+                            </td>
+
+                            <td align="left">
+                                <div>
+                                    <div>
+                                        <h3>Usługi:</h3>
+                                    </div>
+
+                                    <div>
+                                        <th:block th:each="clientServ : ${clientServSet}">
+                                            <label th:text="'Usługa ID: '+${clientServ.getId()}"/><br>
+                                            <span class="title" th:text="'Tytuł usługi: '"/>
+                                            <span>[[${clientServ.getTitle()}]]</span><br>
+                                            <span class="title" th:text="'Opis usługi: '"/>
+                                            <span>[[${clientServ.getDesc()}]]</span><br>
+                                            <span class="title" th:text="'Wartość usługi: '"/>
+                                            <span>[[${clientServ.getOneLineNiceStringForPrice()}]]</span><br>
+                                        </th:block>
+                                    </div>
+
+                                </div>
+                            </td>
+                        </th:block>
+
+                    </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+
+    </form>
+</div>
+</body>
+</html>

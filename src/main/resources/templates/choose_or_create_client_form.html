@@ -114,7 +114,7 @@
                         <th:block th:if="${isManagerView == true}">
 
                             <td>
-                                <a class="mainaction" th:href="@{'/clientmanager/edit/' + ${client.id}}">Analizuj</a>
+                                <a class="mainaction" th:href="@{'/clientanalyzer/' + ${client.id}}">Analizuj</a>
                                 <br>
                                 <a class="action" th:href="@{'/clientmanager/edit/' + ${client.id}}">Edytuj / Usuń</a>
 
@@ -255,7 +255,7 @@
                                 <td>${data[i].lastname}</td>
                                 <td>${data[i].comment}</td>
                                 <td>
-                                    <a class="mainaction" href="/client/edit/${data[i].id}">Analizuj</a>
+                                    <a class="mainaction" href="/clientanalyzer/${data[i].id}">Analizuj</a>
                                     <br>
                                     <a class="action" href="/client/edit/${data[i].id}">Edytuj / Usuń</a>
                                 </td>

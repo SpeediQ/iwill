@@ -3,9 +3,12 @@ package com.kowalczyk.iwill.model;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import static com.kowalczyk.iwill.model.ConstanceNr.LAST_VISIT_DATE;
 
 @Entity
 public class Client {
@@ -152,5 +155,13 @@ public class Client {
 
     public Boolean isIdValid() {
         return getId() > 0 ? true : false;
+    }
+
+    public String getOneLineNiceString(){
+        String date = "";
+        if (getDate() != null){
+             date = String.valueOf(getDate()).substring(0, 10);
+        }
+        return name + " " + lastname + " | " + date;
     }
 }

@@ -112,6 +112,11 @@ public class ClientServ {
         return Math.round(sumIncludingPromotion * 100.0) / 100.0;
     }
 
+    public String getOneLineNiceStringForPrice() {
+        double finalPriceIncludingPromotion = getFinalPriceIncludingPromotion();
+        return finalPriceIncludingPromotion + " zł (rabat na usługę: " + getPromotion() + " %)";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
