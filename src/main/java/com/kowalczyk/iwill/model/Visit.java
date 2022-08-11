@@ -151,6 +151,10 @@ public class Visit implements Serializable {
         double sumIncludingPromotion = getSum() * (1 - getPromotion() * 0.01);
         return "Cena po promocji: " + decimalFormat.format(sumIncludingPromotion) + " zł";
     }
+    public Double getNiceDoubleSumIncludingPromotion() {
+        DecimalFormat decimalFormat = new DecimalFormat("##.00");
+        return getSum() * (1 - getPromotion() * 0.01);
+    }
 
     public String getNiceStringSum() {
         return "Cena podstawowa: " + getSum() + " zł";
@@ -194,17 +198,28 @@ public class Visit implements Serializable {
 
     public String niceOneLineServicesString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("");
+
 
         if (!getClientServSet().isEmpty()) {
-            stringBuilder.append("Usługi: ");
-            getClientServSet().stream().forEach(clientServ -> stringBuilder.append(clientServ.getTitle() + " // "));
+            if (stringBuilder.toString().isEmpty()){
+
+            }
+            getClientServSet().stream().forEach(clientServ -> {
+                if (stringBuilder.toString().isEmpty()){
+                    stringBuilder.append(clientServ.getTitle());
+                }else{
+                    stringBuilder.append(" || " + clientServ.getTitle());
+                }
+            });
+            return "Usługi: " + String.valueOf(stringBuilder);
         }
 
-        return String.valueOf(stringBuilder);
+        return null;
     }
 
     public String niceOneLineString() {
-        return code + " " + " | " + title + " | Opis: " + desc + " | Status: " + status + " | " + niceOneLineServicesString();
+        return code + " " + " | " + title + " | Opis: " + desc + " | Status: " + status;
     }
+
+
 }

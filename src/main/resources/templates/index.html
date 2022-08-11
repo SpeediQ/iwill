@@ -4,26 +4,63 @@
     <meta charset="UTF-8">
     <title>Main Screen</title>
     <link rel="stylesheet" href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Petit Formal Script' rel='stylesheet'>
+    <style type="text/css">
+
+
+        div.left {
+            text-align: left;
+        }
+        h1.main {
+            font-family: 'Petit Formal Script';
+            font-size: 50px;
+            font-weight: bold;
+        }
+
+        a.left {
+            color: black;
+            margin: 10px;
+            font-size: 25px;
+        }
+        span.statistics {
+            color: black;
+            font-weight: bold;
+            font-style: italic;
+            text-align: left;
+            margin: 50px;
+        }
+
+
+    </style>
 </head>
 <body>
 <div class="container text-center">
-    <div><h1>Welcome - Main Screen</h1></div>
+    <div><h1 class="main">Twój asystent</h1></div>
     <br/>
-    <div class="p-2">
-        <a class="h2" th:href="@{/main/cform}">Obsługa Wizyty</a>
-    </div>
-    <br/>
-    <div class="p-2">
-        <a class="h2" th:href="@{/reservations}">Rezerwacje</a>
-    </div>
-    <br/>
-    <div class="p-2">
-        <a class="h2" th:href="@{/serviceTypeManager/p}">Menedżer Typu Usługi</a>
-    </div>
-    <br/>
-    <div class="p-2">
-        <a class="h2" th:href="@{/clientmanager}">Menedżer Klienta</a>
-    </div>
+
+    <table border="0" align="center" width="700px">
+        <tr valign="top">
+            <td width="400px" align="left">
+                <div class="left">
+                <a class="left" th:href="@{/main/cform}">Obsługa Wizyty</a><br>
+                <a class="left" th:href="@{/reservations}">Rezerwacje</a><br>
+                <a class="left" th:href="@{/serviceTypeManager/p}">Menedżer Typu Usługi</a><br>
+                <a class="left" th:href="@{/clientmanager}">Menedżer Klienta</a><br>
+                <a class="left" th:href="@{/analyzer}">Analiza Wizyt</a><br>
+                </div>
+            </td>
+            <td>
+                <div align="left">
+                    <span class="statistics" th:text="${clientCounterString}"/><br>
+                    <span class="statistics" th:text="${visitsCounterString}"/><br>
+                    <span class="statistics" th:text="${clientServCounterString}"/><br>
+                    <span class="statistics" th:text="${totalValueString} + ' zł'"/><br>
+                </div>
+
+            </td>
+        </tr>
+    </table>
+
 </div>
 </body>
 </html>

@@ -54,7 +54,7 @@
                             <td>[[${visit.clientServSet}]]</td>
                             <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
                             <td>[[${visit.time}]]</td>
-                            <td>[[${visit.getSum}]]</td>
+                            <td>[[${visit.getNiceDoubleSumIncludingPromotion()}]]</td>
                             <td>
                                 <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
                             </td>

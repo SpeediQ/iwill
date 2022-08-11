@@ -48,6 +48,7 @@ public class ConstanceNr {
     public final static String DEFAULT_CLIENT_CODE = "Dane zostały usunięte";
     public final static Boolean ACTIVE_CLIENT = true;
     public final static Boolean INACTIVE_CLIENT = false;
+    public final static String DEFAULT_CLIENT_DESC = "RODO - podpisane (data: UZUPEŁNIJ ) formularz kontaktowy - podpisane (data: UZUPEŁNIJ)";
 
     // ATTRIBUTE
     public final static String LAST_VISIT_DATE = "lastVisitDate";
@@ -61,8 +62,12 @@ public class ConstanceNr {
     // SEARCH
     public final static String DEFAULT_FIELD_TITLE = "Tytuł";
     public final static String DEFAULT_FIELD_DESC = "Opis";
-    public final static String DEFAULT_FIELD_CODE = "Kod";
-    public final static List<String> SEARCH_DEFAULT_FIELDS_LIST = Arrays.asList(DEFAULT_FIELD_TITLE, DEFAULT_FIELD_DESC, DEFAULT_FIELD_CODE);
+    public final static String DEFAULT_FIELD_VISIT_TITLE = "Tytuł wizyty";
+    public final static String DEFAULT_FIELD_VISIT_DESC = "Opis wizyty";
+    public final static String DEFAULT_FIELD_VISIT_CODE = "Kod wizyty";
+    public final static String DEFAULT_FIELD_CLIENT_SERVICE_TITLE = "Tytuł usługi";
+    public final static String DEFAULT_FIELD_CLIENT_SERVICE_DESC = "Opis usługi";
+    public final static List<String> SEARCH_DEFAULT_FIELDS_LIST = Arrays.asList(DEFAULT_FIELD_TITLE, DEFAULT_FIELD_DESC, DEFAULT_FIELD_VISIT_TITLE, DEFAULT_FIELD_VISIT_DESC, DEFAULT_FIELD_VISIT_CODE, DEFAULT_FIELD_CLIENT_SERVICE_TITLE, DEFAULT_FIELD_CLIENT_SERVICE_DESC);
 
 
 }

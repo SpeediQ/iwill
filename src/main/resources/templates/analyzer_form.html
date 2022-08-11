@@ -32,17 +32,21 @@
             text-align: left;
             margin: 20px;
         }
+
         ol.link {
 
             font-weight: bold;
         }
+
         span.linkserv {
             color: black;
             font-weight: normal;
         }
+
         span.link {
             color: black;
         }
+
         span.linkserv {
             color: black;
             font-weight: normal;
@@ -53,7 +57,8 @@
             padding: 10px;
 
         }
-        select{
+
+        select {
             width: 340px;
         }
 
@@ -84,16 +89,14 @@
 <body>
 <div class="container text-center">
 
-    <form th:action="@{/clientanalyzer/__${client.getId()}__}" th:object="${client}" method="get"
+    <form th:action="@{/analyzer}" th:object="${client}" method="get"
           style="max-width: 1100px; margin: 0 auto;">
-<!--TITLE PART-->
-        <th:block th:if="${client != null}">
-        <div><h1>Analiza Klienta</h1></div>
-        <label>Dane klienta: </label>
-        <span th:text="${client.getOneLineNiceString()}" th:remove="tag"></span>
+        <!--TITLE PART-->
+        <th:block th:unless="${client != null}">
+            <div><h1>Analiza Wizyt</h1></div>
         </th:block>
-<!--MAIN PART-->
-            <hr>
+        <!--MAIN PART-->
+        <hr>
         <th:block th:unless="${visitForm == true}">
             <h3>Wyszukiwanie wizyt</h3>
         </th:block>
@@ -129,7 +132,7 @@
                             <span th:text="' - uzwględnij typ usługi'"/>
                         </div>
                         <div class="left">
-                            <select  th:name="serviceTypeId">
+                            <select th:name="serviceTypeId">
                                 <th:block th:if="${serviceType != null}">
                                     <option th:value="${serviceType.getId()}"
                                             th:text="${serviceType.niceChooseString()}"/>
@@ -173,7 +176,7 @@
                     </td>
 
 
-<!--                    right-->
+                    <!--                    right-->
 
                     <div>
                         <th:block th:unless="${visitForm == true}">
@@ -192,27 +195,17 @@
                                         <span class="statistics" th:text="${totalValueString} + ' zł'"/><br>
                                     </div>
                                     <br>
-                                    <!--link for client Search-->
-                                    <th:block th:if="${client != null}">
-                                    <ol class="link">
-                                        <li th:each="visit: ${visitList}"><a
-                                                th:href="@{'/clientanalyzer/'+${client.getId()}+'/'+ ${visit.id}}">
-                                            <span class="link" th:text="${visit.niceOneLineString()}"></span><br>
-                                            <span class="linkserv" th:text="${visit.niceOneLineServicesString()}"></span><br><br>
-                                        </a></li>
-                                    </ol>
+                                    <!--link for visit Search-->
+                                    <th:block th:unless="${client != null}">
+                                        <ol class="link">
+                                            <li th:each="visit: ${visitList}"><a
+                                                    th:href="@{'/analyzer/'+${visit.id}+'/'+ 1}">
+                                                <span class="link" th:text="${visit.niceOneLineString()}"></span><br>
+                                                <span class="linkserv"
+                                                      th:text="${visit.niceOneLineServicesString()}"></span><br><br>
+                                            </a></li>
+                                        </ol>
                                     </th:block>
-
-<!--                                    &lt;!&ndash;link for visit Search&ndash;&gt;-->
-<!--                                    <th:block th:unless="${client != null}">-->
-<!--                                        <ol class="link">-->
-<!--                                            <li th:each="visit: ${visitList}"><a-->
-<!--                                                    th:href="@{'/analyzer/'+ ${visit.id}}">-->
-<!--                                                <span class="link" th:text="${visit.niceOneLineString()}"></span><br>-->
-<!--                                                <span class="linkserv" th:text="${visit.niceOneLineServicesString()}"></span><br><br>-->
-<!--                                            </a></li>-->
-<!--                                        </ol>-->
-<!--                                    </th:block>-->
 
                                 </th:block>
                             </td>
@@ -240,7 +233,8 @@
                                 </div>
                                 <br><br>
                                 <div align="center">
-                                    <button type="submit" name="editVisit" value="EditVisit" class="btn btn-primary">Edytuj wizytę
+                                    <button type="submit" name="editVisit" value="EditVisit" class="btn btn-primary">
+                                        Edytuj wizytę
                                     </button>
 
                                 </div>
