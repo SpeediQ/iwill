@@ -50,6 +50,10 @@ public class ConstanceNr {
     public final static Boolean INACTIVE_CLIENT = false;
     public final static String DEFAULT_CLIENT_DESC = "RODO - podpisane (data: UZUPEŁNIJ ) formularz kontaktowy - podpisane (data: UZUPEŁNIJ)";
 
+    // VISIT
+    public final static String DEFAULT_VISIT_DESC = "Orientacyjny czas: \r\n -- Szczegóły dot. wizyty: ";
+    public final static String DEFAULT_VISIT_TITLE = "Wizyta ";
+
     // ATTRIBUTE
     public final static String LAST_VISIT_DATE = "lastVisitDate";
     public final static String MESSAGE_5_YEARS_BEFORE_DELETE = "Dane powinny być przechowywane przez 5 lat.";
