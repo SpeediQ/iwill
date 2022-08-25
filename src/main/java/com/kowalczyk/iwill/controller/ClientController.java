@@ -896,8 +896,8 @@ public class ClientController {
     }
 
     private void prepareDefaultVisitTitleDesc(Visit visit) {
-        visit.setTitle("Wizyta ");
-        visit.setDesc("Szczegóły dot. wizyty: ");
+        visit.setTitle(DEFAULT_VISIT_TITLE);
+        visit.setDesc(DEFAULT_VISIT_DESC);
     }
 
     private void clearStiticFieldsForAnalyzer() {
