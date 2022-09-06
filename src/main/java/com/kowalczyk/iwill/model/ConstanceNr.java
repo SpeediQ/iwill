@@ -62,6 +62,13 @@ public class ConstanceNr {
     public final static String ATTRIBUTE_SERVICE_TYPE_LIST = "serviceTypeList";
     public final static String ATTRIBUTE_FIELDS_LIST = "fieldsList";
 
+    // STATISTICS
+    public final static String STATISTICS_CLIENT_COUNTER = "Łączna ilość klientów: ";
+    public final static String STATISTICS_VISIT_COUNTER = "Łączna ilość wizyt: ";
+    public final static String STATISTICS_CLIENT_SERVICE_COUNTER = "Łączna ilość usług: ";
+    public final static String STATISTICS_SUMMARY_AMOUNT = "Łączna wartość: ";
+
+
 
     // SEARCH
     public final static String DEFAULT_FIELD_TITLE = "Tytuł";

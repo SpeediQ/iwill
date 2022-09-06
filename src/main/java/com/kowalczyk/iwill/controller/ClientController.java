@@ -816,10 +816,15 @@ public class ClientController {
     @PostMapping(value = "/client/edit/save", params = "deleteUpdatedContact")
     public String deleteClientManager(Client client, Model model, HttpServletRequest request) {
         model.addAttribute(FLAG_IS_DELETE_ACTION, true);
-        LocalDate date = LocalDate.parse(request.getParameter(LAST_VISIT_DATE).substring(0, 10));
+        String lastVisitDate = request.getParameter(LAST_VISIT_DATE);
+        Period period = null;
+        LocalDate date = null;
+        if (lastVisitDate != null && !lastVisitDate.isEmpty()) {
+            date = LocalDate.parse(lastVisitDate.substring(0, 10));
+            period = Period.between(date, LocalDate.now());
+        }
 
-        Period period = Period.between(date, LocalDate.now());
-        if (period.getYears() < 5) {
+        if (period != null && period.getYears() < 5) {
             model.addAttribute(ALERT, MESSAGE_5_YEARS_BEFORE_DELETE);
         }
         model.addAttribute(LAST_VISIT_DATE, date);
