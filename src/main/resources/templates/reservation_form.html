@@ -4,14 +4,18 @@
     <meta charset="UTF-8">
     <title>List Visits</title>
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style type="text/css">
+        table th {
+            background-color: white;
+        }
+    </style>
 </head>
-<body>
+<body style="background-color: #e4f6fc">
 <div class="container text-center">
     <div><h1>Lista Rezerwacji</h1></div>
     <br/>
     <div>
-        <table class="table table-bordered">
+        <table class="table table-striped table-advance table-hover">
             <thead>
             <th>Code</th>
             <th>Title</th>

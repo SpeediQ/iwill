@@ -2,10 +2,8 @@ package com.kowalczyk.iwill.controller;
 
 
 import com.kowalczyk.iwill.model.*;
-import com.kowalczyk.iwill.repository.NumeratorRepository;
-import com.kowalczyk.iwill.repository.ServiceTypeRepository;
-import com.kowalczyk.iwill.repository.StatusRepository;
-import com.kowalczyk.iwill.repository.VisitRepository;
+import com.kowalczyk.iwill.repository.*;
+import com.kowalczyk.iwill.service.ClientService;
 import com.kowalczyk.iwill.service.ServiceTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
 
+import static com.kowalczyk.iwill.model.ConstanceNr.*;
+import static com.kowalczyk.iwill.model.ConstanceNr.STATISTICS_CLIENT_SERVICE_COUNTER;
+
 @Controller
 public class VisitController {
 
@@ -35,6 +36,10 @@ public class VisitController {
     private StatusRepository statusRepository;
     @Autowired
     private ServiceTypeService serviceTypeService;
+    @Autowired
+    private ClientRepository clientRepository;
+    @Autowired
+    private ClientServRepository clientServRepository;
 
     @GetMapping("/v/st/{idVisit}")
     public String getChooseOrCreateServiceForm(Model model, @PathVariable("idVisit") int idVisit) {
@@ -171,6 +176,33 @@ public class VisitController {
         setReservationStatus(visit);
         setNumberForClient(visit);
         visitRepository.save(visit);
+        return getIndexForm(model);
+    }
+    private String getIndexForm(Model model) {
+        List<Visit> visitList = visitRepository.findAll();
+        int visitsCounter = visitList.size();
+        int clientServCounter = clientServRepository.findAll().size();
+        int clientCounter = clientRepository.findAll().size();
+
+        double totalValue = 0;
+
+        for (Visit visit : visitList) {
+            totalValue += visit.getClientServSet().stream().mapToDouble(ClientServ::getFinalPriceIncludingPromotion).sum();
+        }
+
+        if (clientCounter != 0) {
+            model.addAttribute("clientCounterString", STATISTICS_CLIENT_COUNTER + clientCounter);
+        }
+        if (visitsCounter != 0) {
+            model.addAttribute("visitsCounterString", STATISTICS_VISIT_COUNTER + visitsCounter);
+        }
+        if (totalValue != 0) {
+            model.addAttribute("totalValueString", STATISTICS_SUMMARY_AMOUNT + totalValue);
+        }
+        if (clientServCounter != 0) {
+            model.addAttribute("clientServCounterString", STATISTICS_CLIENT_SERVICE_COUNTER + clientServCounter);
+        }
+
         return "index";
     }
 

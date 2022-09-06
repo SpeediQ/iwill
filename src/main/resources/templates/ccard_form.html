@@ -6,18 +6,18 @@
     <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"/>
     <style type="text/css">
         button {
-            padding:10px;
+            padding: 10px;
             margin: 10px;
             width: 150px;
         }
     </style>
 </head>
-<body>
+<body style="background-color: #e4f6fc">
 <div class="container text-center">
     <div><h1><b>Tworzenie wizyty</b></h1></div>
     <div><h2><i>Ekran karty klienta</i></h2></div>
 
-    <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 600px; margin: 0 auto;">
+    <form th:action="@{/c/v/add}" th:object="${client}" method="post" style="max-width: 900px; margin: 0 auto;">
         <input type="hidden" th:field="*{id}" th:value="${client.id}"/>
 
         <div>
@@ -34,36 +34,35 @@
         <th:block th:if="${client.getClientCard().getSortedVisitListByVisitSet().size() > 0}">
             <div>
                 <section class="panel">
-                <table class="table table-striped table-advance table-hover">
-                    <thead>
-                    <th>Kod</th>
-                    <th>Tytuł</th>
-                    <th>Opis</th>
-                    <th>Usługi</th>
-                    <th>Data</th>
-                    <th>Godzina</th>
-                    <th>Suma</th>
-                    <th>Akcja</th>
-                    </thead>
-                    <tbody>
-                    <th:block th:each="visit : ${visitList}">
-                        <tr>
-                            <td>[[${visit.code}]]</td>
-                            <td>[[${visit.title}]]</td>
-                            <td>[[${visit.desc}]]</td>
-                            <td>[[${visit.clientServSet}]]</td>
-                            <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
-                            <td>[[${visit.time}]]</td>
-                            <td>[[${visit.getNiceDoubleSumIncludingPromotion()}]]</td>
-                            <td>
-                                <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
-                            </td>
+                    <table class="table table-striped table-advance table-hover">
+                        <thead>
+                        <th>Kod</th>
+                        <th>Tytuł</th>
+                        <th>Opis</th>
+                        <th>Usługi</th>
+                        <th>Data</th>
+                        <th>Godzina</th>
+                        <th>Suma</th>
+                        <th>Akcja</th>
+                        </thead>
+                        <tbody>
+                        <th:block th:each="visit : ${visitList}">
+                            <tr>
+                                <td>[[${visit.code}]]</td>
+                                <td>[[${visit.title}]]</td>
+                                <td>[[${visit.desc}]]</td>
+                                <td>[[${visit.clientServSet}]]</td>
+                                <td>[[${#dates.format(visit.date, 'dd/MM/yyyy')}]]</td>
+                                <td>[[${visit.time}]]</td>
+                                <td>[[${visit.getNiceDoubleSumIncludingPromotion()}]]</td>
+                                <td>
+                                    <a th:href="@{'/visits/edit/' + ${visit.id}}">Edytuj</a>
+                                </td>
 
                         </tr>
                     </th:block>
                     </tbody>
-                </table>
-                    </table><footer id="footerClient" class="panel-footer">
+                </table><footer id="footerClient" class="panel-footer">
                     Łącznie [[${totalItems}]] : Strona [[${currentPage}]] of [[${totalPages}]]
                     &nbsp; &nbsp; - &nbsp;
                     <span th:each="i: ${#numbers.sequence(1, totalPages)}">
